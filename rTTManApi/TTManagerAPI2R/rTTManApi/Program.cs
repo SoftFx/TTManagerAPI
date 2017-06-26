@@ -20,7 +20,7 @@ namespace rTTManApi
         private static List<Order> _orderList;
         private static List<TradeReport> _tradeReportList;
         private static List<AssetInfo> _assetList;
-        private static List<AccountSnapshotEntity> _snapshotList;
+        private static List<AssetSnapshot> _snapshotList;
         #endregion
 
         #region Connection
@@ -647,7 +647,8 @@ namespace rTTManApi
                     IsUTC = true,
                     SkipCancelOrder = skipCancelled
                 };
-                var accList = accId.Aggregate("", (current, acc) => string.Concat(current, ", ", acc));
+                var accList = accId[0];
+                accList = accId.Aggregate(accList, (current, s) => string.Concat(current, ", ", s));
                 Logger.Log.InfoFormat("Requesting trade history of {0} from {1} to {2}", accList, from, to);
                 _tradeReportList = _manager.QueryTradeHistoryOverall(req).Reports;
                 Logger.Log.InfoFormat("Recieved {0} trade reports", _tradeReportList.Count);
@@ -1057,9 +1058,9 @@ namespace rTTManApi
         }
         #endregion
 
-        #region Get daily snapshots
+        #region Get assert snapshots
 
-        public static int GetDailySnapshots(string accId, DateTime from, DateTime to)
+        public static int GetAssertSnapshots(string accId, DateTime from, DateTime to)
         {
             try
             {
@@ -1070,7 +1071,11 @@ namespace rTTManApi
                     toDate = to,
                     IsUTC = true,
                 };
-                _snapshotList = _manager.QueryDailyAccountsSnapshot(req).Reports;
+                _snapshotList = new List<AssetSnapshot>();
+                foreach (var snapshot in _manager.QueryDailyAccountsSnapshot(req).Reports)
+                {
+                    _snapshotList.AddRange(snapshot.Assets);
+                }
                 return 0;
             }
             catch (Exception)
@@ -1079,7 +1084,7 @@ namespace rTTManApi
             }
         }
 
-        public static int GetDailySnapshots(string[] accId, DateTime from, DateTime to)
+        public static int GetAssertSnapshots(string[] accId, DateTime from, DateTime to)
         {
             try
             {
@@ -1090,7 +1095,11 @@ namespace rTTManApi
                     toDate = to,
                     IsUTC = true,
                 };
-                _snapshotList = _manager.QueryDailyAccountsSnapshot(req).Reports;
+                _snapshotList = new List<AssetSnapshot>();
+                foreach (var snapshot in _manager.QueryDailyAccountsSnapshot(req).Reports)
+                {
+                    _snapshotList.AddRange(snapshot.Assets);
+                }
                 return 0;
             }
             catch (Exception)
@@ -1099,124 +1108,30 @@ namespace rTTManApi
             }
         }
 
-        public static DateTime[] GetSnapshotTimestamp()
+        public static string[] GetSnapshotCurrency()
         {
-            return _snapshotList.Select(it => it.Timestamp).ToArray();
+            return _snapshotList.Select(it => it.Currency).ToArray();
         }
 
-        public static double[] GetSnapshotAccountId()
+        public static double[] GetSnapshotAmount()
         {
-            return _snapshotList.Select(it => (double)it.AccountId).ToArray();
+            return _snapshotList.Select(it => (double)it.Amount).ToArray();
         }
-
-        public static string[] GetSnapshotServer()
+        public static double[] GetSnapshotFreeAmount()
         {
-            return _snapshotList.Select(it => it.Server).ToArray();
+            return _snapshotList.Select(it => (double)it.FreeAmount).ToArray();
         }
-
-        public static string[] GetSnapshotDomain()
+        public static double[] GetSnapshotLockedAmount()
         {
-            return _snapshotList.Select(it => it.Domain).ToArray();
+            return _snapshotList.Select(it => (double)it.LockedAmount).ToArray();
         }
-
-        public static string[] GetSnapshotGroup()
+        public static double[] GetSnapshotCurrencyToUsdConversionRate()
         {
-            return _snapshotList.Select(it => it.Group).ToArray();
+            return _snapshotList.Select(it => (double)it.CurrencyToUsdConversionRate).ToArray();
         }
-
-        public static string[] GetSnapshotAccountingType()
+        public static double[] GetSnapshotUsdToCurrencyConversionRate()
         {
-            return _snapshotList.Select(it => it.AccountingType.ToString()).ToArray();
-        }
-
-        public static double[] GetSnapshotBalance()
-        {
-            return _snapshotList.Select(it => (double)it.Balance).ToArray();
-        }
-
-        public static string[] GetSnapshotBalanceCurrency()
-        {
-            return _snapshotList.Select(it => it.BalanceCurrency).ToArray();
-        }
-
-        public static double[] GetSnapshotProfit()
-        {
-            return _snapshotList.Select(it => (double)it.Profit).ToArray();
-        }
-
-        public static double[] GetSnapshotCommission()
-        {
-            return _snapshotList.Select(it => (double)it.Commission).ToArray();
-        }
-
-        public static double[] GetSnapshotAgentCommission()
-        {
-            return _snapshotList.Select(it => (double)it.AgentCommission).ToArray();
-        }
-
-        public static double[] GetSnapshotTotalCommission()
-        {
-            return _snapshotList.Select(it => (double)it.TotalCommission).ToArray();
-        }
-
-        public static double[] GetSnapshotSwap()
-        {
-            return _snapshotList.Select(it => (double)it.Swap).ToArray();
-        }
-
-        public static double[] GetSnapshotTotalProfitLoss()
-        {
-            return _snapshotList.Select(it => (double)it.TotalProfitLoss).ToArray();
-        }
-
-        public static double[] GetSnapshotEquity()
-        {
-            return _snapshotList.Select(it => (double)it.Equity).ToArray();
-        }
-
-        public static double[] GetSnapshotMargin()
-        {
-            return _snapshotList.Select(it => (double)it.Margin).ToArray();
-        }
-
-        public static double[] GetSnapshotMarginLevel()
-        {
-            return _snapshotList.Select(it => (double)it.MarginLevel).ToArray();
-        }
-
-        public static bool[] GetSnapshotIsBlocked()
-        {
-            return _snapshotList.Select(it => it.IsBlocked).ToArray();
-        }
-
-        public static bool[] GetSnapshotIsReadonly()
-        {
-            return _snapshotList.Select(it => it.IsReadonly).ToArray();
-        }
-
-        public static bool[] GetSnapshotIsValid()
-        {
-            return _snapshotList.Select(it => it.IsValid).ToArray();
-        }
-
-        public static double[] GetSnapshotBalanceToUsdConversionRate()
-        {
-            return _snapshotList.Select(it => (double)(it.BalanceToUsdConversionRate ?? 0)).ToArray();
-        }
-
-        public static double[] GetSnapshotUsdToBalanceConversionRate()
-        {
-            return _snapshotList.Select(it => (double)(it.UsdToBalanceConversionRate ?? 0)).ToArray();
-        }
-
-        public static double[] GetSnapshotProfitToUsdConversionRate()
-        {
-            return _snapshotList.Select(it => (double)(it.ProfitToUsdConversionRate ?? 0)).ToArray();
-        }
-
-        public static double[] GetSnapshotUsdToProfitConversionRate()
-        {
-            return _snapshotList.Select(it => (double)(it.ProfitToUsdConversionRate ?? 0)).ToArray();
+            return _snapshotList.Select(it => (double)it.UsdToCurrencyConversionRate).ToArray();
         }
         #endregion
 
