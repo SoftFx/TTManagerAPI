@@ -257,6 +257,7 @@ _Pvt_Extensions
 .Rproj*
 *.Rout
 *.log
+dist/
 man/*
 Storage/*
 *.Rd
