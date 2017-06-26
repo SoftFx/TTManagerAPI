@@ -1,8 +1,8 @@
 #' Gets the Snapshots as requested
 #'
 #' @export
-ttmGetAssertSnapshots <- function(accId, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00)), to = Sys.time()) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAssertSnapshots',accId,from,to)
+ttmGetAssetSnapshots <- function(accId, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00)), to = Sys.time()) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAssetSnapshots',accId,from,to)
   GetSnapshotFrame()
 }
 #' Get Snapshot table

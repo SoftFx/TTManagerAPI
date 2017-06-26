@@ -1058,9 +1058,9 @@ namespace rTTManApi
         }
         #endregion
 
-        #region Get assert snapshots
+        #region Get asset snapshots
 
-        public static int GetAssertSnapshots(string accId, DateTime from, DateTime to)
+        public static int GetAssetSnapshots(string accId, DateTime from, DateTime to)
         {
             try
             {
@@ -1084,7 +1084,7 @@ namespace rTTManApi
             }
         }
 
-        public static int GetAssertSnapshots(string[] accId, DateTime from, DateTime to)
+        public static int GetAssetSnapshots(string[] accId, DateTime from, DateTime to)
         {
             try
             {
