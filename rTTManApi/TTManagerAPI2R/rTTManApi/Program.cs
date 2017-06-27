@@ -648,7 +648,10 @@ namespace rTTManApi
                     SkipCancelOrder = skipCancelled
                 };
                 var accList = accId[0];
-                accList = accId.Aggregate(accList, (current, s) => string.Concat(current, ", ", s));
+                for (var i = 1; i < accId.Length; i++)
+                {
+                    accList = string.Concat(accList, ", ", accId[i]);
+                }
                 Logger.Log.InfoFormat("Requesting trade history of {0} from {1} to {2}", accList, from, to);
                 _tradeReportList = _manager.QueryTradeHistoryOverall(req).Reports;
                 Logger.Log.InfoFormat("Recieved {0} trade reports", _tradeReportList.Count);
@@ -1062,6 +1065,7 @@ namespace rTTManApi
 
         public static int GetAssetSnapshots(string accId, DateTime from, DateTime to)
         {
+            _snapshotList?.Clear();
             try
             {
                 var req = new DailyAccountsSnapshotRequest
@@ -1072,14 +1076,17 @@ namespace rTTManApi
                     IsUTC = true,
                 };
                 _snapshotList = new List<AssetSnapshot>();
+                Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accId, from, to);
                 foreach (var snapshot in _manager.QueryDailyAccountsSnapshot(req).Reports)
                 {
                     _snapshotList.AddRange(snapshot.Assets);
                 }
+                Logger.Log.InfoFormat("Recieved {0} asset snapshots", _snapshotList.Count);
                 return 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Log.ErrorFormat("Requesting asset snapshots failed because {0}", ex.Message);
                 return -1;
             }
         }
@@ -1096,14 +1103,22 @@ namespace rTTManApi
                     IsUTC = true,
                 };
                 _snapshotList = new List<AssetSnapshot>();
+                var accList = accId[0];
+                for (var i = 1; i < accId.Length; i++)
+                {
+                    accList = string.Concat(accList, ", ", accId[i]);
+                }
+                Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accList, from, to);
                 foreach (var snapshot in _manager.QueryDailyAccountsSnapshot(req).Reports)
                 {
                     _snapshotList.AddRange(snapshot.Assets);
                 }
+                Logger.Log.InfoFormat("Recieved {0} asset snapshots", _snapshotList.Count);
                 return 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Log.ErrorFormat("Requesting asset snapshots failed because {0}", ex.Message);
                 return -1;
             }
         }
