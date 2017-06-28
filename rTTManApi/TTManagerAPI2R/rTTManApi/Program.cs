@@ -670,6 +670,7 @@ namespace rTTManApi
             catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Requesting trade history failed because {0}", ex.Message);
+                _tradeReportList?.Clear();
                 return -1;
             }
         }
@@ -707,6 +708,7 @@ namespace rTTManApi
             catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Requesting trade history failed because {0}", ex.Message);
+                _tradeReportList?.Clear();
                 return -1;
             }
         }
