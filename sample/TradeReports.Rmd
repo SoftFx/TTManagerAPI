@@ -1,0 +1,124 @@
+---
+title: <b> "Get all trade users by Group" </b> 
+author: "Yury Maisiayonak"
+date: '`r Sys.time()`'
+output: html_document 
+params: 
+    server: "exchange.tts.st.soft-fx.eu"
+    login: "12350"
+    password: "123qwe!"
+    startDate: "2017-06-21"
+    groupsFilter: "Test*"
+    excludeAccounts: "100180,100183,100184,100185,100186"
+    skipCancelled: FALSE
+    path: "."
+        
+---
+```{r setup, cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE, tidy = FALSE, results='hide'}
+
+if(!require("lubridate")){ 
+ install.packages("lubridate", repos = "http://cran.us.r-project.org", dependencies = TRUE)  
+ library(lubridate) 
+}
+if(!require("data.table")){ 
+ install.packages("data.table", repos = "http://cran.us.r-project.org", dependencies = TRUE)  
+ library(data.table) 
+}
+if(!require("foreach")){ 
+ install.packages("foreach", repos = "http://cran.us.r-project.org", dependencies = TRUE)  
+ library(foreach) 
+}
+if(!require("DT")){ 
+ install.packages("DT", repos = "http://cran.us.r-project.org", dependencies = TRUE)  
+ library(DT) 
+}
+if(!require("plotly")){ 
+ install.packages("plotly", repos = "http://cran.us.r-project.org", dependencies = TRUE)  
+ library(plotly) 
+ }
+if(!require("knitr")){ 
+ install.packages("knitr", repos = "http://cran.us.r-project.org", dependencies = TRUE)  
+ library(knitr) 
+ }
+Filter <-function( table, columnName, pattern)
+{
+    isAllNegative<-T
+    sapply(unlist(strsplit(pattern, ',')), function (wildcard)
+    {
+        if( nchar(wildcard) <= 0 )    
+            return()
+        if(substring(wildcard, 1,1) == '!')
+        {
+            wildcard<-stri_sub(wildcard, 2)
+            reg<-glob2rx(wildcard)
+            table<<-table[ !grepl(reg, table[,columnName, with=F][[1]])]
+        }
+        else
+            isAllNegative<<-F
+    })
+    if( isAllNegative )
+        return (table)
+    
+    unique(rbindlist(lapply(unlist(strsplit(pattern, ',')), function (wildcard)
+    {
+        if( nchar(wildcard) <= 0 )    
+            return()
+        if(substring(wildcard, 1,1) != '!')
+        {
+            reg<-glob2rx(wildcard)
+            table[ grepl(reg, table[,columnName, with=F][[1]])]
+        }
+    })))
+} 
+
+library(rTTManApi)
+options(scipen = 999)
+
+ttmConnect(params$server, params$login, params$password)
+
+from <- as.Date(params$startDate)
+to<- from + days(1)
+#to <- from + days(100)
+excludeAccounts = as.numeric(unlist(strsplit(params$excludeAccounts, ',')))
+
+accounts <- ttmGetAllAccounts()
+
+filterAcc<-function(accounts)
+{
+  accounts = Filter(accounts, "Group", params$groupsFilter)
+  excludedAccIndices<-accounts[Login %in% excludeAccounts, which=T]
+    if( length(excludedAccIndices) != 0)
+        accounts<-accounts[-excludedAccIndices]
+  
+}
+accounts = filterAcc(accounts)
+trades = data.table()
+for(i in 1:nrow(accounts)) {
+      tempTrades = ttmGetTradeReports(toString(accounts$Login[i]), from, to, params$skipCancelled)
+      tempTrades = tempTrades[,TradeAccountFk:=""]
+      tempTrades$TradeAccountFk = accounts$Login[i]
+      trades = rbind(tempTrades, trades)
+}
+trades <- trades[(TradeSide == "Buy" | TradeSide == "Sell"),.(TradeOrderId, TradeAccountFk, TradeBalanceCurrency, TradeOrderCreated, TradeSide, TradeSymbol,  TradeOrderAmount=TradeOrderAmount/100, TradeOrderPrice,  TradePosClosed, TradePosClosePrice, TradeUserComment)]
+
+
+```
+Server: _`r params$server`_.
+
+Login: _`r params$login`_.
+
+Password: _`r params$password`_.
+
+Period: _`r as.Date(from)`_ - _`r as.Date(to)`_.
+
+Groups Filter: _`r params$groupsFilter`_.
+
+Excluded Accounts: _`r params$excludeAccounts`_.
+
+Skip Cancelled: _`r params$skipCancelled`_.
+
+```{r echo=FALSE}
+  
+    write.csv(trades, file = file.path(params$path, paste("TradeReports from", from, " to ", to,".csv" )))
+    datatable(trades)
+```
