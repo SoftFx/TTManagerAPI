@@ -10,6 +10,6 @@ installRPackage <- function(url){
   file.remove(package)
 }
 if(!require(rClr) )
-  installRPackage("https://github.com/SoftFx/TTManagerAPI/rTTManApi/Lib/RClr/rClr_0.7-4.zip");
+  installRPackage("https://github.com/SoftFx/TTManagerAPI/tree/master/rTTManApi/Lib/RClr/rClr_0.7-4.zip");
 require(devtools)
 install_github("SoftFx/TTManagerAPI",subdir = "rTTManApi/R")
