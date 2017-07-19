@@ -15,7 +15,8 @@ GetSnapshotFrame<-function()
   CurrencyToUsdConversionRate = GetSnapshotCurrencyToUsdConversionRate()
   UsdToCurrencyConversionRate = GetSnapshotUsdToCurrencyConversionRate()
   Timestamp = GetSnapshotTimestamp()
-  data.table( Currency,Amount,FreeAmount,LockedAmount,CurrencyToUsdConversionRate,UsdToCurrencyConversionRate,Timestamp)
+  AccountId = GetSnapshotAccountId()
+  data.table(AccountId,Currency,Amount,FreeAmount,LockedAmount,CurrencyToUsdConversionRate,UsdToCurrencyConversionRate,Timestamp)
 }
 #' Get Snapshot field
 GetSnapshotCurrency<-function(){
@@ -44,4 +45,8 @@ GetSnapshotUsdToCurrencyConversionRate<-function(){
 #' Get Snapshot field
 GetSnapshotTimestamp<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotTimestamp')
+}
+#' Get Snapshot field
+GetSnapshotAccountId<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotAccountId')
 }

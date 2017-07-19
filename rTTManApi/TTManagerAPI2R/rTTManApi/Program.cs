@@ -22,8 +22,9 @@ namespace rTTManApi
             public decimal CurrencyToUsdConversionRate;
             public decimal UsdToCurrencyConversionRate;
             public DateTime Timestamp;
+            public double AccountId;
 
-            public AssetDailySnapshot(AssetSnapshot asset, DateTime timestamp)
+            public AssetDailySnapshot(AssetSnapshot asset, DateTime timestamp, double accountId)
             {
                 Currency = asset.Currency;
                 Amount = asset.Amount;
@@ -32,6 +33,7 @@ namespace rTTManApi
                 CurrencyToUsdConversionRate = asset.CurrencyToUsdConversionRate;
                 UsdToCurrencyConversionRate = asset.UsdToCurrencyConversionRate;
                 Timestamp = timestamp;
+                AccountId = accountId;
             }
         }
         #region Private fields
@@ -713,6 +715,11 @@ namespace rTTManApi
             }
         }
 
+        public static double[] GetTradeAccountId()
+        {
+            return _tradeReportList.Select(it => (double)it.AccountId).ToArray();
+        }
+
         public static string[] GetTradeId()
         {
             return _tradeReportList.Select(it => it.Id).ToArray();
@@ -1219,7 +1226,7 @@ namespace rTTManApi
                             .Reports.SelectMany(
                                 snapshot =>
                                     snapshot.Assets.Select(
-                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp))))
+                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
                 {
                     _snapshotList.Add(ads);
                 }
@@ -1257,7 +1264,7 @@ namespace rTTManApi
                             .Reports.SelectMany(
                                 snapshot =>
                                     snapshot.Assets.Select(
-                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp))))
+                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp,snapshot.AccountId))))
                 {
                     _snapshotList.Add(ads);
                 }
@@ -1269,6 +1276,11 @@ namespace rTTManApi
                 Logger.Log.ErrorFormat("Requesting asset snapshots failed because {0}", ex.Message);
                 return -1;
             }
+        }
+
+        public static double[] GetSnapshotAccountId()
+        {
+            return _snapshotList.Select(it => it.AccountId).ToArray();
         }
 
         public static string[] GetSnapshotCurrency()
