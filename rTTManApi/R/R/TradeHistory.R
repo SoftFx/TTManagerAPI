@@ -94,8 +94,9 @@ GetTradeFrame<-function()
   TradeOrderMaxVisibleAmount = GetTradeOrderMaxVisibleAmount()
   TradeReducedOpenCommissionFlag = GetTradeReducedOpenCommissionFlag()
   TradeReducedCloseCommissionFlag = GetTradeReducedCloseCommissionFlag()
+  TradeAccountId = GetTradeAccountId()
   TradeSymbolPrecision = GetTradeSymbolPrecision()
-  data.table(TradeId, TradeDomain, TradeGroup, TradeOrderId, TradeOrderActionNo, TradeClientOrderId, TradeTrType, 
+  data.table(TradeAccountId,TradeId, TradeDomain, TradeGroup, TradeOrderId, TradeOrderActionNo, TradeClientOrderId, TradeTrType, 
              TradeTrReason, TradeTrTime, TradeSide, TradeOrderType, TradeParentOrderType, TradeOrderCreated, 
              TradeOrderModified, TradeSymbol, TradeSymbolAlias, TradeSymbolAliasOrName, TradeSymbolFk, TradeOrderAmount, 
              TradeOrderRemainingAmount, TradeOrderHiddenAmount, TradeOrderLastFillAmount, TradeOrderPrice, 
@@ -462,4 +463,8 @@ GetTradeReducedCloseCommissionFlag<-function(){
 #' Get Trade report field
 GetTradeSymbolPrecision<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeSymbolPrecision')
+}
+#' Get Trade report field
+GetTradeAccountId<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeAccountId')
 }
