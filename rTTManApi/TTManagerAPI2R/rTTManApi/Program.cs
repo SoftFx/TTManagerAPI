@@ -1220,15 +1220,29 @@ namespace rTTManApi
                 };
                 _snapshotList = new List<AssetDailySnapshot>();
                 Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accId, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(req);
                 foreach (
                     var ads in
-                        _manager.QueryDailyAccountsSnapshot(req)
-                            .Reports.SelectMany(
+                        query.Reports.SelectMany(
                                 snapshot =>
                                     snapshot.Assets.Select(
                                         asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
                 {
                     _snapshotList.Add(ads);
+                }
+                while (!query.IsEndOfStream)
+                {
+                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    foreach (
+                        var ads in
+                            query.Reports.SelectMany(
+                                    snapshot =>
+                                        snapshot.Assets.Select(
+                                            asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
+                    {
+                        _snapshotList.Add(ads);
+                    }
                 }
                 Logger.Log.InfoFormat("Recieved {0} asset snapshots", _snapshotList.Count);
                 return 0;
@@ -1258,15 +1272,29 @@ namespace rTTManApi
                     accList = string.Concat(accList, ", ", accId[i]);
                 }
                 Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accList, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(req);
                 foreach (
                     var ads in
-                        _manager.QueryDailyAccountsSnapshot(req)
-                            .Reports.SelectMany(
+                        query.Reports.SelectMany(
                                 snapshot =>
                                     snapshot.Assets.Select(
-                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp,snapshot.AccountId))))
+                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
                 {
                     _snapshotList.Add(ads);
+                }
+                while (!query.IsEndOfStream)
+                {
+                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    foreach (
+                        var ads in
+                            query.Reports.SelectMany(
+                                    snapshot =>
+                                        snapshot.Assets.Select(
+                                            asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
+                    {
+                        _snapshotList.Add(ads);
+                    }
                 }
                 Logger.Log.InfoFormat("Recieved {0} asset snapshots", _snapshotList.Count);
                 return 0;
