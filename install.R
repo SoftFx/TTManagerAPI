@@ -11,5 +11,9 @@ installRPackage <- function(url){
 }
 if(!require(rClr) )
   installRPackage("https://github.com/SoftFx/rFdk-/raw/master/Lib/RClr/rClr_0.7-4.zip");
-require(devtools)
-install_github("SoftFx/TTManagerAPI",subdir = "rTTManApi/R")
+if(require(rTTManApi)) {
+  remove.packages("rTTManApi")
+}else{
+  require(devtools)
+  install_github("SoftFx/TTManagerAPI",subdir = "rTTManApi/R")
+}
