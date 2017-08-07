@@ -1,5 +1,5 @@
 ---
-title: "Examples of functions"
+title: "rTTManAPI"
 author: "Yury Maisiayonak"
 date: "`r Sys.time()`"
 output: html_document
