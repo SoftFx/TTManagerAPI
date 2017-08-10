@@ -3,4 +3,4 @@
 Manager Interface for TT
 
 # For more information see
-https://github.com/SoftFx/TTManagerAPI/blob/master/rTTManApi/sample/examplesOfRTTManApiFunctions.Rmd
+http://htmlpreview.github.io/?https://github.com/SoftFx/TTManagerAPI/blob/master/rTTManApi/sample/examplesOfFunctionRttManApi.html
