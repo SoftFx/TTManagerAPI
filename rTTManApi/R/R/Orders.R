@@ -7,10 +7,11 @@ ttmGetAllOrders <- function() {
 }
 
 #' Gets the Orders as requested with login
-#'
+#' 
+#' @param accountId a numeric. Account id
 #' @export
-ttmGetOrders <- function(login) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrders',login)
+ttmGetOrders <- function(accountId) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrders',accountId)
   GetOrderFrame()
 }
 #' Get Order table

@@ -6,6 +6,9 @@
 \usage{
 ttmGetAssets(accountId)
 }
+\arguments{
+\item{accountId}{a numeric. Account id}
+}
 \description{
 Gets the Assets as requested
 }

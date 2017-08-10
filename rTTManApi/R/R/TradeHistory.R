@@ -1,5 +1,9 @@
 #' Gets the Trade reports as requested
 #'
+#' @param accId a numeric vector. Accounts ids
+#' @param from a POSIXct object. Start time. By default, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00))
+#' @param to a POSIXct object. End time. By default, to = Sys.time()
+#' @param skipCancelled a logical. If TRUE (default), cancelled orders are not displayed
 #' @export
 ttmGetTradeReports <- function(accId, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00)), to = Sys.time(), skipCancelled = TRUE) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports',accId, from, to, skipCancelled)

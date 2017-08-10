@@ -8,7 +8,7 @@ ttmGetAllAccounts <- function() {
 #' Get Account table
 GetAccountFrame<-function()
 {
-  Login = GetAccountLogin()
+  AccountId = GetAccountId()
   Name = GetAccountName()
   Domain = GetAccountDomain()
   Group = GetAccountGroup()
@@ -35,13 +35,13 @@ GetAccountFrame<-function()
   Version = GetAccountVersion()
   MarginFree = GetAccountMarginFree()
   TotalComission = GetAccountTotalComission()
-  data.table(Login,Name,Domain,Group,AccountingType,Blocked,Readonly,Leveage,Profit,Comission,AgentComission,TotalComission,Swap,
+  data.table(AccountId,Name,Domain,Group,AccountingType,Blocked,Readonly,Leveage,Profit,Comission,AgentComission,TotalComission,Swap,
   Equity,Margin,MarginLevel,Balance,BalanceCurrency,MarginCallLevel,MarginFree,StopOutLevel,IsValid,IsWebApiEnabled,
   IsTwoFactorAuthSet,IsArchived,FeedPriority,Version)
 }
 #' Get Account field
-GetAccountLogin<-function(){
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountLogin')
+GetAccountId<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountId')
 }
 #' Get Account field
 GetAccountName<-function(){

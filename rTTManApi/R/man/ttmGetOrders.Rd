@@ -4,7 +4,10 @@
 \alias{ttmGetOrders}
 \title{Gets the Orders as requested with login}
 \usage{
-ttmGetOrders(login)
+ttmGetOrders(accountId)
+}
+\arguments{
+\item{accountId}{a numeric. Account id}
 }
 \description{
 Gets the Orders as requested with login

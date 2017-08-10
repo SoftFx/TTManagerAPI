@@ -197,7 +197,7 @@ namespace rTTManApi
             }
         }
 
-        public static double[] GetAccountLogin()
+        public static double[] GetAccountId()
         {
             return _accountList.Select(it => (double)it.AccountId).ToArray();
         }
@@ -353,13 +353,13 @@ namespace rTTManApi
             }
         }
 
-        public static int GetOrders(string accId)
+        public static int GetOrders(double accId)
         {
             try
             {
                 _orderList?.Clear();
                 Logger.Log.InfoFormat("Requesting all orders of account {0}", accId);
-                _orderList = _manager.RequestOrdersByAccountId(long.Parse(accId));
+                _orderList = _manager.RequestOrdersByAccountId(Convert.ToInt64(accId));
                 Logger.Log.InfoFormat("Recieved {0} orders", _orderList.Count);
                 return 0;
             }
@@ -644,14 +644,14 @@ namespace rTTManApi
 
         #region Get trade history
 
-        public static int GetTradeReports(string accId, DateTime from, DateTime to, bool skipCancelled)
+        public static int GetTradeReports(double accId, DateTime from, DateTime to, bool skipCancelled)
         {
             try
             {
                 _tradeReportList?.Clear();
                 var req = new TradeHistoryOverallRequest
                 {
-                    Accounts = new List<long> { int.Parse(accId) },
+                    Accounts = new List<long> { Convert.ToInt64(accId) },
                     FromDate = from,
                     ToDate = to,
                     IsUTC = true,
@@ -677,23 +677,23 @@ namespace rTTManApi
             }
         }
 
-        public static int GetTradeReports(string[] accId, DateTime from, DateTime to, bool skipCancelled)
+        public static int GetTradeReports(double[] accId, DateTime from, DateTime to, bool skipCancelled)
         {
             try
             {
                 _tradeReportList?.Clear();
                 var req = new TradeHistoryOverallRequest
                 {
-                    Accounts = accId.Select(long.Parse).ToList(),
+                    Accounts = accId.Select(Convert.ToInt64).ToList(),
                     FromDate = from,
                     ToDate = to,
                     IsUTC = true,
                     SkipCancelOrder = skipCancelled
                 };
-                var accList = accId[0];
+                var accList = accId[0].ToString();
                 for (var i = 1; i < accId.Length; i++)
                 {
-                    accList = string.Concat(accList, ", ", accId[i]);
+                    accList = string.Concat(accList, ", ", accId[i].ToString());
                 }
                 Logger.Log.InfoFormat("Requesting trade history of {0} from {1} to {2}", accList, from, to);
                 var tradeHistory = _manager.QueryTradeHistoryOverall(req);
@@ -1159,13 +1159,13 @@ namespace rTTManApi
 
         #region Get assets
 
-        public static int GetAssets(string accId)
+        public static int GetAssets(double accId)
         {
             try
             {
                 _assetList?.Clear();
                 Logger.Log.InfoFormat("Requesting all assets of {0}", accId);
-                var account = _manager.RequestAccountById(long.Parse(accId));
+                var account = _manager.RequestAccountById(Convert.ToInt64(accId));
                 _assetList = account.Assets;
                 Logger.Log.InfoFormat("Recieved {0} assets", _assetList.Count);
                 return 0;
@@ -1206,14 +1206,14 @@ namespace rTTManApi
 
         #region Get asset snapshots
 
-        public static int GetAssetSnapshots(string accId, DateTime from, DateTime to)
+        public static int GetAssetSnapshots(double accId, DateTime from, DateTime to)
         {
             _snapshotList?.Clear();
             try
             {
                 var req = new DailyAccountsSnapshotRequest
                 {
-                    AccountIds = new List<long> { long.Parse(accId) },
+                    AccountIds = new List<long> {Convert.ToInt64(accId) },
                     fromDate = from,
                     toDate = to,
                     IsUTC = true,
@@ -1254,22 +1254,22 @@ namespace rTTManApi
             }
         }
 
-        public static int GetAssetSnapshots(string[] accId, DateTime from, DateTime to)
+        public static int GetAssetSnapshots(double[] accId, DateTime from, DateTime to)
         {
             try
             {
                 var req = new DailyAccountsSnapshotRequest
                 {
-                    AccountIds = accId.Select(long.Parse).ToList(),
+                    AccountIds = accId.Select(Convert.ToInt64).ToList(),
                     fromDate = from,
                     toDate = to,
                     IsUTC = true,
                 };
                 _snapshotList = new List<AssetDailySnapshot>();
-                var accList = accId[0];
+                var accList = accId[0].ToString();
                 for (var i = 1; i < accId.Length; i++)
                 {
-                    accList = string.Concat(accList, ", ", accId[i]);
+                    accList = string.Concat(accList, ", ", accId[i].ToString());
                 }
                 Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accList, from, to);
                 var query = _manager.QueryDailyAccountsSnapshot(req);

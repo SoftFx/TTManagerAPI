@@ -7,6 +7,15 @@
 ttmGetTradeReports(accId, from = as.POSIXct(0, origin = ISOdatetime(1970, 1,
   1, 3, 0, 0)), to = Sys.time(), skipCancelled = TRUE)
 }
+\arguments{
+\item{accId}{a numeric vector. Accounts ids}
+
+\item{from}{a POSIXct object. Start time. By default, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00))}
+
+\item{to}{a POSIXct object. End time. By default, to = Sys.time()}
+
+\item{skipCancelled}{a logical. If TRUE (default), cancelled orders are not displayed}
+}
 \description{
 Gets the Trade reports as requested
 }
