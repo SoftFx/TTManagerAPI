@@ -1,10 +1,10 @@
 #' Gets the Snapshots as requested
 #'
-#' @param accId a numeric vector. Accounts ids
-#' @param from a POSIXct object. Start time. By default, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00))
-#' @param to a POSIXct object. End time. By default, to = Sys.time()
+#' @param accId a numeric vector. Accounts ids.
+#' @param from a POSIXct object. Start time. By default, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT").
+#' @param to a POSIXct object. End time. By default, to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT").
 #' @export
-ttmGetAssetSnapshots <- function(accId, from = as.POSIXct(0, origin = ISOdatetime(1970,01,01,3,00,00)), to = Sys.time()) {
+ttmGetAssetSnapshots <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT")) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAssetSnapshots',accId,from,to)
   GetSnapshotFrame()
 }
