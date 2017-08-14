@@ -1,9 +1,3 @@
-# TTManagerAPI
-
-Manager Interface for TT
-
-# How to install/update it?
-```
 install.packages("devtools")		
 install.packages("install.load")		
 library(install.load)		
@@ -23,6 +17,3 @@ if(require(rTTManApi)) {
   require(devtools)		
   install_github("SoftFx/TTManagerAPI",subdir = "rTTManApi/R")		
 }
-```
-# Examples of using rTTManApi functions
-see examples [here](https://rawgit.com/SoftFx/TTManagerAPI/master/rTTManApi/sample/examplesOfFunctionRttManApi.html)
