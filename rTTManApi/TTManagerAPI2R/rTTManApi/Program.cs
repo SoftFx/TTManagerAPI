@@ -93,7 +93,7 @@ namespace rTTManApi
         }
 
         #endregion
-
+        
         #region Get groups
 
         public static int GetAllGroups()
@@ -462,22 +462,22 @@ namespace rTTManApi
 
         public static DateTime[] GetOrderCreated()
         {
-            return _orderList.Select(it => it.Created).ToArray();
+            return _orderList.Select(it => new DateTime(it.Created.Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetOrderModified()
         {
-            return _orderList.Select(it => it.Modified ?? DateTime.MinValue).ToArray();
+            return _orderList.Select(it => new DateTime((it.Modified ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetOrderFilled()
         {
-            return _orderList.Select(it => it.Filled ?? DateTime.MinValue).ToArray();
+            return _orderList.Select(it => new DateTime((it.Filled ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetOrderPositionCreated()
         {
-            return _orderList.Select(it => it.PositionCreated ?? DateTime.MinValue).ToArray();
+            return _orderList.Select(it => new DateTime((it.PositionCreated ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static double[] GetOrderStopLoss()
@@ -542,7 +542,7 @@ namespace rTTManApi
 
         public static DateTime[] GetOrderExpired()
         {
-            return _orderList.Select(it => it.Expired ?? DateTime.MinValue).ToArray();
+            return _orderList.Select(it => new DateTime((it.Expired ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static double[] GetOrderClosePrice()
@@ -762,7 +762,7 @@ namespace rTTManApi
 
         public static DateTime[] GetTradeTrTime()
         {
-            return _tradeReportList.Select(it => it.TrTime).ToArray();
+            return _tradeReportList.Select(it => new DateTime(it.TrTime.Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static string[] GetTradeSide()
@@ -782,12 +782,12 @@ namespace rTTManApi
 
         public static DateTime[] GetTradeOrderCreated()
         {
-            return _tradeReportList.Select(it => it.OrderCreated ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.OrderCreated ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetTradeOrderModified()
         {
-            return _tradeReportList.Select(it => it.OrderModified ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.OrderModified ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static string[] GetTradeSymbol()
@@ -872,7 +872,7 @@ namespace rTTManApi
 
         public static DateTime[] GetTradeRequestTime()
         {
-            return _tradeReportList.Select(it => it.RequestTime ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.RequestTime ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static double[] GetTradePosId()
@@ -917,7 +917,7 @@ namespace rTTManApi
 
         public static DateTime[] GetTradePosOpened()
         {
-            return _tradeReportList.Select(it => it.PosOpened ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.PosOpened ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static double[] GetTradePosClosePrice()
@@ -927,7 +927,7 @@ namespace rTTManApi
 
         public static DateTime[] GetTradePosClosed()
         {
-            return _tradeReportList.Select(it => it.PosClosed ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.PosClosed ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static double[] GetTradeCommission()
@@ -1022,12 +1022,12 @@ namespace rTTManApi
 
         public static DateTime[] GetTradeExpired()
         {
-            return _tradeReportList.Select(it => it.Expired ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.Expired ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetTradePosModified()
         {
-            return _tradeReportList.Select(it => it.PosModified ?? DateTime.MinValue).ToArray();
+            return _tradeReportList.Select(it => new DateTime((it.PosModified ?? DateTime.MinValue).Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static double[] GetTradeProfitToUsdConversionRate()
@@ -1350,7 +1350,7 @@ namespace rTTManApi
 
         static void Main(string[] args)
         {
-
+            
         }
     }
 }
