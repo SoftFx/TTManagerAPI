@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TickTrader.BusinessObjects;
+using TickTrader.BusinessObjects.FeedSources.CustomConfigs;
 using TickTrader.BusinessObjects.Requests;
 using TickTrader.Manager;
 using TickTrader.Manager.Contract;
 using TickTrader.Manager.Model;
+using TickTrader.Manager.TTManAPI;
 
 namespace rTTManApi
 {
@@ -45,6 +48,7 @@ namespace rTTManApi
         private static List<TradeReport> _tradeReportList;
         private static List<AssetInfo> _assetList;
         private static List<AssetDailySnapshot> _snapshotList;
+        private static List<SymbolInfo> _symbolList; 
 
         #endregion
 
@@ -1348,9 +1352,196 @@ namespace rTTManApi
 
         #endregion
 
+        #region Get symbols info
+        public static int GetSymbolsInfo()
+        {
+            _symbolList?.Clear();
+            try
+            {
+                _symbolList = _manager.RequestAllSymbols();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting symbols info failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static double[] GetSymbolId()
+        {
+            return _symbolList.Select(it => (double)it.Id).ToArray();
+        }
+
+        public static string[] GetSymbolSymbol()
+        {
+            return _symbolList.Select(it => it.Symbol).ToArray();
+        }
+
+        public static string[] GetSymbolSecurity()
+        {
+            return _symbolList.Select(it => it.Security).ToArray();
+        }
+
+        public static double[] GetSymbolPrecision()
+        {
+            return _symbolList.Select(it => (double)it.Precision).ToArray();
+        }
+
+        public static bool[] GetSymbolTradeIsAllowed()
+        {
+            return _symbolList.Select(it => it.TradeIsAllowed).ToArray();
+        }
+
+        public static string[] GetSymbolMarginMode()
+        {
+            return _symbolList.Select(it => it.MarginMode.Value.ToString()).ToArray();
+        }
+
+        public static string[] GetSymbolProfitMode()
+        {
+            return _symbolList.Select(it => it.ProfitMode.Value.ToString()).ToArray();
+        }
+
+        public static string[] GetSymbolQuotesWriteMode()
+        {
+            return _symbolList.Select(it => it.QuotesWriteMode.Value.ToString()).ToArray();
+        }
+
+        public static double[] GetSymbolContractSizeFractional()
+        {
+            return _symbolList.Select(it => it.ContractSizeFractional).ToArray();
+        }
+
+        public static double[] GetSymbolMarginHedged()
+        {
+            return _symbolList.Select(it => it.MarginHedged).ToArray();
+        }
+
+        public static double[] GetSymbolMarginFactorFractional()
+        {
+            return _symbolList.Select(it => it.MarginFactorFractional).ToArray();
+        }
+
+        public static bool[] GetSymbolMarginStrongMode()
+        {
+            return _symbolList.Select(it => it.MarginStrongMode).ToArray();
+        }
+
+        public static string[] GetSymbolMarginCurrency()
+        {
+            return _symbolList.Select(it => it.MarginCurrency).ToArray();
+        }
+
+        public static double[] GetSymbolMarginCurrencyId()
+        {
+            return _symbolList.Select(it => (double)(it.MarginCurrencyId ?? 0)).ToArray();
+        }
+
+        public static double[] GetSymbolMarginCurrencyPrecision()
+        {
+            return _symbolList.Select(it => (double)it.MarginCurrencyPrecision).ToArray();
+        }
+
+        public static double[] GetSymbolMarginCurrencySortOrder()
+        {
+            return _symbolList.Select(it => (double)it.MarginCurrencySortOrder).ToArray();
+        }
+
+        public static string[] GetSymbolProfitCurrency()
+        {
+            return _symbolList.Select(it => it.ProfitCurrency).ToArray();
+        }
+
+        public static double[] GetSymbolProfitCurrencyId()
+        {
+            return _symbolList.Select(it => (double)(it.ProfitCurrencyId ?? 0)).ToArray();
+        }
+
+        public static double[] GetSymbolProfitCurrencyPrecision()
+        {
+            return _symbolList.Select(it => (double)it.ProfitCurrencyPrecision).ToArray();
+        }
+
+        public static double[] GetSymbolProfitCurrencySortOrder()
+        {
+            return _symbolList.Select(it => (double)it.ProfitCurrencySortOrder).ToArray();
+        }
+
+        public static double[] GetSymbolColorRef()
+        {
+            return _symbolList.Select(it => (double)it.ColorRef).ToArray();
+        }
+
+        public static string[] GetSymbolDescription()
+        {
+            return _symbolList.Select(it => it.Description).ToArray();
+        }
+
+        public static bool[] GetSymbolSwapEnabled()
+        {
+            return _symbolList.Select(it => it.SwapEnabled).ToArray();
+        }
+
+        public static double[] GetSymbolSwapSizeShort()
+        {
+            return _symbolList.Select(it => (double)it.SwapSizeShort).ToArray();
+        }
+
+        public static double[] GetSymbolSwapSizeLong()
+        {
+            return _symbolList.Select(it => (double)it.SwapSizeLong).ToArray();
+        }
+
+        public static bool[] GetSymbolIsPrimary()
+        {
+            return _symbolList.Select(it => it.IsPrimary).ToArray();
+        }
+
+        public static double[] GetSymbolSortOrder()
+        {
+            return _symbolList.Select(it => (double)it.SortOrder).ToArray();
+        }
+
+        public static bool[] GetSymbolIsQuotesFilteringDisabled()
+        {
+            return _symbolList.Select(it => it.IsQuotesFilteringDisabled).ToArray();
+        }
+
+        public static string[] GetSymbolSchedule()
+        {
+            return _symbolList.Select(it => it.Schedule).ToArray();
+        }
+
+        public static double[] GetSymbolDefaultSlippage()
+        {
+            return _symbolList.Select(it => (double)it.DefaultSlippage).ToArray();
+        }
+
+        public static double[] GetSymbolStopOrderMarginReduction()
+        {
+            return _symbolList.Select(it => it.StopOrderMarginReduction).ToArray();
+        }
+
+        public static double[] GetSymbolHiddenLimitOrderMarginReduction()
+        {
+            return _symbolList.Select(it => it.HiddenLimitOrderMarginReduction).ToArray();
+        }
+
+        public static string[] GetSymbolSwapType()
+        {
+            return _symbolList.Select(it => it.SwapType.Value.ToString()).ToArray();
+        }
+
+        public static double[] GetSymbolTripleSwapDay()
+        {
+            return _symbolList.Select(it => (double)it.TripleSwapDay).ToArray();
+        }
+
+        #endregion
         static void Main(string[] args)
         {
-            
+
         }
     }
 }
