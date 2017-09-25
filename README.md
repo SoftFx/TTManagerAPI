@@ -25,4 +25,4 @@ if(require(rTTManApi)) {
 }
 ```
 # Examples of using rTTManApi functions
-see examples [here](https://rawgit.com/SoftFx/TTManagerAPI/master/rTTManApi/sample/examplesOfFunctionRttManApi.html)
+see examples [here](http://rpubs.com/mys1997mail/310679)
