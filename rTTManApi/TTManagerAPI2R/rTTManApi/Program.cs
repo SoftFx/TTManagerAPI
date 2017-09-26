@@ -1539,6 +1539,36 @@ namespace rTTManApi
         }
 
         #endregion
+
+        #region Modify symbol swap
+
+        public static int ModifySymbolSwap(string symbolName, double swapSizeShort, double swapSizeLong)
+        {
+            try
+            {
+                var symbol = _manager.RequestSymbol(symbolName);
+                var request = SymbolModifyRequest.Create(1, symbolName, symbolName, symbol.Security, symbol.MarginCurrency,
+                    symbol.ProfitCurrency, symbol.Precision, (int?)symbol.ContractSizeFractional, symbol.Description,
+                    symbol.IsPrimary);
+                request.IgnoreConfigVersion = true;
+                request.SwapSizeShort = (float?)swapSizeShort;
+                request.SwapSizeLong = (float?)swapSizeLong;
+                if (_manager.ModifySymbol(request))
+                {
+                    return 0;
+                }
+                Logger.Log.Error("Modifying symbol swap failed");
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Modifying symbol swap failed because {0}",ex.Message);
+                return -1;
+            }
+            
+        }
+
+        #endregion
         static void Main(string[] args)
         {
 

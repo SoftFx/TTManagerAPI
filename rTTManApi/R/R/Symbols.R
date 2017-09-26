@@ -6,6 +6,17 @@ ttmGetAllSymbols <- function() {
   GetSymbolFrame()
 }
 
+#' Change symbol swap
+#'
+#' @param symbol Name of symbol
+#' @param swapSizeShort swapSizeShort
+#' @param swapSizeLong swapSizeLong
+#' @export
+ttmModifySymbolSwap <- function(symbol = "",swapSizeShort = "",swapSizeLong = "") {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbolSwap', symbol, swapSizeShort,swapSizeLong)
+}
+
+
 #' Get Symbol table
 GetSymbolFrame<-function()
 {
