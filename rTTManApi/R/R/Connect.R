@@ -24,6 +24,7 @@ ttmInit <- function() {
 ttmConnect <- function(address = "",login = "",password = "") {
   ttmInit()
   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Connect', address, login,password)
+  if(hResult != 0) stop('Unable to connect')
 }
 
 
