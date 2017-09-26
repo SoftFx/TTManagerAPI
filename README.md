@@ -15,8 +15,7 @@ installRPackage <- function(url){
   install.packages(package, repos = NULL, type = "source")		
   file.remove(package)		
 }		
-if(!require(rClr) )		
-  installRPackage("https://github.com/SoftFx/rFdk-/raw/master/Lib/RClr/rClr_0.7-4.zip");		
+installRPackage("https://github.com/SoftFx/TTManagerAPI/raw/master/rTTManApi/Lib/RClr/rClr_0.7-5.zip");		
 if(require(rTTManApi)) {		
   remove.packages("rTTManApi")		
 }else{		
