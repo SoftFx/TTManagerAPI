@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>An Introduction to the <strong>rClr</strong> package</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{An Introduction to the rClr package}
+-->
+
+<h1>An Introduction to the <strong>rClr</strong> package</h1>
+
+<h2>Introduction</h2>
+
+<p>The <strong>rClr</strong> package is a low-level interoperability bridge between R and a Common Language Runtime (CLR), the Microsoft .NET CLR or the Mono implementation. <strong>rClr</strong> is to a CLR the equivalent of what <strong>rJava</strong> is to a Java runtime.</p>
+
+<p>A few overarching principles in the design of <strong>rClr</strong> are:</p>
+
+<ul>
+<li>Limit the syntactic tedium</li>
+<li>Stay as close as possible to the expected behaviors of R code and R data structures</li>
+<li>Have transparent bi-directional data conversion for commonly used data types e.g. numeric vectors</li>
+<li>Avoid requiring changes and additions to the .NET code (C#, F#, etc.) for it to be used from R</li>
+<li>The Common Language Runtime should behave as it usually does, so long as the behavior does not clash with expected R behaviors.</li>
+</ul>
+
+<p>Release 0.7 has major changes compared to the 0.5 series released in 2013. Major evolutions in R.NET have allowed to move interop code from C++ to C#. The package will continue to increase its use of C# over C++, to reduce code complexity and be more agnostic with respect to the language runtime. The recent announcements in November 2014 by Microsoft with respect to .NET may change the landscape anyway, for the better.</p>
+
+<h2>Date-time handling and known limitations</h2>
+
+<p>Several use cases for <strong>rClr</strong> involve the handling of time series. A lot of effort was devoted to handling the conversion of date and time between R and .NET representations. A large portion of the unit tests is devoted to these. Some conversions that are known to pass the test on Microsoft .NET do not pass on Mono, mostly if not solely because of daylight savings (at least for the Australia/Canberra time zone&hellip;). It may be wise to stick as much as possible to handling UTC dates, and you should exert caution and double-check if you are handling date-time in another time zone than UTC.</p>
+
+<h2>Getting Started</h2>
+
+<p>On loading, the package attempts to detect and initialise the CLR. </p>
+
+<ul>
+<li>On Windows the package looks by default for the Microsoft .NET runtime. If not available the Mono CLR is sought. Note that at the time of writing, the Mono installer for Windows includes only 32 bits binaries and will not be available from a 64 bits R application. It is however feasible to compile and install a 64 bit Mono runtime. If both CLR implementations are present, it is possible to force the use of Mono with &ldquo;Sys.setenv(RCLR=&#39;Mono&#39;)&rdquo; prior to loading the library. In practice, Mono is not a primary target on Windows given the ubiquity of Microsoft .NET, but this may be useful to diagnose Mono-specific issues with Visual Studio.</li>
+<li>On Unix-alike, Mono is the only supported runtime (there may be more in 2015).</li>
+</ul>
+
+<p>To start with, the customary &ldquo;Hello&rdquo; example follows:</p>
+
+<pre><code class="r">library(rClr)
+</code></pre>
+
+<pre><code>## Loading the dynamic library for Microsoft .NET runtime...
+## Loaded Common Language Runtime version 4.0.30319.18444
+</code></pre>
+
+<pre><code class="r">clrCallStatic(&quot;Rclr.HelloWorld&quot;, &quot;Hello&quot;)
+</code></pre>
+
+<pre><code>## [1] &quot;Hello, World!&quot;
+</code></pre>
+
+<p>To demonstrate something marginally snazzier:</p>
+
+<pre><code class="r">if (tolower(Sys.info()[&quot;sysname&quot;]) == &quot;windows&quot;) {
+    # TODO: change that to a nicer prepackaged forms example. Or, allow for
+    # shorter forms for assembly names. Careful not to allow for ambiguity
+    # however.
+    clrLoadAssembly(&quot;System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;)
+    f &lt;- clrNew(&quot;System.Windows.Forms.Form&quot;)
+    clrSet(f, &quot;Text&quot;, &quot;Hello from the .NET framework&quot;)
+    clrCall(f, &quot;Show&quot;)
+}
+</code></pre>
+
+<pre><code>## NULL
+</code></pre>
+
+<h2>Main functions</h2>
+
+<p>Most functions in the package are prefixed with <code>&quot;clr&quot;</code> for mnemonic. <code>clrNew</code> creates a new object, and returns an R object, either of (S4) class <code>cobjRef</code> or one of the common R data structures if a natural conversion is found, e.g. a System.String to an R character vector.</p>
+
+<pre><code class="r">testClassName &lt;- &quot;Rclr.TestObject&quot;;
+(testObj &lt;- clrNew(testClassName))
+</code></pre>
+
+<pre><code>## An object of class &quot;cobjRef&quot;
+## Slot &quot;clrobj&quot;:
+## &lt;pointer: 0x0000000009ea0dc0&gt;
+## 
+## Slot &quot;clrtype&quot;:
+## [1] &quot;Rclr.TestObject&quot;
+</code></pre>
+
+<p>It is possible to dynamically inspect the CLR object &ldquo;members&rdquo;: in the .NET world members refer to properties, fields and methods of an object.</p>
+
+<pre><code class="r">clrGetProperties(testObj)
+</code></pre>
+
+<pre><code>## [1] &quot;PropertyIntegerOne&quot; &quot;PropertyIntegerTwo&quot;
+</code></pre>
+
+<pre><code class="r">clrGetMemberSignature(testObj, &#39;GetMethodWithParameters&#39;)
+</code></pre>
+
+<pre><code>## [1] &quot;Method: Int32 GetMethodWithParameters, Int32, String&quot;
+</code></pre>
+
+<p>Calling the instance methods on objects is done by specifying the method name as a string - convenience R functions may appear when the package is more mature. Static methods are called by specifying the type name, at least namespace qualified. We can determine the parameters necessary for calling the public method <code>CreateDateArray</code> on the class Rclr.TestCases. The method signature is expressed using CLR types, not R types.  The .NET method expects a <code>String</code> and an <code>Int32</code>.</p>
+
+<pre><code class="r">clrCall(testObj, &quot;GetFieldIntegerOne&quot;)
+</code></pre>
+
+<pre><code>## [1] 0
+</code></pre>
+
+<pre><code class="r">clrGetMemberSignature(&#39;Rclr.TestCases&#39;, &#39;CreateDateArray&#39;)
+</code></pre>
+
+<pre><code>## [1] &quot;Static, Method: DateTime[] CreateDateArray, String, Int32&quot;
+</code></pre>
+
+<p>Two arguments are passed to the function <code>clrCallStatic</code>: a string in an ISO date time format, and a numeric cast as an integer. <strong>rClr</strong> will transparently convert these to CLR types. Note that if the last argument had just been <code>4</code>, the mode of the R vector would have been <code>numeric</code>, not <code>integer</code>. To avoid ambiguity in method calls you must pass an integer vector. The returned value of the .NET method is a <code>DateTime[]</code> i.e. an array of <code>System.DateTime</code> objects. Again <strong>rClr</strong> transparently converts these to a standard R vector with the appropriate POSIX time class attribute.</p>
+
+<pre><code class="r">dates &lt;- clrCallStatic(&#39;Rclr.TestCases&#39;, &#39;CreateDateArray&#39;, &#39;2001-01-01&#39;, as.integer(4))
+str(dates)
+</code></pre>
+
+<pre><code>##  POSIXct[1:4], format: &quot;2000-12-31 13:00:00&quot; &quot;2001-01-01 13:00:00&quot; ...
+</code></pre>
+
+<pre><code class="r">class(dates)
+</code></pre>
+
+<pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;
+</code></pre>
+
+<p><code>clrGet</code> and <code>clrSet</code> are used to get/set public fields and properties of CLR objects. The argument type must match the expected type; observe what happens if a <code>numeric</code> is passed instead of an <code>integer</code></p>
+
+<pre><code class="r">clrGet(testObj, &quot;PropertyIntegerOne&quot;)
+</code></pre>
+
+<pre><code>## [1] 0
+</code></pre>
+
+<pre><code class="r"># clrSet(testObj, &quot;PropertyIntegerOne&quot;, 1) # this would currently fail
+clrSet(testObj, &quot;PropertyIntegerOne&quot;, as.integer(1))
+</code></pre>
+
+<p>There are functions to list static members (a.k.a. class members). The discovery of static members can be done on a class name or on an object type; there is no ambiguity.</p>
+
+<pre><code class="r"># clrGetStaticMembers(testObj)
+# would have the same result as:
+clrGetStaticMembers(&#39;Rclr.TestObject&#39;)
+</code></pre>
+
+<pre><code>## $Methods
+## [1] &quot;get_StaticPropertyIntegerOne&quot;  &quot;get_StaticPropertyIntegerTwo&quot; 
+## [3] &quot;set_StaticPropertyIntegerOne&quot;  &quot;set_StaticPropertyIntegerTwo&quot; 
+## [5] &quot;StaticGetFieldIntegerOne&quot;      &quot;StaticGetFieldIntegerTwo&quot;     
+## [7] &quot;StaticGetMethodWithParameters&quot; &quot;StaticGetPublicInt&quot;           
+## 
+## $Fields
+## [1] &quot;StaticFieldIntegerOne&quot; &quot;StaticFieldIntegerTwo&quot; &quot;StaticPublicInt&quot;      
+## 
+## $Properties
+## [1] &quot;StaticPropertyIntegerOne&quot; &quot;StaticPropertyIntegerTwo&quot;
+</code></pre>
+
+<p><code>clrGet</code> and <code>clrSet</code> can also set static fields and properties, but only if the argument is the name of a class (Type). To avoid risks of ambiguity and confusion, you cannot do this with a concrete object. </p>
+
+<pre><code class="r"># the following call would fail
+# clrGet(testObj,  &quot;StaticFieldIntegerOne&quot;) 
+# This is less ambiguous, and is supported
+clrGet(&#39;Rclr.TestObject&#39;,  &quot;StaticFieldIntegerOne&quot;)
+</code></pre>
+
+<pre><code>## [1] 0
+</code></pre>
+
+<pre><code class="r">clrSet(&#39;Rclr.TestObject&#39;,  &quot;StaticFieldIntegerOne&quot;, as.integer(3))
+</code></pre>
+
+<h2>Data conversion</h2>
+
+<p>Where there is an obvious and natural conversion between CLR and R data types, the conversion is done in preference to passing pointer to external data structures. Most of the basic modes in R (<code>character</code>,<code>numeric</code>,<code>integer</code> etc.) have relatively obvious equivalents in the CLR. For basic these basic modes, a bijection (i.e. round-trip) with these CLR conterparts is defined if possible.</p>
+
+<p>The notion of time is important for many application, notably for the processing of time series. In order to facilitate the mapping of more complex types by packages that depend on <strong>rClr</strong>, it supports the conversion of some chosen R date and time types. A choice was made to convert R date and time classes found in the <strong>base</strong> package (see (Ripley and Hornik, 2001)). Other packages such as <strong>lubridate</strong> offer compelling features and you should consider using these. Note that the R classes <code>Date</code> and <code>POSIXct</code> both map to a <code>System.DateTime</code> in the CLR, and a strict bijection is not possible. <code>DateTime</code> in the CLR is converted to a <code>POSIXct</code> object, as this is the most appropriate to retain the original information. Date, time and time zone software constructs are fraught with oddities and inconsistent between software systems. While considerable effort was devoted to achieve a sensible conversion behavior in <strong>rClr</strong>, you should double check conversions on your data and in your time zone, and you should prefer the use of UTC time zone for conversion.</p>
+
+<p>The rationale for converting data to native types at the boundary of R and the CLR is that this limits the leakage of concepts and behaviors between the two systems. This is particularly important when the expect behavior differs significantly between systems e.g. copying objects versus passing references to objects. Things behave &#39;as expected&#39; on each side of the boundary.</p>
+
+<p>Objects in R are vectors, and single values are just a particular case of vectors of length one. In the CLR, scalar values and arrays are different types. An R vector will be translated to two different types in the CLR depending on its length. Any length other than one results in an array in the CLR, a length of one becomes a scalar value. This is a choice based on the expected behavior of .NET code, and on the typical code available for reuse. See the section on method bindings below.</p>
+
+<pre><code class="r">r_types = list(letters[1:3], as.integer(1:3), 1:3 * 1.1, 1:3 == 2, complex(real = 1:3, 
+    imaginary = 4:6), as.Date(&quot;2001-01-01&quot;) + 0:2, as.POSIXct(&quot;2001-01-01&quot;) + 
+    0:2, as.difftime(3, units = &quot;secs&quot;) + 0:2)
+
+library(plyr)
+conversion = lapply(r_types, rToClrType)
+result &lt;- ldply(lapply(conversion, FUN = as.data.frame))
+
+r_vec_len_one = lapply(r_types, `[`, 1)
+conversion = lapply(r_vec_len_one, rToClrType)
+result2 &lt;- ldply(lapply(conversion, FUN = as.data.frame))
+result &lt;- ldply(list(result, result2))
+
+## Cannot seem to get the proper Rmarkdown with pander.  library(pander)
+## print(pander(result, style=&#39;rmarkdown&#39;))
+library(xtable)
+print(xtable(result), type = &quot;html&quot;)
+</code></pre>
+
+<!-- html table generated in R 3.1.2 by xtable 1.7-4 package -->
+
+<!-- Thu Mar 26 20:05:04 2015 -->
+
+<table border=1>
+<tr> <th>  </th> <th> mode </th> <th> type </th> <th> class </th> <th> length </th> <th> clrType </th>  </tr>
+  <tr> <td align="right"> 1 </td> <td> character </td> <td> character </td> <td> character </td> <td align="right">   3 </td> <td> System.String[] </td> </tr>
+  <tr> <td align="right"> 2 </td> <td> numeric </td> <td> integer </td> <td> integer </td> <td align="right">   3 </td> <td> System.Int32[] </td> </tr>
+  <tr> <td align="right"> 3 </td> <td> numeric </td> <td> double </td> <td> numeric </td> <td align="right">   3 </td> <td> System.Double[] </td> </tr>
+  <tr> <td align="right"> 4 </td> <td> logical </td> <td> logical </td> <td> logical </td> <td align="right">   3 </td> <td> System.Boolean[] </td> </tr>
+  <tr> <td align="right"> 5 </td> <td> complex </td> <td> complex </td> <td> complex </td> <td align="right">   3 </td> <td> System.Numerics.Complex[] </td> </tr>
+  <tr> <td align="right"> 6 </td> <td> numeric </td> <td> double </td> <td> Date </td> <td align="right">   3 </td> <td> System.DateTime[] </td> </tr>
+  <tr> <td align="right"> 7 </td> <td> numeric </td> <td> double </td> <td> POSIXct </td> <td align="right">   3 </td> <td> System.DateTime[] </td> </tr>
+  <tr> <td align="right"> 8 </td> <td> numeric </td> <td> double </td> <td> POSIXt </td> <td align="right">   3 </td> <td> System.DateTime[] </td> </tr>
+  <tr> <td align="right"> 9 </td> <td> numeric </td> <td> double </td> <td> difftime </td> <td align="right">   3 </td> <td> System.TimeSpan[] </td> </tr>
+  <tr> <td align="right"> 10 </td> <td> character </td> <td> character </td> <td> character </td> <td align="right">   1 </td> <td> System.String </td> </tr>
+  <tr> <td align="right"> 11 </td> <td> numeric </td> <td> integer </td> <td> integer </td> <td align="right">   1 </td> <td> System.Int32 </td> </tr>
+  <tr> <td align="right"> 12 </td> <td> numeric </td> <td> double </td> <td> numeric </td> <td align="right">   1 </td> <td> System.Double </td> </tr>
+  <tr> <td align="right"> 13 </td> <td> logical </td> <td> logical </td> <td> logical </td> <td align="right">   1 </td> <td> System.Boolean </td> </tr>
+  <tr> <td align="right"> 14 </td> <td> complex </td> <td> complex </td> <td> complex </td> <td align="right">   1 </td> <td> System.Numerics.Complex </td> </tr>
+  <tr> <td align="right"> 15 </td> <td> numeric </td> <td> double </td> <td> Date </td> <td align="right">   1 </td> <td> System.DateTime </td> </tr>
+  <tr> <td align="right"> 16 </td> <td> numeric </td> <td> double </td> <td> POSIXct </td> <td align="right">   1 </td> <td> System.DateTime </td> </tr>
+  <tr> <td align="right"> 17 </td> <td> numeric </td> <td> double </td> <td> POSIXt </td> <td align="right">   1 </td> <td> System.DateTime </td> </tr>
+  <tr> <td align="right"> 18 </td> <td> numeric </td> <td> double </td> <td> difftime </td> <td align="right">   1 </td> <td> System.TimeSpan </td> </tr>
+   </table>
+
+<h3>More advanced data types</h3>
+
+<p>Most basic vector data types can be handled in rClr in the native code layer written in C/C++. However, limitations and difficulties appear to handle for instance multidimensional arrays, and matching more complicated types between the CLR and R.</p>
+
+<p>Fortunately, it is easier to handle these directly from C#, using the library <strong>R.NET</strong>, the close relative of <strong>rClr</strong>. The following code demonstrate how this allows the conversion of multi-dimensional arrays from the CLR to R matrices.</p>
+
+<pre><code class="r"># setRDotNet(TRUE) # this should be the default package state after 0.7.0
+cTypename &lt;- &quot;Rclr.TestCases&quot;
+clrGetMemberSignature(cTypename, &quot;CreateRectDoubleArray&quot;)
+</code></pre>
+
+<pre><code>## [1] &quot;Static, Method: Double[,] CreateRectDoubleArray&quot;
+</code></pre>
+
+<pre><code class="r">clrCallStatic(cTypename, &quot;CreateRectDoubleArray&quot;)
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    2    3    4    5
+## [2,]    6    7    8    9   10
+## [3,]   11   12   13   14   15
+</code></pre>
+
+<p>There are some cases where, as of version 0.7, automatic conversion can be turned on or off. An example is for CLR dictionaries and arrays, for which an R list is a sensible equivalent. However, a priori converting R lists to CLR equivalent is not well defined. You may also want to manipulate CLR objects from R without <strong>rClr</strong> converting to an R data representation. This can be achieved with the function <code>setConvertAdvancedTypes</code>. Consider the following behavior converting a few types of dictionaries and arrays:</p>
+
+<pre><code class="r">library(stringr)
+toShortTypeName &lt;- function(x) {
+    str_replace_all(x, &quot;, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;, 
+        &quot;&quot;)
+}
+getComplexDataCase &lt;- function(i) {
+    clrCallStatic(cTypename, &quot;GetComplexDataCase&quot;, as.integer(i - 1))
+}
+getComplexDataTypeName &lt;- function(i) {
+    clrCallStatic(cTypename, &quot;GetComplexDataTypeName&quot;, as.integer(i - 1))
+}
+
+numDataTestCases &lt;- clrCallStatic(cTypename, &quot;GetNumComplexDataCases&quot;)
+clrTnames &lt;- toShortTypeName(sapply(1:numDataTestCases, getComplexDataTypeName))
+withConversion &lt;- sapply(1:numDataTestCases, function(i) {
+    class(getComplexDataCase(i))
+})
+
+setConvertAdvancedTypes(FALSE)
+withoutConversion &lt;- sapply(1:numDataTestCases, function(i) {
+    tryCatch(class(getComplexDataCase(i)), error = function(e) {
+        &quot;Not supported&quot;
+    })
+})
+setConvertAdvancedTypes(TRUE)
+
+convSummary &lt;- data.frame(clrType = clrTnames, enabled = withConversion, disabled = withoutConversion)
+
+print(xtable(convSummary), type = &quot;html&quot;)
+</code></pre>
+
+<!-- html table generated in R 3.1.2 by xtable 1.7-4 package -->
+
+<!-- Thu Mar 26 20:05:04 2015 -->
+
+<table border=1>
+<tr> <th>  </th> <th> clrType </th> <th> enabled </th> <th> disabled </th>  </tr>
+  <tr> <td align="right"> 1 </td> <td> System.Collections.Generic.Dictionary2[[System.String],[System.String]] </td> <td> list </td> <td> cobjRef </td> </tr>
+  <tr> <td align="right"> 2 </td> <td> System.Collections.Generic.Dictionary2[[System.String],[System.Double[]]] </td> <td> list </td> <td> cobjRef </td> </tr>
+  <tr> <td align="right"> 3 </td> <td> System.Collections.Generic.Dictionary2[[System.String],[System.Object]] </td> <td> cobjRef </td> <td> cobjRef </td> </tr>
+  <tr> <td align="right"> 4 </td> <td> Rclr.TestObject[] </td> <td> list </td> <td> Not supported </td> </tr>
+  <tr> <td align="right"> 5 </td> <td> Rclr.TestObject[][] </td> <td> list </td> <td> Not supported </td> </tr>
+   </table>
+
+<h2>Method binding in the CLR</h2>
+
+<p>In the common language infrastructure methods can be overloaded, that is have the same names but varying types of arguments. The feature is common to other languages such as Java and C++. R has a partly similar behavior throught the use of default argument values.</p>
+
+<p>An important difference between most languages running on the CLR (C#, F#, etc.) and R is that the former are statically typed (or statically inferred) whereas R is dynamically typed. <strong>rClr</strong> tries hard to use R idioms, but without clashing with the strongly typed languages targeting the CLR.</p>
+
+<p>The <strong>rClr</strong> functions <code>clrCall</code> and <code>clrCallStatic</code> currently relies mostly on the default behavior of the CLR to find the best method to call for the arguments passed to these functions. The .NET lingo for this is &ldquo;method binding&rdquo;. In the future, there may be additional behaviors added to facilitate the operations from R. A typical case is that, in order to emulate the behavior expected by R users with respect to vectorized operations.</p>
+
+<h3><code>params</code> keywords</h3>
+
+<p>C# has a feature to handle elegantly methods allowing for a variable number of arguments, the <code>params</code> keyword. This helps handle concisely methods that would otherwise have a large number of overloads. </p>
+
+<pre><code class="Csharp">   public static int TestParams(string a, string b, params int[] c)
+</code></pre>
+
+<p>You can call such a method qith a variable number of arguments; however the types must match that in the CLR method.</p>
+
+<pre><code class="r">testObj &lt;- clrNew(&#39;Rclr.TestObject&#39;)
+clrCall(testObj, &#39;TestParams&#39;, &quot;Hello, &quot;, &quot;World!&quot;, 1L, 2L, 3L, 6L, 5L, 4L, 9L)
+</code></pre>
+
+<pre><code>## [1] &quot;Hello, World!1236549&quot;
+</code></pre>
+
+<pre><code class="r"># As in C#, it also works if passing a vector
+clrCall(testObj, &#39;TestParams&#39;, &quot;Hello, &quot;, &quot;World!&quot;, 1:5)
+</code></pre>
+
+<pre><code>## [1] &quot;Hello, World!12345&quot;
+</code></pre>
+
+<h3>Optional parameter values in CLR methods</h3>
+
+<p>C# also has a way to define functions with optional parameters, or rather parameters with default values. </p>
+
+<pre><code class="Csharp">public void TestDefaultValues(string a, int b, int c=1, int d=2) { }
+</code></pre>
+
+<p>These methods are supported, as demonstrated in the following code. Note that argument passing is based on the order of parameters. Named arguments is not yet supported, though it may be a feature available in future versions.</p>
+
+<pre><code class="r">clrCall(testObj, &#39;TestDefaultValues&#39;, &quot;Hello&quot;, 1L)
+</code></pre>
+
+<pre><code>## [1] &quot;Hello112&quot;
+</code></pre>
+
+<pre><code class="r">clrCall(testObj, &#39;TestDefaultValues&#39;, &quot;Hello&quot;, 1L, 2L)
+</code></pre>
+
+<pre><code>## [1] &quot;Hello120&quot;
+</code></pre>
+
+<pre><code class="r">clrCall(testObj, &#39;TestDefaultValues&#39;, &quot;Hello&quot;, 1L, 2L, 3L)
+</code></pre>
+
+<pre><code>## [1] &quot;Hello123&quot;
+</code></pre>
+
+<h3>Generic methods</h3>
+
+<p>This section is a placeholder. At the time of writing, generic methods are not supported, at least not readily.</p>
+
+<h3>Metaprogramming</h3>
+
+<p>This section is a placeholder </p>
+
+<h2>Runtime performance</h2>
+
+<p>While the primary concern of the package is the numerical correctness, attention is also being paid to the speed of execution. This section highlights a few figures and advice that may be of importance to users to avoid unnecessarily sluggish performance. The main take home messages are:</p>
+
+<ul>
+<li>Prefer passing large arrays/vectors, rather than numerous calls to <code>clrCallStatic</code> or <code>clrCall</code> with smaller vectors passed or expected as return value from the call.</li>
+</ul>
+
+<p>The following code and figures show the effective transfer rate for numeric vectors, i.e. double precision array in the .NET world. The experimental design is such that 10 repetitions of the measurement are made for a given vector size. Performance is measured in both direction, with comparable speed. Note that the speed of execution is calculated by removing an estimate of the cost of measurement itself; you <em>may</em> thus notice outliers and even negative transfer rates if the measurement was perturbed by garbage collection in R or the CLR.</p>
+
+<pre><code class="r">perfMeasureFile &lt;- list.files(system.file(&quot;tests&quot;, package = &quot;rClr&quot;), pattern = &quot;performance_profiling&quot;, 
+    full.names = TRUE)
+if (length(perfMeasureFile) == 0) {
+    stop(&quot;performance_profiling file not found in the installed rClr package&quot;)
+}
+stopifnot(file.exists(perfMeasureFile[1]))
+source(perfMeasureFile[1])
+maxArrayLen &lt;- 7500000
+# need to reduce the size if we run this on 32 bits machines:
+if (Sys.info()[&quot;machine&quot;] == &quot;x86&quot;) {
+    maxArrayLen &lt;- 6500000
+}
+trials &lt;- createCases(numReps = 10, maxArrayLen = maxArrayLen)
+bench &lt;- rclrNumericPerf(trials, tag = &quot;no.r.net&quot;)
+plotRate(bench, case = &quot;CLR-&gt;R&quot;)
+</code></pre>
+
+<pre><code>Warning in scale$trans$trans(x): NaNs produced
+</code></pre>
+
+<pre><code>Warning: Removed 1 rows containing missing values (geom_point).
+</code></pre>
+
+<p><img src="data:image/png;base64,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" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display:block; margin: auto" style="display: block; margin: auto;" /></p>
+
+<pre><code class="r">plotRate(bench, case = &quot;CLR-&gt;R&quot;, logy = FALSE)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display:block; margin: auto" style="display: block; margin: auto;" /></p>
+
+<p>The transfer rate going form CLR arrays of double to R vectors peaks at a value ranging from 40 million to ~200 million items per second. This seems to largely depend on the hardware. The log/log plot of the conversion rate is particularly useful to visualize at which point the overhead of the function call becomes negligible compared to the array conversion itself: Below ~5000 elements in the vector the transfer rate is roughly linear in log-log space. You may notice a decrease in performance in that case of &#39;CLR-&gt;R&#39;; this may be an artefact of the experimental design interplaying with garbage collection.</p>
+
+<pre><code class="r">plotRate(bench, case = &quot;R-&gt;CLR&quot;)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display:block; margin: auto" style="display: block; margin: auto;" /></p>
+
+<pre><code class="r">plotRate(bench, case = &quot;R-&gt;CLR&quot;, logy = FALSE)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display:block; margin: auto" style="display: block; margin: auto;" /></p>
+
+<h2>Related work</h2>
+
+<ul>
+<li><a href="http://rdotnet.codeplex.com">R.NET</a> is a library to embed R in .NET applications. It is now the preferred mechanism for <strong>rClr</strong> to perform data conversion.</li>
+<li>rJava is by nature quite similar in purpose, though the code and usage are actually quite different.</li>
+<li><a href="https://github.com/agstudy/rsqlserver">rsqlserver</a> uses <strong>rClr</strong></li>
+<li>Rcpp notably with intended use of reference classes.</li>
+</ul>
+
+<h2>Acknowledgements</h2>
+
+<p>I gratefully acknowledge:</p>
+
+<ul>
+<li>Kosei ABE, creator of R.NET</li>
+<li>Hadley Wickham, creator of devtools and testtat</li>
+<li>Yihui Xie, creator of the knitr package</li>
+</ul>
+
+<h2>References</h2>
+
+<p><a href="http://www.r-project.org/doc/Rnews/Rnews_2001-2.pdf">Ripley, B. D. and Hornik, K. (2001) Date-time classes. R News, &frac12;, 8\9611</a></p>
+
+</body>
+
+</html>
