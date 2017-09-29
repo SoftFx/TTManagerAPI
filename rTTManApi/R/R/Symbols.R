@@ -11,9 +11,10 @@ ttmGetAllSymbols <- function() {
 #' @param symbol Name of symbol
 #' @param swapSizeShort swapSizeShort
 #' @param swapSizeLong swapSizeLong
+#' @param swapType swapType
 #' @export
-ttmModifySymbolSwap <- function(symbol = "",swapSizeShort = "",swapSizeLong = "") {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbolSwap', symbol, swapSizeShort,swapSizeLong)
+ttmModifySymbolSwap <- function(symbol = "",swapSizeShort = "",swapSizeLong = "",swapType = "") {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbolSwap', symbol, swapSizeShort,swapSizeLong,swapType)
 }
 
 
