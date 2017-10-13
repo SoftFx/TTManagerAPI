@@ -336,6 +336,11 @@ namespace rTTManApi
             return _accountList.Select(it => (double)it.TotalCommission).ToArray();
         }
 
+        public static string[] GetAccountCountry()
+        {
+            return _accountList.Select(it => it.Country).ToArray();
+        }
+
         #endregion
 
         #region Get orders
