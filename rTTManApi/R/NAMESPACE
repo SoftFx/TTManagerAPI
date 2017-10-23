@@ -3,6 +3,7 @@
 export(ttmConnect)
 export(ttmDeleteSymbolTicks)
 export(ttmDisconnect)
+export(ttmGetAccountSnaphots)
 export(ttmGetAllAccounts)
 export(ttmGetAllGroups)
 export(ttmGetAllOrders)

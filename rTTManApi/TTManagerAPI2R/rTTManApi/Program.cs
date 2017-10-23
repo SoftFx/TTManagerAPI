@@ -49,6 +49,7 @@ namespace rTTManApi
         private static List<AssetInfo> _assetList;
         private static List<AssetDailySnapshot> _snapshotList;
         private static List<SymbolInfo> _symbolList;
+        private static List<AccountSnapshotEntity> _accountSnapshotList;
 
         #endregion
 
@@ -1593,9 +1594,216 @@ namespace rTTManApi
 
         #endregion
 
+        #region Get account snapshots
+        public static int GetAccountSnapshots(double accId, DateTime from, DateTime to)
+        {
+            _accountSnapshotList?.Clear();
+            try
+            {
+                var req = new DailyAccountsSnapshotRequest
+                {
+                    AccountIds = new List<long> { Convert.ToInt64(accId) },
+                    fromDate = from,
+                    toDate = to,
+                    IsUTC = true,
+                };
+                _accountSnapshotList = new List<AccountSnapshotEntity>();
+                Logger.Log.InfoFormat("Requesting account snapshots of {0} from {1} to {2}", accId, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(req);
+                foreach (var snapshot in query.Reports)
+                {
+                    _accountSnapshotList.Add(snapshot);
+                }
+                while (!query.IsEndOfStream)
+                {
+                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    foreach (var snapshot in query.Reports)
+                    {
+                        _accountSnapshotList.Add(snapshot);
+                    }
+                }
+                Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting account snapshots failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static int GetAccountSnapshots(double[] accId, DateTime from, DateTime to)
+        {
+            _accountSnapshotList?.Clear();
+            try
+            {
+                var req = new DailyAccountsSnapshotRequest
+                {
+                    AccountIds = accId.Select(Convert.ToInt64).ToList(),
+                    fromDate = from,
+                    toDate = to,
+                    IsUTC = true,
+                };
+                _accountSnapshotList = new List<AccountSnapshotEntity>();
+                var accList = accId[0].ToString();
+                for (var i = 1; i < accId.Length; i++)
+                {
+                    accList = string.Concat(accList, ", ", accId[i].ToString());
+                }
+                Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accList, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(req);
+                _accountSnapshotList.AddRange(query.Reports);
+                while (!query.IsEndOfStream)
+                {
+                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    _accountSnapshotList.AddRange(query.Reports);
+                }
+                Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting account snapshots failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static string[] GetAccountSnapshotId()
+        {
+            return _accountSnapshotList.Select(it => it.Id.ToString()).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotAccountId()
+        {
+            return _accountSnapshotList.Select(it => (double)it.AccountId).ToArray();
+        }
+
+        public static DateTime[] GetAccountSnapshotTimestamp()
+        {
+            return _accountSnapshotList.Select(it => it.Timestamp).ToArray();
+        }
+
+        public static string[] GetAccountSnapshotServer()
+        {
+            return _accountSnapshotList.Select(it => it.Server).ToArray();
+        }
+
+        public static string[] GetAccountSnapshotDomain()
+        {
+            return _accountSnapshotList.Select(it => it.Domain).ToArray();
+        }
+
+        public static string[] GetAccountSnapshotGroup()
+        {
+            return _accountSnapshotList.Select(it => it.Group).ToArray();
+        }
+
+        public static string[] GetAccountSnapshotAccountingType()
+        {
+            return _accountSnapshotList.Select(it => it.AccountingType.ToString()).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotLeverage()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Leverage).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotBalance()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Balance).ToArray();
+        }
+
+        public static string[] GetAccountSnapshotBalanceCurrency()
+        {
+            return _accountSnapshotList.Select(it => it.BalanceCurrency).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotProfit()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Profit).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotCommission()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Commission).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotAgentCommission()
+        {
+            return _accountSnapshotList.Select(it => (double)it.AgentCommission).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotTotalCommission()
+        {
+            return _accountSnapshotList.Select(it => (double)it.TotalCommission).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotSwap()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Swap).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotTotalProfitLoss()
+        {
+            return _accountSnapshotList.Select(it => (double)it.TotalProfitLoss).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotEquity()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Equity).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotMargin()
+        {
+            return _accountSnapshotList.Select(it => (double)it.Margin).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotMarginLevel()
+        {
+            return _accountSnapshotList.Select(it => (double)it.MarginLevel).ToArray();
+        }
+
+        public static bool[] GetAccountSnapshotIsBlocked()
+        {
+            return _accountSnapshotList.Select(it => it.IsBlocked).ToArray();
+        }
+
+        public static bool[] GetAccountSnapshotIsReadonly()
+        {
+            return _accountSnapshotList.Select(it => it.IsReadonly).ToArray();
+        }
+
+        public static bool[] GetAccountSnapshotIsValid()
+        {
+            return _accountSnapshotList.Select(it => it.IsValid).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotBalanceToUsdConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.BalanceToUsdConversionRate ?? 0)).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotUsdToBalanceConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.UsdToBalanceConversionRate ?? 0)).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotProfitToUsdConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.ProfitToUsdConversionRate ?? 0)).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotUsdToProfitConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.UsdToProfitConversionRate ?? 0)).ToArray();
+        }
+        #endregion
+
         static void Main(string[] args)
         {
-
+            
         }
     }
 }
