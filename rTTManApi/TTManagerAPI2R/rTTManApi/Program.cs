@@ -39,6 +39,40 @@ namespace rTTManApi
                 AccountId = accountId;
             }
         }
+
+        struct PositionDailySnapshot
+        {
+            public string Symbol;
+            public string SymbolAlias;
+            public string SymbolAliasOrName;
+            public string Side;
+            public decimal Amount;
+            public decimal AveragePrice;
+            public decimal Swap;
+            public decimal Commission;
+            public DateTime Modified;
+            public DateTime Timestamp;
+            public string ClientApp;
+            public double Id;
+            public double AccountId;
+
+            public PositionDailySnapshot(PositionSnapshot pos, DateTime timestamp, double accountId)
+            {
+                Symbol = pos.Symbol;
+                SymbolAlias = pos.SymbolAlias;
+                SymbolAliasOrName = pos.SymbolAliasOrName;
+                Side = pos.Side.ToString();
+                Amount = pos.Amount;
+                AveragePrice = pos.AveragePrice;
+                Swap = pos.Swap;
+                Commission = pos.Commission;
+                Modified = pos.Modified ?? new DateTime();
+                ClientApp = pos.ClientApp;
+                Id = pos.Id;
+                Timestamp = timestamp;
+                AccountId = accountId;
+            }
+        }
         #region Private fields
 
         private static TickTraderManagerModel _manager;
@@ -50,6 +84,7 @@ namespace rTTManApi
         private static List<AssetDailySnapshot> _snapshotList;
         private static List<SymbolInfo> _symbolList;
         private static List<AccountSnapshotEntity> _accountSnapshotList;
+        private static List<PositionDailySnapshot> _positionList;
 
         #endregion
 
@@ -1682,7 +1717,7 @@ namespace rTTManApi
 
         public static DateTime[] GetAccountSnapshotTimestamp()
         {
-            return _accountSnapshotList.Select(it => it.Timestamp).ToArray();
+            return _accountSnapshotList.Select(it => new DateTime(it.Timestamp.Ticks, DateTimeKind.Utc)).ToArray();
         }
 
         public static string[] GetAccountSnapshotServer()
@@ -1801,9 +1836,157 @@ namespace rTTManApi
         }
         #endregion
 
+        #region Get position snapshot
+
+        public static int GetPositionSnapshots(double accId, DateTime from, DateTime to)
+        {
+            try
+            {
+                var req = new DailyAccountsSnapshotRequest
+                {
+                    AccountIds = new List<long> { Convert.ToInt64(accId) },
+                    fromDate = from,
+                    toDate = to,
+                    IsUTC = true,
+                };
+                _positionList = new List<PositionDailySnapshot>();
+                Logger.Log.InfoFormat("Requesting position snapshots of {0} from {1} to {2}", accId, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(req);
+                _positionList.AddRange(query.Reports.SelectMany(
+                                snapshot =>
+                                    snapshot.Positions.Select(
+                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
+                while (!query.IsEndOfStream)
+                {
+                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    _positionList.AddRange(query.Reports.SelectMany(
+                                snapshot =>
+                                    snapshot.Positions.Select(
+                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
+                }
+                Logger.Log.InfoFormat("Recieved {0} position snapshots", _positionList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting position snapshots failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static int GetPositionSnapshots(double[] accId, DateTime from, DateTime to)
+        {
+            try
+            {
+                var req = new DailyAccountsSnapshotRequest
+                {
+                    AccountIds = accId.Select(Convert.ToInt64).ToList(),
+                    fromDate = from,
+                    toDate = to,
+                    IsUTC = true,
+                };
+                _positionList = new List<PositionDailySnapshot>();
+                var accList = accId[0].ToString();
+                for (var i = 1; i < accId.Length; i++)
+                {
+                    accList = string.Concat(accList, ", ", accId[i].ToString());
+                }
+                Logger.Log.InfoFormat("Requesting position snapshots of {0} from {1} to {2}", accList, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(req);
+                _positionList.AddRange(query.Reports.SelectMany(
+                                snapshot =>
+                                    snapshot.Positions.Select(
+                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
+                while (!query.IsEndOfStream)
+                {
+                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    _positionList.AddRange(query.Reports.SelectMany(
+                                snapshot =>
+                                    snapshot.Positions.Select(
+                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
+                }
+                Logger.Log.InfoFormat("Recieved {0} position snapshots", _positionList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting position snapshots failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static double[] GetPositionId()
+        {
+            return _positionList.Select(it => it.Id).ToArray();
+        }
+
+        public static double[] GetPositionAccountId()
+        {
+            return _positionList.Select(it => it.AccountId).ToArray();
+        }
+
+        public static string[] GetPositionSymbol()
+        {
+            return _positionList.Select(it => it.Symbol).ToArray();
+        }
+
+        public static string[] GetPositionSymbolAlias()
+        {
+            return _positionList.Select(it => it.SymbolAlias).ToArray();
+        }
+        public static string[] GetPositionSymbolAliasOrName()
+        {
+            return _positionList.Select(it => it.SymbolAliasOrName).ToArray();
+        }
+
+
+        public static string[] GetPositionSide()
+        {
+            return _positionList.Select(it => it.Side).ToArray();
+        }
+
+        public static double[] GetPositionAmount()
+        {
+            return _positionList.Select(it => (double)it.Amount).ToArray();
+        }
+
+        public static double[] GetPositionAveragePrice()
+        {
+            return _positionList.Select(it => (double)it.AveragePrice).ToArray();
+        }
+
+        public static double[] GetPositionSwap()
+        {
+            return _positionList.Select(it => (double)it.Swap).ToArray();
+        }
+
+        public static double[] GetPositionCommission()
+        {
+            return _positionList.Select(it => (double)it.Commission).ToArray();
+        }
+
+        public static DateTime[] GetPositionModified()
+        {
+            return _positionList.Select(it => it.Modified).ToArray();
+        }
+
+        public static DateTime[] GetPositionTimestamp()
+        {
+            return _positionList.Select(it => it.Timestamp).ToArray();
+        }
+
+        public static string[] GetPositionClientApp()
+        {
+            return _positionList.Select(it => it.ClientApp).ToArray();
+        }
+
+        #endregion
+
         static void Main(string[] args)
         {
-            
+
         }
     }
 }
