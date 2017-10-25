@@ -1969,12 +1969,12 @@ namespace rTTManApi
 
         public static DateTime[] GetPositionModified()
         {
-            return _positionList.Select(it => it.Modified).ToArray();
+            return _positionList.Select(it => new DateTime(it.Modified.Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetPositionTimestamp()
         {
-            return _positionList.Select(it => it.Timestamp).ToArray();
+            return _positionList.Select(it => new DateTime(it.Timestamp.Ticks,DateTimeKind.Utc)).ToArray();
         }
 
         public static string[] GetPositionClientApp()
