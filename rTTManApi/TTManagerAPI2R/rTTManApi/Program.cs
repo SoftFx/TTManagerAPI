@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TickTrader.BusinessObjects;
 using TickTrader.BusinessObjects.FeedSources.CustomConfigs;
 using TickTrader.BusinessObjects.Requests;
+using TickTrader.Common.Business;
 using TickTrader.Manager;
 using TickTrader.Manager.Contract;
 using TickTrader.Manager.Model;
@@ -1969,12 +1970,12 @@ namespace rTTManApi
 
         public static DateTime[] GetPositionModified()
         {
-            return _positionList.Select(it => new DateTime(it.Modified.Ticks,DateTimeKind.Utc)).ToArray();
+            return _positionList.Select(it => new DateTime(it.Modified.Ticks, DateTimeKind.Utc)).ToArray();
         }
 
         public static DateTime[] GetPositionTimestamp()
         {
-            return _positionList.Select(it => new DateTime(it.Timestamp.Ticks,DateTimeKind.Utc)).ToArray();
+            return _positionList.Select(it => new DateTime(it.Timestamp.Ticks, DateTimeKind.Utc)).ToArray();
         }
 
         public static string[] GetPositionClientApp()
@@ -1984,9 +1985,65 @@ namespace rTTManApi
 
         #endregion
 
+        #region Uploading ticks
+
+        public static bool InsertTicks(string symbol, DateTime[] timestamps, double[] bidPrices, double[] bidVolumes, double[] askPrices, double[] askVolumes)
+        {
+            var ticks = new List<TickValue>();
+            var size = timestamps.Length;
+            for (var i = 0; i < size; i++)
+            {
+                var id = new FeedTickId(timestamps[i]);
+                var bid = new Level2Value(new Price((decimal)bidPrices[i]), bidVolumes[i]);
+                var ask = new Level2Value(new Price((decimal)askPrices[i]), askVolumes[i]);
+                var tick = new TickValue(id, bid, ask);
+                ticks.Add(tick);
+            }
+            return _manager.InsertSymbolTicks(symbol, ticks);
+        }
+
+        public static bool InsertLevel2Ticks(string symbol, DateTime[] timestamps, double[] bidPrices,
+            double[] bidVolumes, double[] askPrices, double[] askVolumes, double[] depth)
+        {
+            var ticks = new List<TickValue>();
+            var bufTicks = new List<FeedLevel2Record>();
+            FeedTickId id = new FeedTickId();
+            for (int i = 0; i < depth.Length; i++)
+            {
+                if (depth[i].Equals(1) && !bufTicks.IsEmpty())
+                {
+                    var tick = new TickValue(id,bufTicks);
+                    ticks.Add(tick);
+                    bufTicks.Clear();
+                }
+                id = new FeedTickId(timestamps[i]);
+                var bid = new FeedLevel2Record
+                {
+                    Price = (decimal) bidPrices[i],
+                    Type = FxPriceType.Bid,
+                    Volume = bidVolumes[i]
+                };
+                var ask = new FeedLevel2Record
+                {
+                    Price = (decimal)askPrices[i],
+                    Type = FxPriceType.Ask,
+                    Volume = askVolumes[i]
+                };
+                bufTicks.Add(bid);
+                bufTicks.Add(ask);
+            }
+            var lastTick = new TickValue(id, bufTicks);
+            ticks.Add(lastTick);
+            return _manager.InsertSymbolTicks(symbol, ticks);
+        }
+
+        #endregion
+
         static void Main(string[] args)
         {
-
+            Connect("tt.tt-ag.st.soft-fx.eu", "1", "123qwe!");
+            var a = _manager.RequestLevel2("EURUSD",300);
+            Console.ReadKey();
         }
     }
 }
