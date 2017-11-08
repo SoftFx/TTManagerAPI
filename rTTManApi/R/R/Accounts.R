@@ -36,9 +36,10 @@ GetAccountFrame<-function()
   MarginFree = GetAccountMarginFree()
   TotalComission = GetAccountTotalComission()
   Country = GetAccountCountry()
+  Email = GetAccountEmail()
   data.table(AccountId,Name,Domain,Group,AccountingType,Blocked,Readonly,Leveage,Profit,Comission,AgentComission,TotalComission,Swap,
   Equity,Margin,MarginLevel,Balance,BalanceCurrency,MarginCallLevel,MarginFree,StopOutLevel,IsValid,IsWebApiEnabled,
-  IsTwoFactorAuthSet,IsArchived,FeedPriority,Version,Country)
+  IsTwoFactorAuthSet,IsArchived,FeedPriority,Version,Country, Email)
 }
 #' Get Account field
 GetAccountId<-function(){
@@ -151,4 +152,8 @@ GetAccountTotalComission<-function(){
 #' Get Account field
 GetAccountCountry<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountCountry')
+}
+#' Get Account field
+GetAccountEmail<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountEmail')
 }

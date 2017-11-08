@@ -378,6 +378,11 @@ namespace rTTManApi
             return _accountList.Select(it => it.Country).ToArray();
         }
 
+        public static string[] GetAccountEmail()
+        {
+            return _accountList.Select(it => it.Email).ToArray();
+        }
+
         #endregion
 
         #region Get orders
