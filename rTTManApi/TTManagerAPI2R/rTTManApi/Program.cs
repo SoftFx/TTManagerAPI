@@ -2013,7 +2013,7 @@ namespace rTTManApi
             var ticks = new List<TickValue>();
             var bufTicks = new List<FeedLevel2Record>();
             FeedTickId id = new FeedTickId();
-            for (int i = 0; i < Math.Min(bidPrices.Length, askPrices.Length); i++)
+            for (int i = 0; i < depth.Length; i++)
             {
                 if (depth[i].Equals(1) && !bufTicks.IsEmpty())
                 {
@@ -2022,56 +2022,27 @@ namespace rTTManApi
                     bufTicks.Clear();
                 }
                 id = new FeedTickId(timestamps[i]);
-                var bid = new FeedLevel2Record
+                if (!double.IsNaN(bidPrices[i]))
                 {
-                    Price = (decimal) bidPrices[i],
-                    Type = FxPriceType.Bid,
-                    Volume = bidVolumes[i]
-                };
-                var ask = new FeedLevel2Record
-                {
-                    Price = (decimal)askPrices[i],
-                    Type = FxPriceType.Ask,
-                    Volume = askVolumes[i]
-                };
-                bufTicks.Add(bid);
-                bufTicks.Add(ask);
-            }
-            if (askPrices.Length != bidPrices.Length)
-            {
-                for (int i = Math.Min(bidPrices.Length, askPrices.Length);
-                i < Math.Max(bidPrices.Length, askPrices.Length);
-                i++)
-                {
-                    if (depth[i].Equals(1) && !bufTicks.IsEmpty())
+                    var bid = new FeedLevel2Record
                     {
-                        var tick = new TickValue(id, bufTicks);
-                        ticks.Add(tick);
-                        bufTicks.Clear();
-                    }
-                    id = new FeedTickId(timestamps[i]);
-                    if (bidPrices.Length > askPrices.Length)
-                    {                                               
-                        var bid = new FeedLevel2Record
-                        {
-                            Price = (decimal)bidPrices[i],
-                            Type = FxPriceType.Bid,
-                            Volume = bidVolumes[i]
-                        };
-                        bufTicks.Add(bid);
-                    }
-                    else
-                    {
-                        var ask = new FeedLevel2Record
-                        {
-                            Price = (decimal)askPrices[i],
-                            Type = FxPriceType.Ask,
-                            Volume = askVolumes[i]
-                        };
-                        bufTicks.Add(ask);
-                    }
+                        Price = (decimal)bidPrices[i],
+                        Type = FxPriceType.Bid,
+                        Volume = bidVolumes[i]
+                    };
+                    bufTicks.Add(bid);
                 }
-            }          
+                if (!double.IsNaN(askPrices[i]))
+                {
+                    var ask = new FeedLevel2Record
+                    {
+                        Price = (decimal)askPrices[i],
+                        Type = FxPriceType.Ask,
+                        Volume = askVolumes[i]
+                    };
+                    bufTicks.Add(ask);
+                }
+            }         
             var lastTick = new TickValue(id, bufTicks);
             ticks.Add(lastTick);
             return _manager.InsertSymbolTicks(symbol, ticks);
