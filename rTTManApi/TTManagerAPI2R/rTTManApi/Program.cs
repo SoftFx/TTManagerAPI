@@ -2010,6 +2010,10 @@ namespace rTTManApi
         public static bool InsertLevel2Ticks(string symbol, DateTime[] timestamps, double[] bidPrices,
             double[] bidVolumes, double[] askPrices, double[] askVolumes, double[] depth)
         {
+            if (timestamps.Length == 0)
+            {
+                return true;
+            }
             var ticks = new List<TickValue>();
             var bufTicks = new List<FeedLevel2Record>();
             FeedTickId id = new FeedTickId();
@@ -2042,7 +2046,7 @@ namespace rTTManApi
                     };
                     bufTicks.Add(ask);
                 }
-            }         
+            }     
             var lastTick = new TickValue(id, bufTicks);
             ticks.Add(lastTick);
             return _manager.InsertSymbolTicks(symbol, ticks);
@@ -2052,7 +2056,6 @@ namespace rTTManApi
 
         static void Main(string[] args)
         {
-            Connect("tt.tt-ag.st.soft-fx.eu", "1", "123qwe!");
             var a = _manager.RequestLevel2("EURUSD",300);
             Console.ReadKey();
         }
