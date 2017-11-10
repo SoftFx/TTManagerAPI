@@ -1,0 +1,171 @@
+---
+title: "delete Ticks"
+author: "Yury Maisiayonak"
+date: "`r Sys.time()`"
+output: html_document
+params: 
+    server: "tt.tt-ag.st.soft-fx.eu"
+    login: ""
+    password: ""
+    symbol: "EURUSD"
+    from: "2017-11-09 14:09:30"
+    to: "2017-11-09 14:19:30"
+---
+```{r setup, cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE, tidy = FALSE, results='hide'}
+```
+
+```{r cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE, tidy = FALSE, results='hide'}
+library(lubridate) 
+library(data.table) 
+library(foreach) 
+library(DT) 
+library(plotly) 
+library(rFdk)
+library(rTTManApi)
+options(scipen = 999)
+unlink(paste(file.path(), "rFdk", sep = ""), recursive = TRUE)
+
+# getTickAndBarsInfo<-function(server, login, password, symbol, startTime, endTime, depth, barsType = "BidAsk", period = "M1", ){
+#   unlink(paste(file.path(), "rFdk", sep = ""), recursive = TRUE)
+#   list(bestTicks = ttFeed.TickBestHistory(symbol,startTickCheckTime, endTickCheckTime),
+#        ticksL2 = ttFeed.TickLevel2History(symbol,startTickCheckTime, endTickCheckTime,350),
+#        bars = ttFeed.BarHistory(symbol,"BidAsk", "M1", startBarCheckTime, endBarCheckTime))
+# }
+
+
+#getting Ticks before deleting
+
+startDeleteTime = as.POSIXct(params$from, tz = "GMT")
+endDeleteTime = as.POSIXct(params$to, tz = "GMT")
+startTickCheckTime = startDeleteTime-seconds(5)
+endTickCheckTime = endDeleteTime+seconds(5)
+startBarCheckTime = startDeleteTime-minutes(1)
+endBarCheckTime = endDeleteTime+minutes(1)
+symbol = params$symbol
+
+ttConnect(params$server, params$login, params$password, fdkPath = paste(file.path(), "rFdk", sep = ""))
+oldTicks <- ttFeed.TickBestHistory(symbol,startTickCheckTime, endTickCheckTime)
+oldL2Ticks <-ttFeed.TickLevel2History(symbol,startTickCheckTime, endTickCheckTime,350)
+
+deleteTicks <- ttFeed.TickBestHistory(symbol,startDeleteTime, endDeleteTime)
+deleteTicksL2 <- ttFeed.TickLevel2History(symbol,startDeleteTime, endDeleteTime, 350)
+deleteTicks2 <- deleteTicksL2[level == 1]
+oldBars <-ttFeed.BarHistory(symbol,"BidAsk", "M1", startBarCheckTime, endBarCheckTime)
+ttDisconnect()
+
+#Delete Ticks
+ttmConnect(params$server, params$login, params$password)
+ttmDeleteSymbolTicks(symbol, fromTime = startDeleteTime, fromIndex = 0, toTime = endDeleteTime, toIndex = 0)
+#Upstream Bars
+ttmUpstream(symbol, startBarCheckTime, endBarCheckTime)
+ttmDisconnect()
+
+#Getting tmep Ticks, temp Bars and remove previous storage
+unlink(paste(file.path(), "rFdk", sep = ""), recursive = TRUE)
+ttConnect(params$server, params$login, params$password, fdkPath = paste(file.path(), "rFdk", sep = ""))
+tempTicks <- ttFeed.TickBestHistory(symbol,startTickCheckTime, endTickCheckTime)
+tempL2Ticks <-ttFeed.TickLevel2History(symbol,startTickCheckTime, endTickCheckTime,350)
+tempBars <- ttFeed.BarHistory(symbol,"BidAsk", "M1", startBarCheckTime, endBarCheckTime)
+ttDisconnect()
+
+#Insert new Tick and make new Bars
+ttmConnect(params$server, params$login, params$password)
+ttmInsertLevel2Ticks(symbol, deleteTicksL2$createTime, deleteTicksL2$priceBid, deleteTicksL2$volumeBid, deleteTicksL2$priceAsk, deleteTicksL2$volumeAsk, deleteTicksL2$level)
+# ttmInsertTicks(symbol, deleteTicks2$createTime, deleteTicks2$priceBid, deleteTicks2$volumeBid, deleteTicks2$priceAsk, deleteTicks2$volumeAsk)
+t1 = ttmUpstream(symbol, startBarCheckTime, endBarCheckTime)
+ttmDisconnect()
+
+#Getting new Ticks, new Bars and remove previous storage
+unlink(paste(file.path(), "rFdk", sep = ""), recursive = TRUE)
+ttConnect(params$server, params$login, params$password, fdkPath = paste(file.path(), "rFdk", sep = ""))
+newTicks <- ttFeed.TickBestHistory(symbol,startTickCheckTime, endTickCheckTime)
+newL2Ticks <- ttFeed.TickLevel2History(symbol,startTickCheckTime, endTickCheckTime,350)
+newBars <- ttFeed.BarHistory(symbol,"BidAsk", "M1", startBarCheckTime, endBarCheckTime)
+
+checkEquivalence<- function(byStreamRequest, byRequest) {
+  if(nrow(byStreamRequest) != nrow(byRequest))
+    return ("Invalid numbers of row")
+  if(!identical(byStreamRequest, byRequest)) {
+    for(i in 1: nrow(byStreamRequest)) {
+      if(!identical(byStreamRequest[i], byRequest[i])) {
+        s = paste("data is not identical in ", toString(i), " see Diagnostic")
+        return(c(s, toString(i)))
+      }
+    }
+  }
+  return("Data is identical")
+}
+result = checkEquivalence(oldBars, newBars)
+result2 = checkEquivalence(oldTicks, newTicks)
+result3 = checkEquivalence(oldL2Ticks, newL2Ticks)
+```
+
+###Parameters
+Server: _`r params$server`_.
+
+Login: _`r params$login`_.
+
+Password: _`r params$password`_.
+
+Symbol: _`r symbol`_.
+
+Period: _`r startDeleteTime`_ - _`r endDeleteTime`_.
+
+##Old Ticks: 
+### _`r startTickCheckTime`_ - _`r endTickCheckTime`_
+```{r echo=F}
+datatable(oldTicks)
+```
+
+##Old Bars: 
+### _`r startBarCheckTime`_ - _`r endBarCheckTime`_
+```{r echo=F}
+datatable(oldBars)
+```
+
+##Ticks should be removed: 
+### _`r startDeleteTime`_ - _`r endDeleteTime`_
+```{r echo=F}
+datatable(deleteTicks)
+```
+
+##Temp Ticks:  
+###_`r startTickCheckTime`_ - _`r endTickCheckTime`_
+```{r echo=F}
+datatable(tempTicks)
+```
+
+##Temp Bars: 
+### _`r startBarCheckTime`_ - _`r endBarCheckTime`_
+```{r echo=F}
+datatable(tempBars)
+```
+
+##New Ticks:  
+###_`r startTickCheckTime`_ - _`r endTickCheckTime`_
+```{r echo=F}
+datatable(newTicks)
+```
+
+##New Bars: 
+### _`r startBarCheckTime`_ - _`r endBarCheckTime`_
+```{r echo=F}
+datatable(newBars)
+```
+
+###Checking deleting
+  (oldTick Count - tempTick Count) == deleteTickCount__ **`r nrow(oldTicks)-nrow(tempTicks) == nrow(deleteTicks)`**
+
+###Checking inserting
+  (newTick Count - tempTick Count) == deleteTickCount__ **`r nrow(newTicks)-nrow(tempTicks) == nrow(deleteTicks)`**
+
+###Bars checking
+  oldBars == newBars__ **`r result`**
+  
+###Ticks checking
+  oldTicks == newTicks__ **`r result2`**
+
+###TicksL2 checking
+  oldL2Ticks == newL2Ticks__ **`r result3`**
+  
+  
