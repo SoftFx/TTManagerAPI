@@ -4,7 +4,7 @@
 \alias{ttmConnect}
 \title{Connects to a TT server}
 \usage{
-ttmConnect(address = "", login = "", password = "")
+ttmConnect(address = "", login = "", password = "", file = "")
 }
 \arguments{
 \item{address}{Url of the server}
@@ -12,6 +12,8 @@ ttmConnect(address = "", login = "", password = "")
 \item{login}{account you login}
 
 \item{password}{password of the account}
+
+\item{file}{when not empty, credentials will read from it}
 }
 \description{
 Connects to a TT server
