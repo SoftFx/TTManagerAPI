@@ -25,7 +25,7 @@ ttmInit <- function() {
 #' @param address Url of the server
 #' @param login account you login
 #' @param password password of the account
-#' @param file when not empty, credentials will read from it
+#' @param file when not empty, credentials will be read from it
 #' @export
 ttmConnect <- function(address = "",login = "",password = "", file = "") {
   ttmInit()

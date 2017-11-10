@@ -13,7 +13,7 @@ ttmConnect(address = "", login = "", password = "", file = "")
 
 \item{password}{password of the account}
 
-\item{file}{when not empty, credentials will read from it}
+\item{file}{when not empty, credentials will be read from it}
 }
 \description{
 Connects to a TT server
