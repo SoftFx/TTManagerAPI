@@ -2010,10 +2010,6 @@ namespace rTTManApi
         public static bool InsertLevel2Ticks(string symbol, DateTime[] timestamps, double[] bidPrices,
             double[] bidVolumes, double[] askPrices, double[] askVolumes, double[] depth)
         {
-            if (timestamps.Length == 0)
-            {
-                return true;
-            }
             var ticks = new List<TickValue>();
             var bufTicks = new List<FeedLevel2Record>();
             FeedTickId id = new FeedTickId();
