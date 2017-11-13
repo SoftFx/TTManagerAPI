@@ -1594,7 +1594,7 @@ namespace rTTManApi
             try
             {
                 var symbol = _manager.RequestSymbol(symbolName);
-                if (!swapType.Equals("Points") && !swapType.Equals("Percent"))
+                if (!swapType.Equals(symbol.SwapType.ToString()))
                 {
                     throw new ArgumentException("wrong swap type for this symbol");
                 }
