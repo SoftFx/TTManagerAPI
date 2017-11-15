@@ -6,6 +6,13 @@
 \usage{
 ttmUpstream(symbol, from, to)
 }
+\arguments{
+\item{symbol}{a character. Symbol}
+
+\item{from}{a DateTime object. Start time to upstream}
+
+\item{to}{a DateTime object. End time to upstream}
+}
 \description{
 Upstream symbol ticks
 }

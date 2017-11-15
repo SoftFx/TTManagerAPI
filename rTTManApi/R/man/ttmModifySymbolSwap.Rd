@@ -8,13 +8,13 @@ ttmModifySymbolSwap(symbol = "", swapSizeShort = "", swapSizeLong = "",
   swapType = "")
 }
 \arguments{
-\item{symbol}{Name of symbol}
+\item{symbol}{a character. Symbol}
 
-\item{swapSizeShort}{swapSizeShort}
+\item{swapSizeShort}{a double. SwapSizeShort}
 
-\item{swapSizeLong}{swapSizeLong}
+\item{swapSizeLong}{a double. SwapSizeLong}
 
-\item{swapType}{swapType}
+\item{swapType}{a character. SwapType}
 }
 \description{
 Change symbol swap

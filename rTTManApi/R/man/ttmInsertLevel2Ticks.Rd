@@ -10,17 +10,17 @@ ttmInsertLevel2Ticks(symbol, timestamps, bidPrices, bidVolumes, askPrices,
 \arguments{
 \item{symbol}{Symbol}
 
-\item{timestamps}{Array of datetimes}
+\item{timestamps}{a DateTime array. Datetimes}
 
-\item{bidPrices}{Array of bid prices}
+\item{bidPrices}{a double array. Bid prices}
 
-\item{bidVolumes}{Array of bid volumes}
+\item{bidVolumes}{a double array. Bid volumes}
 
-\item{askPrices}{Array of ask prices}
+\item{askPrices}{a double array. Ask prices}
 
-\item{askVolumes}{Array of ask volumes}
+\item{askVolumes}{a double array. Ask volumes}
 
-\item{depth}{Array of depth}
+\item{depth}{a double array. Depths}
 }
 \description{
 Upload symbol ticks L2
