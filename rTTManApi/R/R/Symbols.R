@@ -15,7 +15,7 @@ ttmGetAllSymbols <- function() {
 #' @param swapSizeLong a double. SwapSizeLong
 #' @param swapType a character. SwapType. For TTS only "Points" or "PercentPerYear"
 #' @examples 
-#' ttmModifySymbolSwap("BTCBYN", 10, 10, Points)
+#' ttmModifySymbolSwap("BTCBYN", 10, 10, "Points")
 #' 
 #' @export
 ttmModifySymbolSwap <- function(symbol = "",swapSizeShort = "",swapSizeLong = "",swapType = "") {

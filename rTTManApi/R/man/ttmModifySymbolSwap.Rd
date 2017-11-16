@@ -20,6 +20,6 @@ ttmModifySymbolSwap(symbol = "", swapSizeShort = "", swapSizeLong = "",
 Change symbol swap
 }
 \examples{
-ttmModifySymbolSwap("BTCBYN", 10, 10, Points)
+ttmModifySymbolSwap("BTCBYN", 10, 10, "Points")
 
 }
