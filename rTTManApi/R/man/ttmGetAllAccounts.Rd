@@ -9,3 +9,6 @@ ttmGetAllAccounts()
 \description{
 Gets the Accounts as requested
 }
+\examples{
+ttmGetAllAccounts()
+}

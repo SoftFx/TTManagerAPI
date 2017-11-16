@@ -9,3 +9,7 @@ ttmGetAllOrders()
 \description{
 Gets the Orders as requested
 }
+\examples{
+ttmGetAllOrders()
+
+}

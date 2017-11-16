@@ -22,3 +22,7 @@ ttmInsertTicks(symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes)
 \description{
 Upload symbol ticks
 }
+\examples{
+ttmInsertTicks("EURUSD", c(ISOdatetime(2017,11,01,0,00,00, tz ="GMT"), ISOdatetime(2017,11,01,0,00,02, tz ="GMT")), c(1.20, 1.21), c(100, 1000), c(1.21,1.22), c(1000, 1000))
+
+}

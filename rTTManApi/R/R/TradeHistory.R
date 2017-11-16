@@ -4,6 +4,9 @@
 #' @param from a POSIXct object. Start time. By default, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT").
 #' @param to a POSIXct object. End time. By default, to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT").
 #' @param skipCancelled a logical. If TRUE (default), cancelled orders are not displayed.
+#' @examples 
+#' ttmGetTradeReports(c(100181, 100182), ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), TRUE)
+#' 
 #' @export
 ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), skipCancelled = TRUE) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports',accId, from, to, skipCancelled)

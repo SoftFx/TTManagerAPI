@@ -14,8 +14,12 @@ ttmModifySymbolSwap(symbol = "", swapSizeShort = "", swapSizeLong = "",
 
 \item{swapSizeLong}{a double. SwapSizeLong}
 
-\item{swapType}{a character. SwapType}
+\item{swapType}{a character. SwapType. For TTS only "Points" or "PercentPerYear"}
 }
 \description{
 Change symbol swap
+}
+\examples{
+ttmModifySymbolSwap("BTCBYN", 10, 10, Points)
+
 }

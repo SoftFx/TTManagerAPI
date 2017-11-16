@@ -20,3 +20,7 @@ ttmDeleteSymbolTicks(symbol, fromTime, fromIndex, toTime, toIndex)
 \description{
 Delete symbol ticks
 }
+\examples{
+ttmDeleteSymbolTicks("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"),0, ISOdatetime(2017,08,02,0,00,00, tz ="GMT"),0)
+
+}

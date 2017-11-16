@@ -1,5 +1,6 @@
 #' Gets the Accounts as requested
-#'
+#' @examples 
+#' ttmGetAllAccounts()
 #' @export
 ttmGetAllAccounts <- function() {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAccounts')

@@ -19,3 +19,7 @@ ttmGetTradeReports(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz = "GMT"),
 \description{
 Gets the Trade reports as requested
 }
+\examples{
+ttmGetTradeReports(c(100181, 100182), ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), TRUE)
+
+}

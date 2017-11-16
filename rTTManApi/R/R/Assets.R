@@ -1,6 +1,8 @@
 #' Gets the Assets as requested
 #'
 #' @param accountId a numeric. Account id
+#' @examples 
+#' ttmGetAssets(100181)
 #' @export
 ttmGetAssets <- function(accountId) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAssets',accountId)

@@ -17,3 +17,7 @@ ttmGetAccountSnaphots(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
 \description{
 Gets the Account snaphots as requested
 }
+\examples{
+ttmGetAccountSnaphots(c(100181,100182,100183), ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"))
+
+}

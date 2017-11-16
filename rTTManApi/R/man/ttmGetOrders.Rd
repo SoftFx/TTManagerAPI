@@ -12,3 +12,7 @@ ttmGetOrders(accountId)
 \description{
 Gets the Orders as requested with login
 }
+\examples{
+ttmGetOrders(100185)
+
+}

@@ -16,3 +16,7 @@ ttmUpstream(symbol, from, to)
 \description{
 Upstream symbol ticks
 }
+\examples{
+ ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"))
+
+}

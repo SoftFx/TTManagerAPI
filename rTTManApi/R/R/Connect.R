@@ -26,6 +26,9 @@ ttmInit <- function() {
 #' @param login account you login
 #' @param password password of the account
 #' @param file when not empty, credentials will be read from it
+#' @examples 
+#' ttmConnect("tpstsoft.eu", "123456","123456", "fileName.properties")
+#' 
 #' @export
 ttmConnect <- function(address = "",login = "",password = "", file = "") {
   ttmInit()
@@ -43,7 +46,9 @@ ttmConnect <- function(address = "",login = "",password = "", file = "") {
 
 
 #' Disconnect from a TT server
-#'
+#' @examples 
+#' ttmDisconnect()
+#' 
 #' @export
 ttmDisconnect <- function() {
   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Disconnect')

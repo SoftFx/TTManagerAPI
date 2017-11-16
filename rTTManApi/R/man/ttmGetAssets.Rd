@@ -12,3 +12,6 @@ ttmGetAssets(accountId)
 \description{
 Gets the Assets as requested
 }
+\examples{
+ttmGetAssets(100181)
+}

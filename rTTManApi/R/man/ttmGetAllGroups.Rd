@@ -9,3 +9,6 @@ ttmGetAllGroups()
 \description{
 Gets the groups as requested
 }
+\examples{
+ttmGetAllGroups()
+}

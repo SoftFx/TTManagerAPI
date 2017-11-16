@@ -1,5 +1,6 @@
 #' Gets the groups as requested
-#'
+#' @examples 
+#' ttmGetAllGroups()
 #' @export
 ttmGetAllGroups <- function() {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllGroups')

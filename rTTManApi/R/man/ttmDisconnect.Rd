@@ -9,3 +9,7 @@ ttmDisconnect()
 \description{
 Disconnect from a TT server
 }
+\examples{
+ttmDisconnect()
+
+}
