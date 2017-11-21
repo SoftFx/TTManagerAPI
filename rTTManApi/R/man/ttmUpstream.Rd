@@ -6,6 +6,17 @@
 \usage{
 ttmUpstream(symbol, from, to)
 }
+\arguments{
+\item{symbol}{a character. Symbol}
+
+\item{from}{a DateTime object. Start time to upstream}
+
+\item{to}{a DateTime object. End time to upstream}
+}
 \description{
 Upstream symbol ticks
+}
+\examples{
+ ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"))
+
 }

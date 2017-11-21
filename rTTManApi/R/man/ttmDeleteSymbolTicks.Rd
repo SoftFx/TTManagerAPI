@@ -6,6 +6,21 @@
 \usage{
 ttmDeleteSymbolTicks(symbol, fromTime, fromIndex, toTime, toIndex)
 }
+\arguments{
+\item{symbol}{a character. Symbol}
+
+\item{fromTime}{a DateTime object. Start time to delete}
+
+\item{fromIndex}{a double. Start index to delete. By default, fromIndex = 0}
+
+\item{toTime}{a DateTime object. End time to delete.}
+
+\item{toIndex}{a double. End index to delete. By default, toIndex = 0}
+}
 \description{
 Delete symbol ticks
+}
+\examples{
+ttmDeleteSymbolTicks("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"),0, ISOdatetime(2017,08,02,0,00,00, tz ="GMT"),0)
+
 }

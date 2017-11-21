@@ -18,3 +18,7 @@ ttmConnect(address = "", login = "", password = "", file = "")
 \description{
 Connects to a TT server
 }
+\examples{
+ttmConnect("tpstsoft.eu", "123456","123456", "fileName.properties")
+
+}

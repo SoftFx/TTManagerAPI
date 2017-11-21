@@ -1,4 +1,6 @@
 #' Gets the symbols as requested
+#' @examples 
+#' ttmGetAllSymbols()
 #'
 #' @export
 ttmGetAllSymbols <- function() {
@@ -8,10 +10,13 @@ ttmGetAllSymbols <- function() {
 
 #' Change symbol swap
 #'
-#' @param symbol Name of symbol
-#' @param swapSizeShort swapSizeShort
-#' @param swapSizeLong swapSizeLong
-#' @param swapType swapType
+#' @param symbol a character. Symbol
+#' @param swapSizeShort a double. SwapSizeShort
+#' @param swapSizeLong a double. SwapSizeLong
+#' @param swapType a character. SwapType. For TTS only "Points" or "PercentPerYear"
+#' @examples 
+#' ttmModifySymbolSwap("BTCBYN", 10, 10, "Points")
+#' 
 #' @export
 ttmModifySymbolSwap <- function(symbol = "",swapSizeShort = "",swapSizeLong = "",swapType = "") {
   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbolSwap', symbol, swapSizeShort,swapSizeLong,swapType)

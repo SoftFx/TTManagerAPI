@@ -17,3 +17,7 @@ ttmGetPositionSnaphots(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
 \description{
 Gets the position snaphots as requested
 }
+\examples{
+ttmGetPositionSnaphots(c(100181,100182,100183), ISOdatetime(2017,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"))
+
+}

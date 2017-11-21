@@ -9,3 +9,7 @@ ttmGetAllSymbols()
 \description{
 Gets the symbols as requested
 }
+\examples{
+ttmGetAllSymbols()
+
+}
