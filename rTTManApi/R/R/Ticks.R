@@ -2,14 +2,16 @@
 #'
 #' @export
 ttmUpstream <- function(symbol, from, to) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream',symbol,from,to)
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream',symbol,from,to)
+  if(hResult == FALSE) stop("ttmUpstream return false")
 }
 
 #' Delete symbol ticks
 #'
 #' @export
 ttmDeleteSymbolTicks <- function(symbol, fromTime, fromIndex, toTime, toIndex) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'DeleteSymbolTicks', symbol, fromTime, fromIndex, toTime, toIndex)
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'DeleteSymbolTicks', symbol, fromTime, fromIndex, toTime, toIndex)
+  if(hResult == FALSE) stop("ttmDeleteSymbolTicks return false")
 }
 
 #' Upload symbol ticks
@@ -22,7 +24,8 @@ ttmDeleteSymbolTicks <- function(symbol, fromTime, fromIndex, toTime, toIndex) {
 #' 
 #' @export
 ttmInsertTicks <- function(symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'InsertTicks',symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes)
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'InsertTicks',symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes)
+  if(hResult == FALSE) stop("ttmInsertTicks return false")
 }
 
 #' Upload symbol ticks L2
@@ -36,5 +39,6 @@ ttmInsertTicks <- function(symbol, timestamps, bidPrices, bidVolumes, askPrices,
 #' 
 #' @export
 ttmInsertLevel2Ticks <- function(symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes, depth) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'InsertLevel2Ticks',symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes, depth)
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'InsertLevel2Ticks',symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes, depth)
+  if(hResult == FALSE) stop("ttmInsertLevel2Ticks return false")
 }
