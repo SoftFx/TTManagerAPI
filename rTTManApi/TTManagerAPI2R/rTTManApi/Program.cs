@@ -383,6 +383,29 @@ namespace rTTManApi
             return _accountList.Select(it => it.Email).ToArray();
         }
 
+        public static string[] GetAccountInternalComment()
+        {
+            return _accountList.Select(it => it.InternalComment).ToArray();
+        }
+
+        public static bool ModifyAccount(string accountId,string internalComment)
+        {
+            var request = new AccountModifyRequest
+            {
+                AccountId = int.Parse(accountId),
+                InternalComment = internalComment
+            };
+            try
+            {
+                return _manager.ModifyAccount(request);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Modifying account failed because {0}", ex.Message);
+                return false;
+            }
+        }
+
         #endregion
 
         #region Get orders
@@ -2052,8 +2075,7 @@ namespace rTTManApi
 
         static void Main(string[] args)
         {
-            var a = _manager.RequestLevel2("EURUSD",300);
-            Console.ReadKey();
+            
         }
     }
 }
