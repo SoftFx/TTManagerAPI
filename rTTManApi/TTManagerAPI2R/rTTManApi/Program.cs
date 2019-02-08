@@ -1636,7 +1636,7 @@ namespace rTTManApi
             }
             catch (Exception ex)
             {
-                Logger.Log.ErrorFormat("Modifying symbol swap failed because {0}", ex.Message);
+                Logger.Log.ErrorFormat("Modifying symbol swap failed because {0}", ex);
                 return -2;
             }
 
