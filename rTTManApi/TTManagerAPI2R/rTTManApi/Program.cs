@@ -1612,21 +1612,16 @@ namespace rTTManApi
 
         #region Modify symbol swap
 
-        public static int ModifySymbolSwap(string symbolName, double swapSizeShort, double swapSizeLong, string swapType)
+        public static int ModifySymbolSwap(string symbolName, double swapSizeShort, double swapSizeLong)
         {
             try
             {
                 var symbol = _manager.RequestSymbol(symbolName);
-                if (!swapType.Equals(symbol.SwapType.ToString()))
+                /*if (!swapType.Equals(symbol.SwapType.ToString()))
                 {
                     throw new ArgumentException("wrong swap type for this symbol");
-                }
-                var request = SymbolModifyRequest.Create(1, symbolName, symbolName, symbol.Security, symbol.MarginCurrency,
-                    symbol.ProfitCurrency, symbol.Precision, (int?)symbol.ContractSizeFractional, symbol.Description,
-                    symbol.IsPrimary);
-                request.IgnoreConfigVersion = true;
-                request.SwapSizeShort = (float?)swapSizeShort;
-                request.SwapSizeLong = (float?)swapSizeLong;
+                }*/
+                var request = new SymbolModifyRequest { SymbolName = symbolName, IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort, SwapSizeLong = (float?)swapSizeLong };
                 if (_manager.ModifySymbol(request))
                 {
                     return 0;
