@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -86,6 +87,8 @@ namespace rTTManApi
         private static List<SymbolInfo> _symbolList;
         private static List<AccountSnapshotEntity> _accountSnapshotList;
         private static List<PositionDailySnapshot> _positionList;
+
+        private static List<NetPosition> _netPositions;
 
         #endregion
 
@@ -388,7 +391,7 @@ namespace rTTManApi
             return _accountList.Select(it => it.InternalComment).ToArray();
         }
 
-        public static bool ModifyAccount(string accountId,string internalComment)
+        public static bool ModifyAccount(string accountId, string internalComment)
         {
             var request = new AccountModifyRequest
             {
@@ -406,6 +409,66 @@ namespace rTTManApi
             }
         }
 
+        #endregion
+
+        #region Get Net Positions
+
+        public static int GetAllNetPositions()
+        {
+            try
+            {
+                _netPositions?.Clear();
+                Logger.Log.Info("Requesting all net positions");
+                _netPositions = _manager.RequestAllPositions();
+                Logger.Log.InfoFormat("Recieved {0} positions", _netPositions.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting all positions failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static double[] GetNetPositionsAccountId()
+        {
+            return _netPositions.Select(it => (double)it.AccountId).ToArray();
+        }
+
+        public static double[] GetNetPositionsAmount()
+        {
+            return _netPositions.Select(it => (double)it.Amount).ToArray();
+        }
+
+        public static double[] GetNetPositionsAveragePrice()
+        {
+            return _netPositions.Select(it => (double)it.AveragePrice).ToArray();
+        }
+
+        public static double[] GetNetPositionsId()
+        {
+            return _netPositions.Select(it => (double)it.Id).ToArray();
+        }
+
+        public static double[] GetNetPositionsProfit()
+        {
+            return _netPositions.Select(it => (double)(it.Profit ?? 0)).ToArray();
+        }
+
+        public static string[] GetNetPositionsSymbol()
+        {
+            return _netPositions.Select(it => it.Symbol).ToArray();
+        }
+
+        public static DateTime[] GetNetPositionsModified()
+        {
+            return _netPositions.Select(it => new DateTime((it.Modified ?? DateTime.MinValue).Ticks, DateTimeKind.Utc)).ToArray();
+        }
+
+        public static string[] GetNetPositionsSide()
+        {
+            return _netPositions.Select(it => it.Side.ToString()).ToArray();
+        }
         #endregion
 
         #region Get orders
@@ -444,6 +507,24 @@ namespace rTTManApi
             }
         }
 
+        /*public static int GetOrders(double[] accId)
+        {
+            try
+            {
+                _orderList?.Clear();
+                var positions = new List<NetPosition>();
+                for(int i = 0; i < accId.Length; ++i)
+                    positions = _manager.RequestAllPositions()
+                _orderList = _manager.RequestOrdersByAccountId(Convert.ToInt64(accId));
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting all orders of account {0} failed because {1}", accId, ex.Message);
+                return -1;
+            }
+        }
+        */
         public static double[] GetOrderRangeId()
         {
             return _orderList.Select(it => (double)it.RangeId).ToArray();
@@ -1643,7 +1724,116 @@ namespace rTTManApi
 
         public static bool Upstream(string symbol, DateTime from, DateTime to)
         {
-            return _manager.Upstream(symbol, from, to);
+            return _manager.Upstream(symbol, from, to, TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes.Level2ToAll);
+        }
+        public static bool Upstream(string symbol, DateTime from, DateTime to, int type)
+        {
+            return _manager.Upstream(symbol, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)type);
+        }
+        /* public static bool Upstream(string symbol, DateTime from, DateTime to, string[] upstreamType)
+         {
+
+             for(int i = 0; i <  upstreamType.Length; ++i )
+             {
+
+             }
+             switch (upstreamType)
+             {
+                 case "Level2ToTicks":
+                     type = 0;
+                     break;
+                 case "TicksToM1AndCache":
+                     type = 1;
+                     break;
+                 case "M1ToH1AndCache":
+                     type = 2;
+                     break;
+                 case "Leve2ToTicksAndBars":
+                     type = 3;
+                     break;
+                 case "H1ToCache":
+                     type = 4;
+                     break;
+                 case "Level2ToVWAP":
+                     type = 8;
+                     break;
+                 case "Level2ToAll":
+                     type = 11;
+                     break;
+             }
+             return  _manager.Upstream(symbol, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)type | (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)type);
+         }
+         */
+
+        public static bool Upstream(string symbol, DateTime from, DateTime to, double upstreamType)
+        {
+            return _manager.Upstream(symbol, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
+        }
+
+        public static bool Upstream(string symbol, DateTime from, DateTime to, double[] upstreamTypes)
+        {
+            var result = upstreamTypes.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
+            return _manager.Upstream(symbol, from, to, result);
+        }
+
+        public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double upstreamType)
+        {
+            int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
+            var info = _manager.GetHistoryTaskInfo(taskId);
+            while (info.Status == TaskStatus.Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+                info = _manager.GetHistoryTaskInfo(taskId);
+            }
+            if (info.Status == TaskStatus.RanToCompletion)
+                return 0;
+            return -1;
+        }
+
+        public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double[] upstreamType)
+        {
+            var result = upstreamType.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
+            int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, result);
+            var info = _manager.GetHistoryTaskInfo(taskId);
+            while (info.Status == TaskStatus.Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+                info = _manager.GetHistoryTaskInfo(taskId);
+            }
+            if (info.Status == TaskStatus.RanToCompletion)
+                return 0;
+            return -1;
+        }
+
+        public static int UpstreamAsync(string symbol, DateTime from, DateTime to, double upstreamType)
+        {
+            List<string> symbols = new List<string> { symbol };
+            int taskId = _manager.UpstreamAsync(symbols, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
+            var info = _manager.GetHistoryTaskInfo(taskId);
+            while (info.Status == TaskStatus.Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+                info = _manager.GetHistoryTaskInfo(taskId);
+            }
+            if (info.Status == TaskStatus.RanToCompletion)
+                return 0;
+            return -1;
+        }
+
+        public static int UpstreamAsync(string symbol, DateTime from, DateTime to, double[] upstreamType)
+        {
+            List<string> symbols = new List<string> { symbol };
+            var result = upstreamType.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
+            int taskId = _manager.UpstreamAsync(symbols, from, to, result);
+            var info = _manager.GetHistoryTaskInfo(taskId);
+            while (info.Status == TaskStatus.Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+                info = _manager.GetHistoryTaskInfo(taskId);
+            }
+            if (info.Status == TaskStatus.RanToCompletion)
+                return 0;
+            return -1;
         }
 
         public static bool DeleteSymbolTicks(string symbol, DateTime fromTime, double fromIndex, DateTime toTime, double toIndex)
@@ -2035,7 +2225,7 @@ namespace rTTManApi
             {
                 if (depth[i].Equals(1) && !bufTicks.IsEmpty())
                 {
-                    var tick = new TickValue(id,bufTicks);
+                    var tick = new TickValue(id, bufTicks);
                     ticks.Add(tick);
                     bufTicks.Clear();
                 }
@@ -2060,17 +2250,145 @@ namespace rTTManApi
                     };
                     bufTicks.Add(ask);
                 }
-            }     
+            }
             var lastTick = new TickValue(id, bufTicks);
             ticks.Add(lastTick);
             return _manager.InsertSymbolTicks(symbol, ticks);
         }
 
+        public static bool UploadQuotes(string symbol, string periodicityLevel, string fullFilePath)
+        {
+            using (FileStream stream = new FileStream(fullFilePath, FileMode.Open))
+            {
+                int level1 = -1;
+                switch (periodicityLevel)
+                {
+                    case "M1":
+                        level1 = 2;
+                        break;
+                    case "H1":
+                        level1 = 3;
+                        break;
+                    case "Ticks":
+                        level1 = 1;
+                        break;
+                    case "Level2":
+                        level1 = 0;
+                        break;
+                    case "VWAP":
+                        level1 = 4;
+                        break;
+                }
+                return _manager.QHImportFromStream(symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)level1, stream);
+            }
+
+        }
+
+        #endregion
+
+        #region ExportQuotes
+        public static int ExportFromStorageAsync(string symbol, DateTime from, DateTime to, double periodicityLevel)
+        {
+            List<string> symbolList = new List<string> { symbol };
+            int id = _manager.ExportFromStorageAsync(symbolList, from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+            TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+            while (info.Status == TaskStatus.Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+                info = _manager.GetHistoryTaskInfo(id);
+            }
+            if (info.Status == TaskStatus.RanToCompletion)
+                return 0;
+            return -1;
+        }
+
+        public static int ExportQuotes(string symbol, DateTime from, DateTime to, double periodicityLevel, string resultDirPath, bool isLocalDownload = false)
+        {
+            int exportResult = ExportFromStorageAsync(symbol, from, to, periodicityLevel);
+            var transferFiles = _manager.GetQHTransferFiles();
+            if (exportResult == 0)
+            {
+                if (isLocalDownload)
+                {
+                    string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+                    if (transferFiles.Any(d => d.FileName.Equals(fileName)))
+                    {
+                        bool isDownloaded = QHTransferFileDownnloadToStream(fileName, String.Concat(resultDirPath, "\\", fileName));
+                        if (!isDownloaded)
+                            Logger.Log.ErrorFormat("Can not download file {0}", fileName);
+                     }
+                    else
+                    {
+                        Logger.Log.WarnFormat("There is not file {0}", fileName, "on server");
+                    }
+                    
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+        public static int ExportFromStorageAsync(string[] symbols, DateTime from, DateTime to, double periodicityLevel)
+        {
+            int id = _manager.ExportFromStorageAsync(symbols.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+            TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+            while(info.Status == TaskStatus.Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+                info = _manager.GetHistoryTaskInfo(id);
+            }
+            if (info.Status == TaskStatus.RanToCompletion)
+                return 0;
+            return -1;
+        }
+
+        public static int ExportQuotes(string[] symbol, DateTime from, DateTime to, double periodicityLevel, string resultDirPath, bool isLocalDownload = false)
+        {
+            int exportResult = ExportFromStorageAsync(symbol, from, to, periodicityLevel);
+            var transferFiles = _manager.GetQHTransferFiles();
+            if (exportResult == 0)
+            {
+                if(isLocalDownload)
+                {
+                    for (int i = 0; i < symbol.Length; ++i)
+                    {
+                        string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol[i], (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+                        if (transferFiles.Any(d => d.FileName.Equals(fileName)))
+                        {
+                            bool isDownloaded = QHTransferFileDownnloadToStream(fileName, String.Concat(resultDirPath, "\\", fileName));
+                            if (!isDownloaded)
+                                Logger.Log.ErrorFormat("Can not download file {0}", fileName);
+                        }
+                        else
+                        {
+                            Logger.Log.WarnFormat("There is not file {0}", fileName, "on server");
+                        }
+                       
+                    }
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+        public static string GetHistoryTaskInfo(int id)
+        {
+            TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+            return info.Status.ToString();
+        }
+
+        public static bool QHTransferFileDownnloadToStream(string fileName, string path)
+        {
+            using (FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                return _manager.QHTransferFileDownnloadToStream(fileName, fileStream);
+            }
+        }
         #endregion
 
         static void Main(string[] args)
         {
-            
+
         }
     }
 }

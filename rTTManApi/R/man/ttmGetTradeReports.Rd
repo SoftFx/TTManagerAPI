@@ -4,8 +4,9 @@
 \alias{ttmGetTradeReports}
 \title{Gets the Trade reports as requested}
 \usage{
-ttmGetTradeReports(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz = "GMT"),
-  to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"), skipCancelled = TRUE)
+ttmGetTradeReports(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
+  "GMT"), to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"),
+  skipCancelled = TRUE)
 }
 \arguments{
 \item{accId}{a numeric vector. Accounts ids.}

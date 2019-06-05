@@ -2,14 +2,30 @@
 #' @param symbol a character. Symbol
 #' @param from a DateTime object. Start time to upstream 
 #' @param to a DateTime object. End time to upstream
+#' @param upstreamType a numeric. UpstreamType Enum Code
 #' @examples 
-#'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"))
+#'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
 #' 
 #' @export
-ttmUpstream <- function(symbol, from, to) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream',symbol,from,to)
+ttmUpstream <- function(symbol, from, to, upstreamType) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream', symbol, from, to, upstreamType)
   if(hResult == FALSE) stop("ttmUpstream return false")
 }
+
+#' UpstreamAsync symbol ticks
+#' @param symbol a character. Symbol
+#' @param from a DateTime object. Start time to upstream 
+#' @param to a DateTime object. End time to upstream
+#' @param upstreamType a numeric. UpstreamType Enum Code
+#' @examples 
+#'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
+#' 
+#' @export
+ttmUpstreamAsync <- function(symbol, from, to, upstreamType) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'UpstreamAsync', symbol, from, to, upstreamType)
+  hResult
+}
+
 
 #' Delete symbol ticks
 #' @param symbol a character. Symbol
@@ -57,4 +73,33 @@ ttmInsertTicks <- function(symbol, timestamps, bidPrices, bidVolumes, askPrices,
 ttmInsertLevel2Ticks <- function(symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes, depth) {
   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'InsertLevel2Ticks',symbol, timestamps, bidPrices, bidVolumes, askPrices, askVolumes, depth)
   if(hResult == FALSE) stop("ttmInsertLevel2Ticks return false")
+}
+
+#' Upload Quotes
+#' @param symbol Symbol
+#' @param periodicityLevel Periodicity Level
+#' @param fullFilePath a character. Path to Zip Quote File
+#' @examples 
+#' ttmUploadQuotes("EURUSD", "M1", "C:/Quotes/EURUSD_Ticks_2019-05-24_2019-06-01.zip")
+#' 
+#' @export
+ttmUploadQuotes <- function(symbol, periodicityLevel, fullFilePath) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'UploadQuotes',symbol, periodicityLevel, fullFilePath)
+  if(hResult == FALSE) stop("UploadQuotes return false")
+}
+
+#' Export Quotes
+#' @param symbol Symbol
+#' @param from a DateTime object. Start time to export
+#' @param to a DateTime object. End time to export
+#' @param periodicityLevel Periodicity Level
+#' @param resultDirPath a character. Path to Zip Quote File
+#' @param isLocalDownload a bool. Download File to Local Machine or not
+#' @examples 
+#' ttmExportQuotes(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"), 1, "C:/Quotes", TRUE)
+#' 
+#' @export
+ttmExportQuotes <- function(symbol, from, to, periodicityLevel, resultDirPath, isLocalDownload = FALSE) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ExportQuotes',symbol, from, to, periodicityLevel, resultDirPath, isLocalDownload)
+  hResult
 }

@@ -4,8 +4,8 @@
 \alias{ttmModifySymbolSwap}
 \title{Change symbol swap}
 \usage{
-ttmModifySymbolSwap(symbol = "", swapSizeShort = "", swapSizeLong = "",
-  swapType = "")
+ttmModifySymbolSwap(symbol = "", swapSizeShort = "",
+  swapSizeLong = "", swapType = "")
 }
 \arguments{
 \item{symbol}{a character. Symbol}
