@@ -7,18 +7,18 @@
 ttmUpstreamAsync(symbol, from, to, upstreamType)
 }
 \arguments{
-\item{symbol}{a character. Symbol}
+\item{symbol}{a character vector. Symbol names}
 
 \item{from}{a DateTime object. Start time to upstream}
 
 \item{to}{a DateTime object. End time to upstream}
 
-\item{upstreamType}{a numeric. UpstreamType Enum Code}
+\item{upstreamType}{a character vector. From this ("Level2ToTicks","TicksToM1","M1ToH1","Level2ToVWAP","Level2ToMain","TicksToCache" ,"M1ToCache","H1ToCache" ,"Cache","Level2ToAll")}
 }
 \description{
 UpstreamAsync symbol ticks
 }
 \examples{
- ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
+ ttmUpstreamAsync("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), c("M1ToH1", "H1ToCache"))
 
 }

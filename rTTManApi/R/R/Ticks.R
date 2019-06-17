@@ -1,28 +1,35 @@
-#' Upstream symbol ticks
-#' @param symbol a character. Symbol
-#' @param from a DateTime object. Start time to upstream 
-#' @param to a DateTime object. End time to upstream
-#' @param upstreamType a numeric. UpstreamType Enum Code
-#' @examples 
-#'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
-#' 
-#' @export
-ttmUpstream <- function(symbol, from, to, upstreamType) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream', symbol, from, to, upstreamType)
-  if(hResult == FALSE) stop("ttmUpstream return false")
-}
+# #' Upstream symbol ticks
+# #' @param symbol a character. Symbol
+# #' @param from a DateTime object. Start time to upstream
+# #' @param to a DateTime object. End time to upstream
+# #' @param upstreamType a numeric. UpstreamType Enum Code
+# #' @examples
+# #'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
+# ttmUpstream <- function(symbol, from, to, upstreamType) {
+#   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream', symbol, from, to, upstreamType)
+#   if(hResult == FALSE) stop("ttmUpstream return false")
+
+
 
 #' UpstreamAsync symbol ticks
-#' @param symbol a character. Symbol
+#' @param symbol a character vector. Symbol names
 #' @param from a DateTime object. Start time to upstream 
 #' @param to a DateTime object. End time to upstream
-#' @param upstreamType a numeric. UpstreamType Enum Code
+#' @param upstreamType a character vector. From this ("Level2ToTicks","TicksToM1","M1ToH1","Level2ToVWAP","Level2ToMain","TicksToCache" ,"M1ToCache","H1ToCache" ,"Cache","Level2ToAll")
 #' @examples 
-#'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
+#'  ttmUpstreamAsync("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), c("M1ToH1", "H1ToCache"))
 #' 
 #' @export
 ttmUpstreamAsync <- function(symbol, from, to, upstreamType) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'UpstreamAsync', symbol, from, to, upstreamType)
+  upstreamNum <- sapply(1:length(upstreamType), function(i){
+    if( is.element(upstreamType[i], names(UpstreamTypes))){
+      UpstreamTypes[[upstreamType[i]]]
+    }else{
+      stop(paste("ttmUpstreamAsync - Wrong Upstream Type -", upstreamType[i]))
+      -1
+    }
+  })
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'UpstreamAsync', symbol, from, to, upstreamNum)
   hResult
 }
 
@@ -76,30 +83,61 @@ ttmInsertLevel2Ticks <- function(symbol, timestamps, bidPrices, bidVolumes, askP
 }
 
 #' Upload Quotes
-#' @param symbol Symbol
-#' @param periodicityLevel Periodicity Level
+#' @param symbol a character. Symbol name
+#' @param periodicityLevel a character. Periodicity Level. From this ("TicksLevel2", "Ticks" ,"M1", "H1", "VWAP")
 #' @param fullFilePath a character. Path to Zip Quote File
 #' @examples 
 #' ttmUploadQuotes("EURUSD", "M1", "C:/Quotes/EURUSD_Ticks_2019-05-24_2019-06-01.zip")
 #' 
 #' @export
 ttmUploadQuotes <- function(symbol, periodicityLevel, fullFilePath) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'UploadQuotes',symbol, periodicityLevel, fullFilePath)
-  if(hResult == FALSE) stop("UploadQuotes return false")
+  periodicity <- -1
+  if(is.element(periodicityLevel, names(StoragePerodicity))){
+    periodicity <- StoragePerodicity[[periodicityLevel]]
+  }else{
+    stop(paste("ttmUploadQuotes - Wrong Storage Type -", periodicityLevel))
+  }
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'UploadQuotes', symbol, periodicity, fullFilePath)
+  hResult
 }
 
 #' Export Quotes
-#' @param symbol Symbol
+#' @param symbol a character vector. Symbol names
 #' @param from a DateTime object. Start time to export
 #' @param to a DateTime object. End time to export
-#' @param periodicityLevel Periodicity Level
-#' @param resultDirPath a character. Path to Zip Quote File
+#' @param periodicityLevel a character. Periodicity Level. From this ("TicksLevel2", "Ticks" ,"M1", "H1", "VWAP")
+#' @param resultDirPath a character. Path to directory where quotes will be downloaded.
 #' @param isLocalDownload a bool. Download File to Local Machine or not
 #' @examples 
-#' ttmExportQuotes(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"), 1, "C:/Quotes", TRUE)
+#' ttmExportQuotes(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"), "M1", "C:/Quotes", TRUE)
 #' 
 #' @export
 ttmExportQuotes <- function(symbol, from, to, periodicityLevel, resultDirPath, isLocalDownload = FALSE) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ExportQuotes',symbol, from, to, periodicityLevel, resultDirPath, isLocalDownload)
+  periodicity <- -1
+  if(is.element(periodicityLevel, names(StoragePerodicity))){
+    periodicity <- StoragePerodicity[[periodicityLevel]]
+  }else{
+    stop(paste("ttmUploadQuotes - Wrong Storage Type -", periodicityLevel))
+  }
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ExportQuotes',symbol, from, to, periodicity, resultDirPath, isLocalDownload)
   hResult
 }
+
+UpstreamTypes <- list("Level2ToTicks" = 1,
+                      "TicksToM1" = 2,
+                      "M1ToH1" = 4,
+                      "Level2ToVWAP" = 8,
+                      "Level2ToMain" = 15,
+                      "TicksToCache" = 16,
+                      "M1ToCache" = 32,
+                      "H1ToCache" = 64,
+                      "Cache" = 112,
+                      "Level2ToAll" = 127)
+
+StoragePerodicity <- list(
+  "TicksLevel2" = 0,
+  "Ticks" = 1,
+  "M1" = 2,
+  "H1" = 3,
+  "VWAP" = 4
+)

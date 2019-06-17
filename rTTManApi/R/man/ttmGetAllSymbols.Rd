@@ -2,11 +2,21 @@
 % Please edit documentation in R/Symbols.R
 \name{ttmGetAllSymbols}
 \alias{ttmGetAllSymbols}
-\title{Gets the symbols as requested}
+\title{#' Create New Symbol (For Test Only)
+ttmCreateNewSymbol <- function(symbolName = "",security = "",marginCurrency = "",profitCurrency = "", precision = 5, contractSize = 1) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbolName, security, marginCurrency, profitCurrency, precision, contractSize)
+  return(hResult)
+}
+Gets the symbols as requested}
 \usage{
 ttmGetAllSymbols()
 }
 \description{
+#' Create New Symbol (For Test Only)
+ttmCreateNewSymbol <- function(symbolName = "",security = "",marginCurrency = "",profitCurrency = "", precision = 5, contractSize = 1) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbolName, security, marginCurrency, profitCurrency, precision, contractSize)
+  return(hResult)
+}
 Gets the symbols as requested
 }
 \examples{

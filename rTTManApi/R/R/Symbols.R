@@ -1,3 +1,9 @@
+#' #' Create New Symbol (For Test Only)
+#' ttmCreateNewSymbol <- function(symbolName = "",security = "",marginCurrency = "",profitCurrency = "", precision = 5, contractSize = 1) {
+#'   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbolName, security, marginCurrency, profitCurrency, precision, contractSize)
+#'   return(hResult)
+#' }
+
 #' Gets the symbols as requested
 #' @examples 
 #' ttmGetAllSymbols()

@@ -8,15 +8,15 @@ ttmExportQuotes(symbol, from, to, periodicityLevel, resultDirPath,
   isLocalDownload = FALSE)
 }
 \arguments{
-\item{symbol}{Symbol}
+\item{symbol}{a character vector. Symbol names}
 
 \item{from}{a DateTime object. Start time to export}
 
 \item{to}{a DateTime object. End time to export}
 
-\item{periodicityLevel}{Periodicity Level}
+\item{periodicityLevel}{a character. Periodicity Level. From this ("TicksLevel2", "Ticks" ,"M1", "H1", "VWAP")}
 
-\item{resultDirPath}{a character. Path to Zip Quote File}
+\item{resultDirPath}{a character. Path to directory where quotes will be downloaded.}
 
 \item{isLocalDownload}{a bool. Download File to Local Machine or not}
 }
@@ -24,6 +24,6 @@ ttmExportQuotes(symbol, from, to, periodicityLevel, resultDirPath,
 Export Quotes
 }
 \examples{
-ttmExportQuotes(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"), 1, "C:/Quotes", TRUE)
+ttmExportQuotes(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"), "M1", "C:/Quotes", TRUE)
 
 }

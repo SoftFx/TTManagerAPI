@@ -13,11 +13,72 @@ using TickTrader.Manager;
 using TickTrader.Manager.Contract;
 using TickTrader.Manager.Model;
 using TickTrader.Manager.TTManAPI;
+using TickTrader.BusinessLogic;
 
 namespace rTTManApi
 {
     public class rTTManApiHost
     {
+        #region MarketManager
+        static MarketManager InitMarketManager()
+        {
+            var manager = new MarketManager(NettingCalculationTypes.Optimized);
+            manager.Update(_manager.RequestAllSymbols(), _manager.RequestAllGroupSecurities());
+            manager.Update(_manager.RequestAllCurrencies());
+            var ticks = _manager.RequestAllSymbolsTicks();
+            foreach(var tick in ticks)
+            {
+                var buf = manager.Update(tick).ToList();
+            }
+            return manager;
+        }
+        #endregion
+
+        #region Try Get CurrentBalanceToUSDConversionRate (Just for TEST)
+        struct DepCurrencyToUSD
+        {
+            public string Currency;
+            public decimal ConversionToUsdRate;
+
+            public DepCurrencyToUSD(string currency, decimal conversionRate)
+            {
+                Currency = currency;
+                ConversionToUsdRate = conversionRate;
+            }
+        }
+        private static List<DepCurrencyToUSD> _depCurrencyToUSDs;
+
+        public static void CalculateDepCurrencyToUSDConversionRate(double[] accId)
+        {
+            _depCurrencyToUSDs = new List<DepCurrencyToUSD>();
+            var marketManager = InitMarketManager();
+            for(int i = 0; i < accId.Length; ++i)
+            {
+                var account = _manager.RequestAccountById(Convert.ToInt64(accId[i]));
+                decimal rate = 0;
+                try
+                {
+                    rate = marketManager.GetGroupState(account.Group).ConversionMap.GetPositiveAssetConversion(account.BalanceCurrency, "USD").Value;
+                }
+                catch
+                {
+                    Logger.Log.ErrorFormat("Can not calculate conversionToUsd rate, account - {0}; currency - {1}", account.AccountId, account.BalanceCurrency);
+                    rate = 0;
+                }
+                _depCurrencyToUSDs.Add(new DepCurrencyToUSD(account.BalanceCurrency, rate));
+            }
+
+        }
+        public static string[] GetDepCurrencyToUSDCurrency()
+        {
+            return _depCurrencyToUSDs.Select(it => it.Currency).ToArray();
+        }
+        public static double[] GetDepCurrencyToUSDRate()
+        {
+            return _depCurrencyToUSDs.Select(it => (double)it.ConversionToUsdRate).ToArray();
+        }
+        #endregion
+
         struct AssetDailySnapshot
         {
             public string Currency;
@@ -91,7 +152,6 @@ namespace rTTManApi
         private static List<NetPosition> _netPositions;
 
         #endregion
-
         #region Connection
 
         public static int Connect(string address, string login, string password)
@@ -1313,7 +1373,6 @@ namespace rTTManApi
         #endregion
 
         #region Get assets
-
         public static int GetAssets(double accId)
         {
             try
@@ -1357,6 +1416,96 @@ namespace rTTManApi
             return _assetList.Select(it => (double)it.LockedAmount).ToArray();
         }
 
+        #endregion
+
+        #region Get All Current Assets
+        private static List<MyAssetsInfo> _allAssets;
+
+        struct MyAssetsInfo
+        {
+            public string Currency;
+            public short CurrencyId;
+            public decimal Amount;
+            public decimal FreeAmount;
+            public decimal LockedAmount;
+            public long AccountId;
+            public decimal ConversionToUsd;
+            public MyAssetsInfo(AssetInfo info, long id, decimal conversionToUsd)
+            {
+                Currency = info.Currency;
+                CurrencyId = info.CurrencyId;
+                Amount = info.Amount;
+                FreeAmount = info.FreeAmount;
+                LockedAmount = info.LockedAmount;
+                AccountId = id;
+                ConversionToUsd = conversionToUsd;
+            }
+        }
+ 
+        public static int GetAllAssets()
+        {
+            _allAssets?.Clear();
+            Logger.Log.InfoFormat("Requesting All Assets");
+            try
+            {
+                var accounts = _manager.RequestAllAccounts();
+                var marketManager = InitMarketManager();
+                _allAssets = new List<MyAssetsInfo>();
+                foreach( var item in accounts)
+                {
+                    var assets = item.Assets;
+                    foreach(var asset in assets)
+                    {
+                        decimal rate = 0;
+                        try
+                        {
+                            rate = marketManager.GetGroupState(item.Group).ConversionMap.GetPositiveAssetConversion(asset.Currency, "USD").Value;
+                        }
+                        catch
+                        {
+                            Logger.Log.ErrorFormat("Can not calculate conversionToUsd rate, account - {0}; currency - {1}", item.AccountId, asset.Currency);
+                            rate = 0;
+                        }
+                        var myAssetInfo = new MyAssetsInfo(asset, item.AccountId, rate);
+                        _allAssets.Add(myAssetInfo);
+                    }
+                }
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting all aseets failed because {0}", ex.Message);
+                Console.ReadLine();
+                return -1;
+            }
+            return 0;
+        }
+        public static double[] GetAllAssetAccount()
+        {
+            return _allAssets.Select(it => (double)it.AccountId).ToArray();
+        }
+        public static string[] GetAllAssetCurrency()
+        {
+            return _allAssets.Select(it => it.Currency).ToArray();
+        }
+        public static double[] GetAllAssetCurrencyId()
+        {
+            return _allAssets.Select(it => (double)it.CurrencyId).ToArray();
+        }
+        public static double [] GetAllAssetAmount()
+        {
+            return _allAssets.Select(it => (double)it.Amount).ToArray();
+        }
+        public static double[] GetAllAssetFreeAmount()
+        {
+            return _allAssets.Select(it => (double)it.FreeAmount).ToArray();
+        }
+        public static double[] GetAllAssetLockedAmount()
+        {
+            return _allAssets.Select(it => (double)it.LockedAmount).ToArray();
+        }
+        public static double[] GetAllAssetConversionToUsd()
+        {
+            return _allAssets.Select(it => (double)it.ConversionToUsd).ToArray();
+        }
         #endregion
 
         #region Get asset snapshots
@@ -1502,7 +1651,34 @@ namespace rTTManApi
         }
 
         #endregion
-
+       
+        #region Create Symbol
+        public static bool CreateSymbol(string symbolName, string security, string marginCurrency, string profitCurrency, double precision, double contractSize)
+        {
+            //var req =  SymbolNewRequest.Create(1, symbolName, security, marginCurrency, profitCurrency, (int)precision, (int)contractSize, "", false);
+            var req2 = new SymbolNewRequest
+            {
+                SymbolName = symbolName,
+                Security = security,
+                MarginCurrency = marginCurrency,
+                ProfitCurrency = profitCurrency,
+                Precision = (int)precision,
+                ContractSizeFractional = contractSize,
+                Ticks = new List<FeedTick> { new FeedTick(symbolName, new DateTime(2019, 6, 1, 0, 0, 0), 1, 1, 1, 1) },
+                StopOrderMarginReduction = 1,
+                HiddenLimitOrderMarginReduction = 1,
+                MarginFactorFractional = 1,
+                SwapType = SwapType.Points,
+                SwapSizeLong = 0,
+                SwapSizeShort = 0,
+                QuotesWriteMode = QuotesWriteModes.Bars,
+                IsQuotesFilteringDisabled = false,
+                ConfigVersion = _manager.ConfigVersion
+            };
+            return _manager.CreateSymbol(req2);
+        }
+        #endregion
+        
         #region Get symbols info
         public static int GetSymbolsInfo()
         {
@@ -1721,49 +1897,11 @@ namespace rTTManApi
         #endregion
 
         #region Symbol ticks
-
+        
         public static bool Upstream(string symbol, DateTime from, DateTime to)
         {
             return _manager.Upstream(symbol, from, to, TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes.Level2ToAll);
         }
-        public static bool Upstream(string symbol, DateTime from, DateTime to, int type)
-        {
-            return _manager.Upstream(symbol, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)type);
-        }
-        /* public static bool Upstream(string symbol, DateTime from, DateTime to, string[] upstreamType)
-         {
-
-             for(int i = 0; i <  upstreamType.Length; ++i )
-             {
-
-             }
-             switch (upstreamType)
-             {
-                 case "Level2ToTicks":
-                     type = 0;
-                     break;
-                 case "TicksToM1AndCache":
-                     type = 1;
-                     break;
-                 case "M1ToH1AndCache":
-                     type = 2;
-                     break;
-                 case "Leve2ToTicksAndBars":
-                     type = 3;
-                     break;
-                 case "H1ToCache":
-                     type = 4;
-                     break;
-                 case "Level2ToVWAP":
-                     type = 8;
-                     break;
-                 case "Level2ToAll":
-                     type = 11;
-                     break;
-             }
-             return  _manager.Upstream(symbol, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)type | (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)type);
-         }
-         */
 
         public static bool Upstream(string symbol, DateTime from, DateTime to, double upstreamType)
         {
@@ -1775,7 +1913,7 @@ namespace rTTManApi
             var result = upstreamTypes.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
             return _manager.Upstream(symbol, from, to, result);
         }
-
+        
         public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double upstreamType)
         {
             int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
@@ -2281,7 +2419,6 @@ namespace rTTManApi
                 }
                 return _manager.QHImportFromStream(symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)level1, stream);
             }
-
         }
 
         #endregion
@@ -2289,70 +2426,40 @@ namespace rTTManApi
         #region ExportQuotes
         public static int ExportFromStorageAsync(string symbol, DateTime from, DateTime to, double periodicityLevel)
         {
-            List<string> symbolList = new List<string> { symbol };
-            int id = _manager.ExportFromStorageAsync(symbolList, from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
-            TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
-            while (info.Status == TaskStatus.Running)
+            try
             {
-                System.Threading.Thread.Sleep(1000);
-                info = _manager.GetHistoryTaskInfo(id);
+                List<string> symbolList = new List<string> { symbol };
+                int id = _manager.ExportFromStorageAsync(symbolList, from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+                while (info.Status == TaskStatus.Running)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    info = _manager.GetHistoryTaskInfo(id);
+                }
+                if (info.Status != TaskStatus.RanToCompletion)
+                {
+                    Logger.Log.ErrorFormat("Export operation status is {0}", info.Status.ToString());
+                    return -1;
+                }
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
+                return -1;
             }
-            if (info.Status == TaskStatus.RanToCompletion)
-                return 0;
-            return -1;
+            return 0;
         }
 
         public static int ExportQuotes(string symbol, DateTime from, DateTime to, double periodicityLevel, string resultDirPath, bool isLocalDownload = false)
         {
-            int exportResult = ExportFromStorageAsync(symbol, from, to, periodicityLevel);
-            var transferFiles = _manager.GetQHTransferFiles();
-            if (exportResult == 0)
+            try
             {
-                if (isLocalDownload)
+                int exportResult = ExportFromStorageAsync(symbol, from, to, periodicityLevel);
+                var transferFiles = _manager.GetQHTransferFiles();
+                string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+                if (exportResult == 0)
                 {
-                    string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
-                    if (transferFiles.Any(d => d.FileName.Equals(fileName)))
+                    if (isLocalDownload)
                     {
-                        bool isDownloaded = QHTransferFileDownnloadToStream(fileName, String.Concat(resultDirPath, "\\", fileName));
-                        if (!isDownloaded)
-                            Logger.Log.ErrorFormat("Can not download file {0}", fileName);
-                     }
-                    else
-                    {
-                        Logger.Log.WarnFormat("There is not file {0}", fileName, "on server");
-                    }
-                    
-                }
-                return 0;
-            }
-            return -1;
-        }
-
-        public static int ExportFromStorageAsync(string[] symbols, DateTime from, DateTime to, double periodicityLevel)
-        {
-            int id = _manager.ExportFromStorageAsync(symbols.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
-            TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
-            while(info.Status == TaskStatus.Running)
-            {
-                System.Threading.Thread.Sleep(1000);
-                info = _manager.GetHistoryTaskInfo(id);
-            }
-            if (info.Status == TaskStatus.RanToCompletion)
-                return 0;
-            return -1;
-        }
-
-        public static int ExportQuotes(string[] symbol, DateTime from, DateTime to, double periodicityLevel, string resultDirPath, bool isLocalDownload = false)
-        {
-            int exportResult = ExportFromStorageAsync(symbol, from, to, periodicityLevel);
-            var transferFiles = _manager.GetQHTransferFiles();
-            if (exportResult == 0)
-            {
-                if(isLocalDownload)
-                {
-                    for (int i = 0; i < symbol.Length; ++i)
-                    {
-                        string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol[i], (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
                         if (transferFiles.Any(d => d.FileName.Equals(fileName)))
                         {
                             bool isDownloaded = QHTransferFileDownnloadToStream(fileName, String.Concat(resultDirPath, "\\", fileName));
@@ -2363,18 +2470,88 @@ namespace rTTManApi
                         {
                             Logger.Log.WarnFormat("There is not file {0}", fileName, "on server");
                         }
-                       
                     }
                 }
-                return 0;
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
+                return -1;
             }
-            return -1;
+            return 0;
+        }
+
+        public static int ExportFromStorageAsync(string[] symbols, DateTime from, DateTime to, double periodicityLevel)
+        {
+            try
+            {
+                int id = _manager.ExportFromStorageAsync(symbols.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+                while (info.Status == TaskStatus.Running)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    info = _manager.GetHistoryTaskInfo(id);
+                }
+                if (info.Status != TaskStatus.RanToCompletion)
+                {
+                    Logger.Log.ErrorFormat("Export operation status is {0}", info.Status.ToString());
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+
+        }
+
+        public static int ExportQuotes(string[] symbols, DateTime from, DateTime to, double periodicityLevel, string resultDirPath, bool isLocalDownload = false)
+        {
+            try
+            {
+                int exportResult = ExportFromStorageAsync(symbols, from, to, periodicityLevel);
+                var transferFiles = _manager.GetQHTransferFiles();
+                if (exportResult == 0)
+                {
+                    if (isLocalDownload)
+                    {
+                        for(int i = 0; i < symbols.Length; ++i)
+                        {
+                            string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbols[i], (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+                            if (transferFiles.Any(d => d.FileName.Equals(fileName)))
+                            {
+                                bool isDownloaded = QHTransferFileDownnloadToStream(fileName, String.Concat(resultDirPath, "\\", fileName));
+                                if (!isDownloaded)
+                                    Logger.Log.ErrorFormat("Can not download file {0}", fileName);
+                            }
+                            else
+                            {
+                                Logger.Log.WarnFormat("There is not file {0}", fileName, "on server");
+                            }
+
+                        }
+                    }
+                } 
+            }      
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
         }
 
         public static string GetHistoryTaskInfo(int id)
         {
             TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
             return info.Status.ToString();
+        }
+
+        public static bool CancelTask(int id)
+        {
+            var res = _manager.RequestHistoryTaskCancel(id);
+            return res;
         }
 
         public static bool QHTransferFileDownnloadToStream(string fileName, string path)
@@ -2386,9 +2563,22 @@ namespace rTTManApi
         }
         #endregion
 
+        private static List<SymbolTick> _symbolTicks;
+
+        public static int GetAllSymbolTicks()
+        {
+            try
+            {
+                _symbolTicks = _manager.GetAllSymbolsTicks();
+                return 0;
+            }catch(Exception e)
+            {
+                Logger.Log.ErrorFormat("Can't get symbols tick {0}", e.Message);
+                return -1;
+            }
+        }
         static void Main(string[] args)
         {
-
         }
     }
 }

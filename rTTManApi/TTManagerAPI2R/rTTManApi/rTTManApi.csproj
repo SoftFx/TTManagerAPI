@@ -83,6 +83,9 @@
       <HintPath>..\lib\System.Interactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="TickTrader.BusinessLogic">
+      <HintPath>..\lib\TickTrader.BusinessLogic.dll</HintPath>
+    </Reference>
     <Reference Include="TickTrader.BusinessObjects, Version=1.27.30.0, Culture=neutral, PublicKeyToken=f93e83ea42ea164d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\TickTrader.BusinessObjects.dll</HintPath>

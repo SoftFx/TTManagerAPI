@@ -1,3 +1,55 @@
+#' Gets All Assets as requested
+#'
+#' @examples 
+#' ttmGetAllAssets()
+#' @export
+ttmGetAllAssets <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssets')
+  GetAllAssetFrame()
+}
+#' Get All Asset Table
+GetAllAssetFrame <- function(){
+  AccountId = GetAllAssetAccount()
+  Currency = GetAllAssetCurrency()
+  CurrencyId = GetAllAssetCurrencyId()
+  Amount = GetAllAssetAmount()
+  FreeAmount = GetAllAssetFreeAmount()
+  LockedAmount = GetAllAssetLockedAmount()
+  ConversionToUsd = GetAllAssetConversionToUsd()
+  data.table(AccountId, Currency,CurrencyId,Amount,FreeAmount,LockedAmount, ConversionToUsd)
+}
+#' Get All Asset field
+GetAllAssetCurrency<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetCurrency')
+}
+#' Get All Asset field
+GetAllAssetCurrencyId<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetCurrencyId')
+}
+#' Get All Asset field
+GetAllAssetAccount<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetAccount')
+}
+#' Get All Asset field
+GetAllAssetAmount<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetAmount')
+}
+#' Get All Asset field
+GetAllAssetFreeAmount<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetFreeAmount')
+}
+#' Get All Asset field
+GetAllAssetLockedAmount<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetLockedAmount')
+}
+
+#'Get All Asset field
+GetAllAssetConversionToUsd <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAssetConversionToUsd')
+}
+
+
+
 #' Gets the Assets as requested
 #'
 #' @param accountId a numeric. Account id

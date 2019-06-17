@@ -7,9 +7,9 @@
 ttmUploadQuotes(symbol, periodicityLevel, fullFilePath)
 }
 \arguments{
-\item{symbol}{Symbol}
+\item{symbol}{a character. Symbol name}
 
-\item{periodicityLevel}{Periodicity Level}
+\item{periodicityLevel}{a character. Periodicity Level. From this ("TicksLevel2", "Ticks" ,"M1", "H1", "VWAP")}
 
 \item{fullFilePath}{a character. Path to Zip Quote File}
 }
