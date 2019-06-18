@@ -2394,31 +2394,20 @@ namespace rTTManApi
             return _manager.InsertSymbolTicks(symbol, ticks);
         }
 
-        public static bool UploadQuotes(string symbol, string periodicityLevel, string fullFilePath)
+        public static int UploadQuotes(string symbol, double periodicityLevel, string fullFilePath)
         {
-            using (FileStream stream = new FileStream(fullFilePath, FileMode.Open))
+            try
             {
-                int level1 = -1;
-                switch (periodicityLevel)
+                using (FileStream stream = new FileStream(fullFilePath, FileMode.Open))
                 {
-                    case "M1":
-                        level1 = 2;
-                        break;
-                    case "H1":
-                        level1 = 3;
-                        break;
-                    case "Ticks":
-                        level1 = 1;
-                        break;
-                    case "Level2":
-                        level1 = 0;
-                        break;
-                    case "VWAP":
-                        level1 = 4;
-                        break;
+                    _manager.QHImportFromStream(symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel), stream);
                 }
-                return _manager.QHImportFromStream(symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)level1, stream);
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Uploading quotes failed because {0}", ex.Message);
+                return -1;
             }
+            return 0;
         }
 
         #endregion
