@@ -40,9 +40,17 @@ GetAccountSnapshotFrame<-function()
   UsdToBalanceConversionRate = GetAccountSnapshotUsdToBalanceConversionRate()
   ProfitToUsdConversionRate = GetAccountSnapshotProfitToUsdConversionRate()
   UsdToProfitConversionRate = GetAccountSnapshotUsdToProfitConversionRate()
+
+  BalanceToReportConversionRate = GetAccountSnapshotBalanceToReportConversionRate()
+  ReportToBalanceConversionRate = GetAccountSnapshotReportToBalanceConversionRate()
+  ReportToProfitConversionRate = GetAccountSnapshotReportToProfitConversionRate()
+  ProfitToReportConversionRate = GetAccountSnapshotProfitToReportConversionRate()
+  ReportCurrency = GetAccountSnapshotReportCurrency()
+  
   data.table(Id, AccountId, Timestamp, Server, Domain, Group, AccountingType, Leverage, Balance, BalanceCurrency, Profit, Commission, AgentCommission,
              TotalCommission, Swap, TotalProfitLoss, Equity, Margin, MarginLevel, IsBlocked, IsReadonly, IsValid, BalanceToUsdConversionRate,
-             UsdToBalanceConversionRate, ProfitToUsdConversionRate, UsdToProfitConversionRate)
+             UsdToBalanceConversionRate, ProfitToUsdConversionRate, UsdToProfitConversionRate, 
+             BalanceToReportConversionRate, ReportToBalanceConversionRate, ReportToProfitConversionRate , ProfitToReportConversionRate, ReportCurrency)
 }
 #' Get Account snapshot field
 GetAccountSnapshotId<-function(){
@@ -147,4 +155,25 @@ GetAccountSnapshotProfitToUsdConversionRate<-function(){
 #' Get Account snapshot field
 GetAccountSnapshotUsdToProfitConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshotUsdToProfitConversionRate')
+}
+#' Get Account snapshot field
+GetAccountSnapshotBalanceToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshotBalanceToReportConversionRate')
+}
+#' Get Account snapshot field
+GetAccountSnapshotReportToBalanceConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshotReportToBalanceConversionRate')
+}
+
+#' Get Account snapshot field
+GetAccountSnapshotReportToProfitConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshotReportToProfitConversionRate')
+}
+#' Get Account snapshot field
+GetAccountSnapshotProfitToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshotProfitToReportConversionRate')
+}
+#' Get Account snapshot field
+GetAccountSnapshotReportCurrency<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshotReportCurrency')
 }

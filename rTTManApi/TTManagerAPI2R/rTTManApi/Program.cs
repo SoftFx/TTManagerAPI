@@ -2186,6 +2186,32 @@ namespace rTTManApi
         {
             return _accountSnapshotList.Select(it => (double)(it.UsdToProfitConversionRate ?? 0)).ToArray();
         }
+
+        public static double[] GetAccountSnapshotBalanceToReportConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.BalanceToReportConversionRate ?? 0)).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotReportToBalanceConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.ReportToBalanceConversionRate ?? 0)).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotReportToProfitConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.ReportToProfitConversionRate ?? 0)).ToArray();
+        }
+
+        public static double[] GetAccountSnapshotProfitToReportConversionRate()
+        {
+            return _accountSnapshotList.Select(it => (double)(it.ProfitToReportConversionRate ?? 0)).ToArray();
+        }
+
+        public static string[] GetAccountSnapshotReportCurrency()
+        {
+            return _accountSnapshotList.Select(it => it.ReportCurrency).ToArray();
+        }
+
         #endregion
 
         #region Get position snapshot
