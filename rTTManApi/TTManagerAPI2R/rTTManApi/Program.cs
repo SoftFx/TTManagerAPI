@@ -151,7 +151,47 @@ namespace rTTManApi
 
         private static List<NetPosition> _netPositions;
 
+        private static List<TickValue> _tickValues;
+
         #endregion
+
+        #region GetTicks
+        public static int GetTicks(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
+        {
+            try
+            {
+                _tickValues = _manager.QueryTickHistoryCache(endTime, (int)count, symbol, includeLevel2);
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get ticks because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static DateTime[] GetTicksTimestamps()
+        {
+            return _tickValues.Select(it => new DateTime(it.Id.Time.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+
+        public static double[] GetTicksAskPrice()
+        {
+            return _tickValues.Select(it => (double)it.BestAsk.Price).ToArray();
+        }
+        public static double[] GetTicksAskVolume()
+        {
+            return _tickValues.Select(it => it.BestAsk.Volume).ToArray();
+        }
+        public static double[] GetTicksBidPrice()
+        {
+            return _tickValues.Select(it => (double)it.BestBid.Price).ToArray();
+        }
+        public static double[] GetTicksBidVolume()
+        {
+            return _tickValues.Select(it => it.BestBid.Volume).ToArray();
+        }
+        #endregion
+       
         #region Connection
 
         public static int Connect(string address, string login, string password)
@@ -853,6 +893,56 @@ namespace rTTManApi
         public static bool[] GetOrderIsPending()
         {
             return _orderList.Select(it => it.IsPending).ToArray();
+        }
+
+        public static int CreateNewOrder(double login, double orderType, double orderSide, string symbol, double amount, double stopPrice, double price, double stopLoss,  double takeProfit, string UserComment, string ManagerComment, DateTime Expiration)
+        {
+            try
+            {
+                decimal? stopPr = stopPrice.Equals(0) ? null : (decimal?)stopPrice;
+                decimal? pr = price.Equals(0) ? null : (decimal?)price;
+                decimal? sl = stopLoss.Equals(0) ? null : (decimal?)stopLoss;
+                decimal? tp = takeProfit.Equals(0) ? null : (decimal?)takeProfit;
+                DateTime? Expir = DateTime.Compare(Expiration, new DateTime(1970, 1, 1)) == 0 ? null : (DateTime?)Expiration;
+                var orderRequest = OpenOrderRequest.Create((long)login, (OrderTypes)Convert.ToInt32(orderType),
+                    (OrderSides)Convert.ToInt32(orderSide), symbol, (decimal)amount, stopPr, pr, sl, tp, UserComment, ManagerComment,
+                    "", "", 0, Expir);
+                Order order = _manager.OpenOrder(orderRequest);
+                if (order == null)
+                {
+                    Logger.Log.ErrorFormat("Order {0} could not be created");
+                }
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Order {0} could not be created because", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static int CreateNewOrder(double[]login, double[] orderType, double[] orderSide, string[] symbol, double[] amount, double[] stopPrice, double[] price, double[] stopLoss, double[] takeProfit, string[] UserComment, string[] ManagerComment, DateTime[] Expiration)
+        {
+            try
+            {
+                for (int i = 0; i < login.Length; ++i)
+                {
+                    decimal? stopPr = stopPrice[i].Equals(0) ? null : (decimal?)stopPrice[i];
+                    decimal? pr = price[i].Equals(0) ? null : (decimal?)price[i];
+                    decimal? sl = stopLoss[i].Equals(0) ? null : (decimal?)stopLoss[i];
+                    decimal? tp = takeProfit[i].Equals(0) ? null : (decimal?)takeProfit[i];
+                    DateTime? Expir = DateTime.Compare(Expiration[i], new DateTime(1970, 1, 1)) == 0 ? null : (DateTime?)Expiration[i];
+                    var orderRequest = OpenOrderRequest.Create((long)login[i], (OrderTypes)Convert.ToInt32(orderType[i]),
+                        (OrderSides)Convert.ToInt32(orderSide[i]), symbol[i], (decimal)amount[i], stopPr, pr, sl, tp, UserComment[i], ManagerComment[i],
+                        "", "", 0, Expir);
+                    Order order = _manager.OpenOrder(orderRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Order {0} could not be created because", ex.Message);
+                return -1;
+            }
+            return 0;
         }
 
         #endregion
@@ -1979,6 +2069,58 @@ namespace rTTManApi
             return _manager.DeleteSymbolTicks(symbol, new FeedTickId(fromTime, (byte)fromIndex), new FeedTickId(toTime, (byte)toIndex));
         }
 
+        public static int DeleteFromStorageAsync(string symbol, DateTime from, DateTime to, double periodicityLevel)
+        {
+            try
+            {
+                List<string> symbolList = new List<string> { symbol };
+                int id = _manager.DeleteFromStorageAsync(symbolList, from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+                while (info.Status == TaskStatus.Running)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    info = _manager.GetHistoryTaskInfo(id);
+                }
+                if (info.Status != TaskStatus.RanToCompletion)
+                {
+                    Logger.Log.ErrorFormat("Delete operation status is {0}", info.Status.ToString());
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Delete Quotes failed because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static int DeleteFromStorageAsync(string[] symbols, DateTime from, DateTime to, double periodicityLevel)
+        {
+            try
+            {
+                int id = _manager.DeleteFromStorageAsync(symbols.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
+                while (info.Status == TaskStatus.Running)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    info = _manager.GetHistoryTaskInfo(id);
+                }
+                if (info.Status != TaskStatus.RanToCompletion)
+                {
+                    Logger.Log.ErrorFormat("Export operation status is {0}", info.Status.ToString());
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+
+        }
+
         #endregion
 
         #region Get account snapshots
@@ -2592,6 +2734,7 @@ namespace rTTManApi
                 return -1;
             }
         }
+
         static void Main(string[] args)
         {
         }

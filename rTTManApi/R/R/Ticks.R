@@ -117,11 +117,75 @@ ttmExportQuotes <- function(symbol, from, to, periodicityLevel, resultDirPath, i
   if(is.element(periodicityLevel, names(StoragePerodicity))){
     periodicity <- StoragePerodicity[[periodicityLevel]]
   }else{
-    stop(paste("ttmUploadQuotes - Wrong Storage Type -", periodicityLevel))
+    stop(paste("ttmExportQuotes - Wrong Storage Type -", periodicityLevel))
   }
   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ExportQuotes',symbol, from, to, periodicity, resultDirPath, isLocalDownload)
   hResult
 }
+
+#' Delete Quotes
+#' @param symbol a character vector. Symbol names
+#' @param from a DateTime object. Start time to delete
+#' @param to a DateTime object. End time to delete
+#' @param periodicityLevel a character. Periodicity Level. From this ("TicksLevel2", "Ticks" ,"M1", "H1", "VWAP")
+#' @examples 
+#' ttmExportQuotes(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"), "M1", "C:/Quotes", TRUE)
+#' 
+#' @export
+ttmDeleteQuotes <- function(symbol, from, to, periodicityLevel) {
+  periodicity <- -1
+  if(is.element(periodicityLevel, names(StoragePerodicity))){
+    periodicity <- StoragePerodicity[[periodicityLevel]]
+  }else{
+    stop(paste("ttmDeleteQuotes - Wrong Storage Type -", periodicityLevel))
+  }
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'DeleteFromStorageAsync',symbol, from, to, periodicity)
+  hResult
+}
+
+#' Get Quotes
+#' @param symbol a character. Symbol name
+#' @param to a DateTime object. End time
+#' @param count a numeric. Integer ticks count (Can be positive or negative)
+#' @examples 
+#' ttmGetTicks("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
+#' 
+#' @export
+ttmGetTicks <- function(symbol, endTime, count) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicks', symbol, endTime, count)
+  GetTicksFrame()
+}
+
+GetTicksFrame <- function(){
+  data.table(
+    Timestamp = GetTicksTimestamps(),
+    BidPrice = GetTicksBidPrice(),
+    BidVolume = GetTicksBidVolume(),
+    AskPrice = GetTicksAskPrice(),
+    AskVolume = GetTicksAskVolume()
+  )
+}
+
+GetTicksTimestamps <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksTimestamps')
+}
+
+GetTicksAskPrice <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksAskPrice')
+}
+
+GetTicksAskVolume <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksAskVolume')
+}
+
+GetTicksBidPrice <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksBidPrice')
+}
+
+GetTicksBidVolume <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksBidVolume')
+}
+
 
 UpstreamTypes <- list("Level2ToTicks" = 1,
                       "TicksToM1" = 2,

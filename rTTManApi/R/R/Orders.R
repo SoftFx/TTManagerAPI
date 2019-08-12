@@ -295,3 +295,12 @@ GetOrderActivation<-function(){
 GetOrderIsPending<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderIsPending')
 }
+
+#' Create the Orders as requested
+#' @examples 
+#' ttmCreateNewOrder()
+#'
+#' @export
+ttmCreateNewOrder <- function(login, orderType, orderSide, symbol, amount,stopPrice, price, stopLoss, takeProfit,UserComment, ManagerComment, Expiration) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateNewOrder', login, orderType, orderSide, symbol, amount,stopPrice, price, stopLoss, takeProfit,UserComment, ManagerComment, Expiration)
+}
