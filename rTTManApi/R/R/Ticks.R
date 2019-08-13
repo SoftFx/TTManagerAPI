@@ -145,7 +145,7 @@ ttmDeleteQuotes <- function(symbol, from, to, periodicityLevel) {
 
 #' Get Quotes
 #' @param symbol a character. Symbol name
-#' @param to a DateTime object. End time
+#' @param endTime a DateTime object. End time
 #' @param count a numeric. Integer ticks count (Can be positive or negative)
 #' @examples 
 #' ttmGetTicks("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
@@ -153,6 +153,19 @@ ttmDeleteQuotes <- function(symbol, from, to, periodicityLevel) {
 #' @export
 ttmGetTicks <- function(symbol, endTime, count) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicks', symbol, endTime, count)
+  GetTicksFrame()
+}
+
+#' Get Ticks History
+#' @param symbol a character. Symbol name
+#' @param endTime a DateTime object. End time
+#' @param count a numeric. Integer ticks count (Can be positive or negative)
+#' @examples 
+#' ttmGetTicks("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
+#' 
+#' @export
+ttmGetTicksHistory <- function(symbol, endTime, count) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksHistory', symbol, endTime, count)
   GetTicksFrame()
 }
 

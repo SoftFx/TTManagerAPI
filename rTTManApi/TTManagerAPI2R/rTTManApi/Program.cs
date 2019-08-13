@@ -152,12 +152,12 @@ namespace rTTManApi
         private static List<NetPosition> _netPositions;
 
         private static List<TickValue> _tickValues;
-
         #endregion
 
         #region GetTicks
         public static int GetTicks(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
         {
+            _tickValues?.Clear();
             try
             {
                 _tickValues = _manager.QueryTickHistoryCache(endTime, (int)count, symbol, includeLevel2);
@@ -191,7 +191,22 @@ namespace rTTManApi
             return _tickValues.Select(it => it.BestBid.Volume).ToArray();
         }
         #endregion
-       
+
+        public static int GetTicksHistory(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
+        {
+            _tickValues?.Clear();
+            try
+            {
+                _tickValues = _manager.QueryTickHistory(endTime, Convert.ToInt32(count), symbol, includeLevel2).Items.ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get ticks because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+
         #region Connection
 
         public static int Connect(string address, string login, string password)
