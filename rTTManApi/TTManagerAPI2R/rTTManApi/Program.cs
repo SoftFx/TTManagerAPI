@@ -190,7 +190,6 @@ namespace rTTManApi
         {
             return _tickValues.Select(it => it.BestBid.Volume).ToArray();
         }
-        #endregion
 
         public static int GetTicksHistory(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
         {
@@ -206,6 +205,51 @@ namespace rTTManApi
             }
             return 0;
         }
+        #endregion
+
+        #region Get BarHistory
+        private static List<HistoryBar> _barHistory;
+
+        public static int GetBarHistory(string symbol, string periodicity, double barType, DateTime to, double count)
+        {
+            _barHistory?.Clear();
+            try
+            {
+                _barHistory = _manager.QueryBarHistory(to, Convert.ToInt32(count), symbol, periodicity, (FxPriceType)(Convert.ToInt32(barType))).Items.ToList();
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get bars because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static DateTime[] GetBarsHistoryTimestamps()
+        {
+            return _barHistory.Select(it => new DateTime(it.Time.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+
+        public static double[] GetBarsHistoryOpen()
+        {
+            return _barHistory.Select(it => (double)it.Open).ToArray();
+        }
+        public static double[] GetBarsHistoryHigh()
+        {
+            return _barHistory.Select(it => (double)it.Hi).ToArray();
+        }
+        public static double[] GetBarsHistoryLow()
+        {
+            return _barHistory.Select(it => (double)it.Low).ToArray();
+        }
+        public static double[] GetBarsHistoryClose()
+        {
+            return _barHistory.Select(it => (double)it.Close).ToArray();
+        }
+        public static double[] GetBarsHistoryVolume()
+        {
+            return _barHistory.Select(it => (double)it.Volume).ToArray();
+        }
+        #endregion
 
         #region Connection
 
