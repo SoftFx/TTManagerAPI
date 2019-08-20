@@ -301,6 +301,6 @@ GetOrderIsPending<-function(){
 #' ttmCreateNewOrder()
 #'
 #' @export
-ttmCreateNewOrder <- function(login, orderType, orderSide, symbol, amount,stopPrice, price, stopLoss, takeProfit,UserComment, ManagerComment, Expiration) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateNewOrder', login, orderType, orderSide, symbol, amount,stopPrice, price, stopLoss, takeProfit,UserComment, ManagerComment, Expiration)
+ttmCreateNewOrder <- function(login, orderType, orderSide, symbol, amount,stopPrice, price, stopLoss, takeProfit,UserComment, ManagerComment, Expiration, reqType = 0) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateNewOrder', login, orderType, orderSide, symbol, amount,stopPrice, price, stopLoss, takeProfit,UserComment, ManagerComment, Expiration, reqType)
 }

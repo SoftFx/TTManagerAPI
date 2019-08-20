@@ -954,7 +954,7 @@ namespace rTTManApi
             return _orderList.Select(it => it.IsPending).ToArray();
         }
 
-        public static int CreateNewOrder(double login, double orderType, double orderSide, string symbol, double amount, double stopPrice, double price, double stopLoss,  double takeProfit, string UserComment, string ManagerComment, DateTime Expiration)
+        public static int CreateNewOrder(double login, double orderType, double orderSide, string symbol, double amount, double stopPrice, double price, double stopLoss,  double takeProfit, string UserComment, string ManagerComment, DateTime Expiration, double reqType = 0)
         {
             try
             {
@@ -963,9 +963,20 @@ namespace rTTManApi
                 decimal? sl = stopLoss.Equals(0) ? null : (decimal?)stopLoss;
                 decimal? tp = takeProfit.Equals(0) ? null : (decimal?)takeProfit;
                 DateTime? Expir = DateTime.Compare(Expiration, new DateTime(1970, 1, 1)) == 0 ? null : (DateTime?)Expiration;
-                var orderRequest = OpenOrderRequest.Create((long)login, (OrderTypes)Convert.ToInt32(orderType),
+                int requestType = Convert.ToInt32(reqType);
+                OpenOrderRequest orderRequest;
+                if (requestType == 0)
+                {
+                    orderRequest = OpenOrderRequest.Create((long)login, (OrderTypes)Convert.ToInt32(orderType),
                     (OrderSides)Convert.ToInt32(orderSide), symbol, (decimal)amount, stopPr, pr, sl, tp, UserComment, ManagerComment,
                     "", "", 0, Expir);
+                }
+                else
+                {
+                    orderRequest = OpenOrderRequest.CreateClient((long)login, (OrderTypes)Convert.ToInt32(orderType),
+                    (OrderSides)Convert.ToInt32(orderSide), symbol, (decimal)amount, stopPr, pr, sl, tp, UserComment, ManagerComment,
+                    "", "", 0, Expir);
+                }
                 Order order = _manager.OpenOrder(orderRequest);
                 if (order == null)
                 {
@@ -979,7 +990,7 @@ namespace rTTManApi
             return 0;
         }
 
-        public static int CreateNewOrder(double[]login, double[] orderType, double[] orderSide, string[] symbol, double[] amount, double[] stopPrice, double[] price, double[] stopLoss, double[] takeProfit, string[] UserComment, string[] ManagerComment, DateTime[] Expiration)
+        public static int CreateNewOrder(double[]login, double[] orderType, double[] orderSide, string[] symbol, double[] amount, double[] stopPrice, double[] price, double[] stopLoss, double[] takeProfit, string[] UserComment, string[] ManagerComment, DateTime[] Expiration, double reqType = 0)
         {
             try
             {
@@ -990,9 +1001,20 @@ namespace rTTManApi
                     decimal? sl = stopLoss[i].Equals(0) ? null : (decimal?)stopLoss[i];
                     decimal? tp = takeProfit[i].Equals(0) ? null : (decimal?)takeProfit[i];
                     DateTime? Expir = DateTime.Compare(Expiration[i], new DateTime(1970, 1, 1)) == 0 ? null : (DateTime?)Expiration[i];
-                    var orderRequest = OpenOrderRequest.Create((long)login[i], (OrderTypes)Convert.ToInt32(orderType[i]),
+                    int requestType = Convert.ToInt32(reqType);
+                    OpenOrderRequest orderRequest;
+                    if (requestType == 0)
+                    {
+                        orderRequest = OpenOrderRequest.Create((long)login[i], (OrderTypes)Convert.ToInt32(orderType[i]),
                         (OrderSides)Convert.ToInt32(orderSide[i]), symbol[i], (decimal)amount[i], stopPr, pr, sl, tp, UserComment[i], ManagerComment[i],
                         "", "", 0, Expir);
+                    }
+                    else
+                    {
+                        orderRequest = OpenOrderRequest.CreateClient((long)login[i], (OrderTypes)Convert.ToInt32(orderType[i]),
+                        (OrderSides)Convert.ToInt32(orderSide[i]), symbol[i], (decimal)amount[i], stopPr, pr, sl, tp, UserComment[i], ManagerComment[i],
+                        "", "", 0, Expir);
+                    }
                     Order order = _manager.OpenOrder(orderRequest);
                 }
             }
