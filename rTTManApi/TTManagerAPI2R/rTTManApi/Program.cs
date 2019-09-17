@@ -87,6 +87,8 @@ namespace rTTManApi
             public decimal LockedAmount;
             public decimal CurrencyToUsdConversionRate;
             public decimal UsdToCurrencyConversionRate;
+            public decimal CurrencyToReportConversionRate;
+            public decimal ReportToCurrencyConversionRate;
             public DateTime Timestamp;
             public double AccountId;
 
@@ -98,6 +100,8 @@ namespace rTTManApi
                 LockedAmount = asset.LockedAmount;
                 CurrencyToUsdConversionRate = asset.CurrencyToUsdConversionRate;
                 UsdToCurrencyConversionRate = asset.UsdToCurrencyConversionRate;
+                CurrencyToReportConversionRate = asset.CurrencyToReportConversionRate ?? 0;
+                ReportToCurrencyConversionRate = asset.ReportToCurrencyConversionRate ?? 0;
                 Timestamp = timestamp;
                 AccountId = accountId;
             }
@@ -1815,10 +1819,17 @@ namespace rTTManApi
         {
             return _snapshotList.Select(it => (double)it.UsdToCurrencyConversionRate).ToArray();
         }
-
+        public static double[] GetSnapshotCurrencyToReportConversionRate()
+        {
+            return _snapshotList.Select(it => (double)it.CurrencyToReportConversionRate).ToArray();
+        }
+        public static double[] GetSnapshotReportToCurrencyConversionRate()
+        {
+            return _snapshotList.Select(it => (double)it.ReportToCurrencyConversionRate).ToArray();
+        }
         public static DateTime[] GetSnapshotTimestamp()
         {
-            return _snapshotList.Select(it => it.Timestamp).ToArray();
+            return _snapshotList.Select(it => new DateTime(it.Timestamp.Ticks, DateTimeKind.Utc)).ToArray();
         }
 
         #endregion
