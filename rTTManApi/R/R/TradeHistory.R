@@ -103,6 +103,14 @@ GetTradeFrame<-function()
   TradeReducedCloseCommissionFlag = GetTradeReducedCloseCommissionFlag()
   TradeAccountId = GetTradeAccountId()
   TradeSymbolPrecision = GetTradeSymbolPrecision()
+  TradeProfitCurrencyToReportConversionRate = GetTradeProfitCurrencyToReportConversionRate()
+  TradeMarginCurrencyToReportConversionRate = GetTradeMarginCurrencyToReportConversionRate()
+  TradeDstAssetToReportConversionRate = GetTradeDstAssetToReportConversionRate()
+  TradeSrcAssetToReportConversionRate = GetTradeSrcAssetToReportConversionRate()
+  TradeBalanceToReportConversionRate = GetTradeBalanceToReportConversionRate()
+  TradeProfitToReportConversionRate = GetTradeProfitToReportConversionRate()
+  
+  
   data.table(TradeAccountId,TradeId, TradeDomain, TradeGroup, TradeOrderId, TradeOrderActionNo, TradeClientOrderId, TradeTrType, 
              TradeTrReason, TradeTrTime, TradeSide, TradeOrderType, TradeParentOrderType, TradeOrderCreated, 
              TradeOrderModified, TradeSymbol, TradeSymbolAlias, TradeSymbolAliasOrName, TradeSymbolFk, TradeOrderAmount, 
@@ -121,7 +129,9 @@ GetTradeFrame<-function()
              TradeUsdToSrcAssetConversionRate, TradeDstAssetToUsdConversionRate, TradeUsdToDstAssetConversionRate, 
              TradeSrcAssetCurrency, TradeSrcAssetAmount, TradeSrcAssetMovement, TradeDstAssetCurrency, TradeDstAssetAmount, 
              TradeDstAssetMovement, TradeOptions, TradeOrderMaxVisibleAmount, TradeReducedOpenCommissionFlag, 
-             TradeReducedCloseCommissionFlag, TradeSymbolPrecision)
+             TradeReducedCloseCommissionFlag, TradeSymbolPrecision, TradeProfitCurrencyToReportConversionRate,TradeMarginCurrencyToReportConversionRate,
+             TradeDstAssetToReportConversionRate,TradeSrcAssetToReportConversionRate,TradeBalanceToReportConversionRate,
+             TradeProfitToReportConversionRate)
 }
 #' Get Trade report field
 GetTradeId<-function(){
@@ -474,4 +484,34 @@ GetTradeSymbolPrecision<-function(){
 #' Get Trade report field
 GetTradeAccountId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeAccountId')
+}
+
+#' Get Trade report field
+GetTradeProfitCurrencyToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeProfitCurrencyToReportConversionRate')
+}
+
+#' Get Trade report field
+GetTradeMarginCurrencyToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeMarginCurrencyToReportConversionRate')
+}
+
+#' Get Trade report field
+GetTradeDstAssetToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeDstAssetToReportConversionRate')
+}
+
+#' Get Trade report field
+GetTradeSrcAssetToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeSrcAssetToReportConversionRate')
+}
+
+#' Get Trade report field
+GetTradeBalanceToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeBalanceToReportConversionRate')
+}
+
+#' Get Trade report field
+GetTradeProfitToReportConversionRate<-function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeProfitToReportConversionRate')
 }

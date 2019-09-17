@@ -1545,6 +1545,31 @@ namespace rTTManApi
             return _tradeReportList.Select(it => (double)(it.SymbolPrecision ?? 0)).ToArray();
         }
 
+        public static double[] GetTradeProfitCurrencyToReportConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.ProfitCurrencyToReportConversionRate ?? 0)).ToArray();
+        }
+        public static double[] GetTradeMarginCurrencyToReportConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.MarginCurrencyToReportConversionRate ?? 0)).ToArray();
+        }
+        public static double[] GetTradeDstAssetToReportConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.DstAssetToReportConversionRate ?? 0)).ToArray();
+        }
+        public static double[] GetTradeSrcAssetToReportConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.SrcAssetToReportConversionRate ?? 0)).ToArray();
+        }
+        public static double[] GetTradeBalanceToReportConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.BalanceToReportConversionRate ?? 0)).ToArray();
+        }
+        public static double[] GetTradeProfitToReportConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.ProfitToReportConversionRate ?? 0)).ToArray();
+        }
+        
         #endregion
 
         #region Get assets
