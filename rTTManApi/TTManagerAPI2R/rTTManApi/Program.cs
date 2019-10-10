@@ -6,15 +6,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TickTrader.BusinessObjects;
-using TickTrader.BusinessObjects.FeedSources.CustomConfigs;
 using TickTrader.BusinessObjects.Requests;
 using TickTrader.Common.Business;
-using TickTrader.Manager;
-using TickTrader.Manager.Contract;
 using TickTrader.Manager.Model;
-using TickTrader.Manager.TTManAPI;
 using TickTrader.BusinessLogic;
-
+using TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask;
 namespace rTTManApi
 {
     public class rTTManApiHost
@@ -1860,30 +1856,69 @@ namespace rTTManApi
         #endregion
        
         #region Create Symbol
-        public static bool CreateSymbol(string symbolName, string security, string marginCurrency, string profitCurrency, double precision, double contractSize)
+        public static bool CreateSymbol(string symbolName, string security, string isin, string alias, string marginCurrency, string profitCurrency, 
+            double precision, double contractSize, double marginFactorFractional = 1, bool swapEnabled = true, double marginMode = 1, 
+            double profitMode = 1, double marginHedged = 0.5, double swapType = 1, double swapSizeLong = 0, double swapSizeShort = 0, string description = "")
         {
-            //var req =  SymbolNewRequest.Create(1, symbolName, security, marginCurrency, profitCurrency, (int)precision, (int)contractSize, "", false);
             var req2 = new SymbolNewRequest
             {
                 SymbolName = symbolName,
                 Security = security,
+                ISIN = isin,
                 MarginCurrency = marginCurrency,
                 ProfitCurrency = profitCurrency,
                 Precision = (int)precision,
                 ContractSizeFractional = contractSize,
-                Ticks = new List<FeedTick> { new FeedTick(symbolName, new DateTime(2019, 6, 1, 0, 0, 0), 1, 1, 1, 1) },
+                Ticks = new List<FeedTick> { new FeedTick(symbolName, DateTime.UtcNow, 1, 0, 1, 0) },
+                SymbolAlias = alias,
                 StopOrderMarginReduction = 1,
                 HiddenLimitOrderMarginReduction = 1,
-                MarginFactorFractional = 1,
-                SwapType = SwapType.Points,
-                SwapSizeLong = 0,
-                SwapSizeShort = 0,
-                QuotesWriteMode = QuotesWriteModes.Bars,
+                MarginFactorFractional = marginFactorFractional,
+                MarginHedged = marginHedged,
+                SwapType = (SwapType)Convert.ToInt32(swapType),
+                SwapSizeLong = (float)swapSizeLong,
+                SwapSizeShort = (float)swapSizeShort,
+                QuotesWriteMode = QuotesWriteModes.Ticks,
                 IsQuotesFilteringDisabled = false,
-                ConfigVersion = _manager.ConfigVersion
+                //ConfigVersion = _manager.ConfigVersion,
+                MarginMode = (MarginCalculationModes)Convert.ToInt32(marginMode),
+                ProfitMode = (ProfitCalculationModes)Convert.ToInt32(profitMode),
+                QuotesBackupMode = QuotesWriteModes.TicksLevel2,
+                Description = description,
+                IgnoreConfigVersion = true
             };
-            return _manager.CreateSymbol(req2);
+            try
+            {
+                return _manager.CreateSymbol(req2);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Create symbol failed because {0}", ex.Message);
+                return false;
+            }
         }
+
+        public static bool ModifySymbol(string symbolName, string newISIN)
+        {
+            //int ConfigVersion, string SymbolName, string NewSymbolName, string Security, string MarginCurrency, string ProfitCurrency, int? Precision, int? ContractSize, string Description, bool? IsPrimary
+            var req = new SymbolModifyRequest
+            {
+                //ConfigVersion = _manager.ConfigVersion,
+                SymbolName = symbolName,
+                IgnoreConfigVersion = true,
+                ISIN = newISIN
+            };
+            try
+            {
+                return _manager.ModifySymbol(req);
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Modify symbol failed because {0}", ex.Message);
+                return false;
+            }
+        }
+
         #endregion
         
         #region Get symbols info
@@ -2107,23 +2142,23 @@ namespace rTTManApi
         
         public static bool Upstream(string symbol, DateTime from, DateTime to)
         {
-            return _manager.Upstream(symbol, from, to, TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes.Level2ToAll);
+            return _manager.Upstream(symbol, from, to, UpstreamTypes.Level2ToAll);
         }
 
         public static bool Upstream(string symbol, DateTime from, DateTime to, double upstreamType)
         {
-            return _manager.Upstream(symbol, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
+            return _manager.Upstream(symbol, from, to, (UpstreamTypes)Convert.ToInt32(upstreamType));
         }
 
         public static bool Upstream(string symbol, DateTime from, DateTime to, double[] upstreamTypes)
         {
-            var result = upstreamTypes.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
+            var result = upstreamTypes.Select(i => (UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
             return _manager.Upstream(symbol, from, to, result);
         }
         
         public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double upstreamType)
         {
-            int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
+            int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, (UpstreamTypes)Convert.ToInt32(upstreamType));
             var info = _manager.GetHistoryTaskInfo(taskId);
             while (info.Status == TaskStatus.Running)
             {
@@ -2137,7 +2172,7 @@ namespace rTTManApi
 
         public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double[] upstreamType)
         {
-            var result = upstreamType.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
+            var result = upstreamType.Select(i => (UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
             int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, result);
             var info = _manager.GetHistoryTaskInfo(taskId);
             while (info.Status == TaskStatus.Running)
@@ -2153,7 +2188,7 @@ namespace rTTManApi
         public static int UpstreamAsync(string symbol, DateTime from, DateTime to, double upstreamType)
         {
             List<string> symbols = new List<string> { symbol };
-            int taskId = _manager.UpstreamAsync(symbols, from, to, (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)Convert.ToInt32(upstreamType));
+            int taskId = _manager.UpstreamAsync(symbols, from, to, (UpstreamTypes)Convert.ToInt32(upstreamType));
             var info = _manager.GetHistoryTaskInfo(taskId);
             while (info.Status == TaskStatus.Running)
             {
@@ -2168,7 +2203,7 @@ namespace rTTManApi
         public static int UpstreamAsync(string symbol, DateTime from, DateTime to, double[] upstreamType)
         {
             List<string> symbols = new List<string> { symbol };
-            var result = upstreamType.Select(i => (TickTrader.BusinessObjects.QuoteHistory.UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
+            var result = upstreamType.Select(i => (UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
             int taskId = _manager.UpstreamAsync(symbols, from, to, result);
             var info = _manager.GetHistoryTaskInfo(taskId);
             while (info.Status == TaskStatus.Running)
@@ -2191,7 +2226,7 @@ namespace rTTManApi
             try
             {
                 List<string> symbolList = new List<string> { symbol };
-                int id = _manager.DeleteFromStorageAsync(symbolList, from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                int id = _manager.DeleteFromStorageAsync(symbolList, from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
                 TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
                 while (info.Status == TaskStatus.Running)
                 {
@@ -2216,7 +2251,7 @@ namespace rTTManApi
         {
             try
             {
-                int id = _manager.DeleteFromStorageAsync(symbols.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                int id = _manager.DeleteFromStorageAsync(symbols.ToList(), from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
                 TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
                 while (info.Status == TaskStatus.Running)
                 {
@@ -2685,7 +2720,7 @@ namespace rTTManApi
             {
                 using (FileStream stream = new FileStream(fullFilePath, FileMode.Open))
                 {
-                    _manager.QHImportFromStream(symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel), stream);
+                    _manager.QHImportFromStream(symbol, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel), stream);
                 }
             }catch(Exception ex)
             {
@@ -2703,7 +2738,7 @@ namespace rTTManApi
             try
             {
                 List<string> symbolList = new List<string> { symbol };
-                int id = _manager.ExportFromStorageAsync(symbolList, from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                int id = _manager.ExportFromStorageAsync(symbolList, from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
                 TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
                 while (info.Status == TaskStatus.Running)
                 {
@@ -2729,7 +2764,7 @@ namespace rTTManApi
             {
                 int exportResult = ExportFromStorageAsync(symbol, from, to, periodicityLevel);
                 var transferFiles = _manager.GetQHTransferFiles();
-                string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+                string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbol, (StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
                 if (exportResult == 0)
                 {
                     if (isLocalDownload)
@@ -2758,7 +2793,7 @@ namespace rTTManApi
         {
             try
             {
-                int id = _manager.ExportFromStorageAsync(symbols.ToList(), from, to, (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                int id = _manager.ExportFromStorageAsync(symbols.ToList(), from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
                 TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
                 while (info.Status == TaskStatus.Running)
                 {
@@ -2792,7 +2827,7 @@ namespace rTTManApi
                     {
                         for(int i = 0; i < symbols.Length; ++i)
                         {
-                            string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbols[i], (TickTrader.BusinessObjects.QuoteHistory.Engine.StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
+                            string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbols[i], (StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
                             if (transferFiles.Any(d => d.FileName.Equals(fileName)))
                             {
                                 bool isDownloaded = QHTransferFileDownnloadToStream(fileName, String.Concat(resultDirPath, "\\", fileName));

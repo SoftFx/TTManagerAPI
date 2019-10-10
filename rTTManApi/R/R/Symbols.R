@@ -4,6 +4,66 @@
 #'   return(hResult)
 #' }
 
+#' Create new Symbol
+#'
+#' @param symbol a character. Symbol
+#' @param security a character. Security
+#' @param isin a character. ISIN
+#' @param alias a character. Alias
+#' @param marginCurrency a character. MarginCurrency
+#' @param profitCurrency a character. ProfitCurrency
+#' @param precision a numeric. Precision
+#' @param contractSize a numeric. ContractSize
+#' @param marginFactorFractional a numeric. MarginFactorFractional
+#' @param swapEnabled a boolean. SwapEnabled
+#' @param marginMode a character. MarginMode
+#' @param profitMode a character. ProfitMode
+#' @param marginHedged a numeric.  MarginHedged
+#' @param swapType a character. SwapType. For TTS only "Points" or "PercentPerYear"
+#' @param swapSizeLong a numeric. SwapSizeLong
+#' @param swapSizeShort a numeric SwapSizeShort
+#' @param description a character. SwapSizeShort
+#' 
+#' @export
+ttmCreateNewSymbol <- function(symbol, security, isin, alias, marginCurrency, profitCurrency,
+                               precision, contractSize, marginFactorFractional = 1, swapEnabled = TRUE, marginMode = "CFD", profitMode = "CFD",
+                               marginHedged = 0.5, swapType = "PercentPerYear", swapSizeLong = 0, swapSizeShort = 0, description = ""
+                               ){
+  tempMarginMode <- -1
+  tempProfitMode <- -1
+  tempSwapType <- -1
+  if(is.element(marginMode, names(MarginCalculationModes))){
+    tempMarginMode <- MarginCalculationModes[[marginMode]]
+  }else{
+    stop(paste("Wrong Margin Mode -", marginMode))
+  }
+  if(is.element(profitMode, names(ProfitCalculationModes))){
+    tempProfitMode <- ProfitCalculationModes[[profitMode]]
+  }else{
+    stop(paste("Wrong Profit Mode -", marginMode))
+  }
+  if(is.element(swapType, names(SwapType))){
+    tempSwapType <- SwapType[[swapType]]
+  }else{
+    stop(paste("Wrong SwapType -", swapType))
+  }
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbol ,security, isin, alias, marginCurrency, profitCurrency,
+                                precision, contractSize, marginFactorFractional, swapEnabled, tempMarginMode, tempProfitMode,
+                                marginHedged, tempSwapType, swapSizeLong, swapSizeShort, description)
+}
+
+#' Modify Symbol
+#' 
+#' @param symbol a character. Symbol
+#' @param isin a character. New ISIN value
+#' 
+#' @export
+ttmModifySymbol <- function(symbol, isin) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbol', symbol, isin)
+}
+
+
+
 #' Gets the symbols as requested
 #' @examples 
 #' ttmGetAllSymbols()
@@ -208,3 +268,23 @@ GetSymbolSwapType<-function(){
 GetSymbolTripleSwapDay<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolTripleSwapDay')
 }
+
+
+MarginCalculationModes <- list("Forex" = 0,
+                               "CFD" = 1,
+                               "Futures" = 2,
+                               "CFD_Index" = 3,
+                               "CFD_Leverage" = 4
+                      )
+ProfitCalculationModes <- list("Forex" = 0,
+                               "CFD" = 1,
+                               "Futures" = 2,
+                               "CFD_Index" = 3,
+                               "CFD_Leverage" = 4
+                               )
+
+SwapType <- list("Points" = 0,
+                 "PercentPerYear" = 1
+                 )
+
+
