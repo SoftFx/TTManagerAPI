@@ -2107,6 +2107,14 @@ namespace rTTManApi
             return _symbolList.Select(it => (double)it.TripleSwapDay).ToArray();
         }
 
+        public static string[] GetSymbolISIN()
+        {
+            return _symbolList.Select(it => it.ISIN).ToArray();
+        }
+        public static string[] GetSymbolAlias()
+        {
+            return _symbolList.Select(it => it.Alias).ToArray();
+        }
         #endregion
 
         #region Modify symbol swap
