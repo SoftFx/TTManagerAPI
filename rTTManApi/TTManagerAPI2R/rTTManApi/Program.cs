@@ -136,6 +136,23 @@ namespace rTTManApi
                 AccountId = accountId;
             }
         }
+
+        struct AccountCustomProperties
+        {
+            public long AccountId;
+            public string NM;
+            public string Name;
+            public string Value;
+
+            public AccountCustomProperties(CustomPropertyKey key, string value, long account)
+            {
+                AccountId = account;
+                NM = key.Namespace;
+                Name = key.Name;
+                Value = value;
+            }
+        };
+
         #region Private fields
 
         private static TickTraderManagerModel _manager;
@@ -152,6 +169,7 @@ namespace rTTManApi
         private static List<NetPosition> _netPositions;
 
         private static List<TickValue> _tickValues;
+        private static List<AccountCustomProperties> _customProperties;
         #endregion
 
         #region GetTicks
@@ -566,6 +584,50 @@ namespace rTTManApi
                 Logger.Log.ErrorFormat("Modifying account failed because {0}", ex.Message);
                 return false;
             }
+        }
+        
+        public static int GetAccountsCustomProperties()
+        {
+            _customProperties?.Clear();
+            try
+            {
+                _customProperties = new List<AccountCustomProperties>();
+
+                for (int i = 0; i < _accountList.Count; ++i)
+                {
+                    var keys = _accountList[i].Properties.Keys.ToList();
+                    for (int j = 0; j < keys.Count; ++j)
+                    {
+                        _customProperties.Add(new AccountCustomProperties(keys[j], _accountList[i].Properties.Get(keys[j]), _accountList[i].AccountId));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting all accounts custom Properties failed because {0}", ex.StackTrace);
+                return -1;
+            }
+            return 0;
+
+        }
+
+        public static double[] GetAccountCustomPropertiesId()
+        {
+            return _customProperties.Select(it => (double)it.AccountId).ToArray();
+        }
+        public static string[] GetAccountCustomPropertiesNM()
+        {
+            return _customProperties.Select(it => it.NM).ToArray();
+        }
+
+        public static string[] GetAccountCustomPropertiesName()
+        {
+            return _customProperties.Select(it => it.Name).ToArray();
+        }
+
+        public static string[] GetAccountCustomPropertiesValue()
+        {
+            return _customProperties.Select(it => it.Value).ToArray();
         }
 
         #endregion

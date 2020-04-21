@@ -1,5 +1,5 @@
 #' Initialize the CLR runtime and loads QuoteHistory host assembly
-#'
+#' @import data.table
 ttmInit <- function() {
   require(rClr)
   if(!require(stringi))

@@ -3,8 +3,15 @@
 #' ttmGetAllAccounts()
 #' @export
 ttmGetAllAccounts <- function() {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAccounts')
-  GetAccountFrame()
+  t1 = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAccounts')
+  #return(GetAccountFrame)
+  
+  ###temp code to Get eWallet Property from CustomProperties
+  PropertyTable = GetAccountsCustomProperties()
+  accounts = GetAccountFrame()
+  accounts = merge(accounts, PropertyTable[PropertyName == "ewallet",.(AccountId, "EWallet" = PropertyValue)], by = "AccountId", all.x = TRUE)
+  ###
+  return(accounts)
 }
 #' Get Account table
 GetAccountFrame<-function()
@@ -167,4 +174,29 @@ GetAccountEmail<-function(){
 #' Get Account field
 GetAccountInternalComment<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountInternalComment')
+}
+
+GetAccountCustomPropertiesId <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountCustomPropertiesId')
+}
+
+GetAccountCustomPropertiesNM <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountCustomPropertiesNM')
+}
+
+GetAccountCustomPropertiesName <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountCustomPropertiesName')
+}
+
+GetAccountCustomPropertiesValue <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountCustomPropertiesValue')
+}
+
+GetAccountsCustomProperties <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountsCustomProperties')
+  AccountId = GetAccountCustomPropertiesId()
+  PropertyNM = GetAccountCustomPropertiesNM()
+  PropertyName = GetAccountCustomPropertiesName()
+  PropertyValue = GetAccountCustomPropertiesValue()
+  return(data.table(AccountId, PropertyNM, PropertyName, PropertyValue))
 }
