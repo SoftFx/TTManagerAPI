@@ -2116,12 +2116,12 @@ namespace rTTManApi
 
         public static double[] GetSymbolSwapSizeShort()
         {
-            return _symbolList.Select(it => (double)it.SwapSizeShort).ToArray();
+            return _symbolList.Select(it => double.Parse(it.SwapSizeShort.ToString())).ToArray();
         }
 
         public static double[] GetSymbolSwapSizeLong()
         {
-            return _symbolList.Select(it => (double)it.SwapSizeLong).ToArray();
+            return _symbolList.Select(it => double.Parse(it.SwapSizeLong.ToString())).ToArray();
         }
 
         public static bool[] GetSymbolIsPrimary()
