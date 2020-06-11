@@ -173,7 +173,7 @@ namespace rTTManApi
         #endregion
 
         #region GetTicks
-        public static int GetTicks(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
+        public static int GetTickHistoryCache(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
         {
             _tickValues?.Clear();
             try
@@ -207,6 +207,11 @@ namespace rTTManApi
         public static double[] GetTicksBidVolume()
         {
             return _tickValues.Select(it => it.BestBid.Volume).ToArray();
+        }
+
+        public static string[] GetTicksType()
+        {
+            return _tickValues.Select(it => it.TickType.ToString()).ToArray();
         }
 
         public static int GetTicksHistory(string symbol, DateTime endTime, double count, bool includeLevel2 = false)

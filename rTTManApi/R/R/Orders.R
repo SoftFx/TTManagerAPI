@@ -19,7 +19,7 @@ ttmGetOrders <- function(accountId) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrders',accountId)
   GetOrderFrame()
 }
-#' Get Order table
+# Get Order table
 GetOrderFrame<-function()
 {
   RangeId = GetOrderRangeId()
@@ -83,215 +83,215 @@ GetOrderFrame<-function()
              Taxes, ReqOpenPrice, ReqOpenAmount, ClientApp, IsReducedOpenCommission, IsReducedCloseCommission, 
              MaxVisibleAmount, FilledAmount, VisibleAmount, TotalCommission, Activation, IsPending)
 }
-#' Get Order field
+# Get Order field
 GetOrderRangeId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderRangeId')
 }
-#' Get Order field
+# Get Order field
 GetOrderAccountId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderAccountId')
 }
-#' Get Order field
+# Get Order field
 GetOrderSymbol<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderSymbol')
 }
-#' Get Order field
+# Get Order field
 GetOrderSymbolAlias<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderSymbolAlias')
 }
-#' Get Order field
+# Get Order field
 GetOrderSymbolAliasOrName<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderSymbolAliasOrName')
 }
-#' Get Order field
+# Get Order field
 GetOrderOrderId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderOrderId')
 }
-#' Get Order field
+# Get Order field
 GetOrderClientOrderId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderClientOrderId')
 }
-#' Get Order field
+# Get Order field
 GetOrderParentOrderId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderParentOrderId')
 }
-#' Get Order field
+# Get Order field
 GetOrderPrice<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderPrice')
 }
-#' Get Order field
+# Get Order field
 GetOrderSide<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderSide')
 }
-#' Get Order field
+# Get Order field
 GetOrderType<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderType')
 }
-#' Get Order field
+# Get Order field
 GetOrderInitialType<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderInitialType')
 }
-#' Get Order field
+# Get Order field
 GetOrderStatus<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderStatus')
 }
-#' Get Order field
+# Get Order field
 GetOrderAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderAmount')
 }
-#' Get Order field
+# Get Order field
 GetOrderRemainingAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderRemainingAmount')
 }
-#' Get Order field
+# Get Order field
 GetOrderAggrFillPrice<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderAggrFillPrice')
 }
-#' Get Order field
+# Get Order field
 GetOrderAverageFillPrice<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderAverageFillPrice')
 }
-#' Get Order field
+# Get Order field
 GetOrderCreated<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderCreated')
 }
-#' Get Order field
+# Get Order field
 GetOrderModified<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderModified')
 }
-#' Get Order field
+# Get Order field
 GetOrderFilled<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderFilled')
 }
-#' Get Order field
+# Get Order field
 GetOrderPositionCreated<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderPositionCreated')
 }
-#' Get Order field
+# Get Order field
 GetOrderStopLoss<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderStopLoss')
 }
-#' Get Order field
+# Get Order field
 GetOrderTakeProfit<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderTakeProfit')
 }
-#' Get Order field
+# Get Order field
 GetOrderProfit<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderProfit')
 }
-#' Get Order field
+# Get Order field
 GetOrderMargin<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderMargin')
 }
-#' Get Order field
+# Get Order field
 GetOrderUserComment<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderUserComment')
 }
-#' Get Order field
+# Get Order field
 GetOrderManagerComment<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderManagerComment')
 }
-#' Get Order field
+# Get Order field
 GetOrderUserTag<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderUserTag')
 }
-#' Get Order field
+# Get Order field
 GetOrderManagerTag<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderManagerTag')
 }
-#' Get Order field
+# Get Order field
 GetOrderMagic<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderMagic')
 }
-#' Get Order field
+# Get Order field
 GetOrderCommission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderCommission')
 }
-#' Get Order field
+# Get Order field
 GetOrderAgentCommision<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderAgentCommision')
 }
-#' Get Order field
+# Get Order field
 GetOrderSwap<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderSwap')
 }
-#' Get Order field
+# Get Order field
 GetOrderExpired<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderExpired')
 }
-#' Get Order field
+# Get Order field
 GetOrderClosePrice<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderClosePrice')
 }
-#' Get Order field
+# Get Order field
 GetOrderMarginRateInitial<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderMarginRateInitial')
 }
-#' Get Order field
+# Get Order field
 GetOrderMarginRateCurrent<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderMarginRateCurrent')
 }
-#' Get Order field
+# Get Order field
 GetOrderOpenConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderOpenConversionRate')
 }
-#' Get Order field
+# Get Order field
 GetOrderCloseConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderCloseConversionRate')
 }
-#' Get Order field
+# Get Order field
 GetOrderVersion<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderVersion')
 }
-#' Get Order field
+# Get Order field
 GetOrderOptions<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderOptions')
 }
-#' Get Order field
+# Get Order field
 GetOrderTaxes<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderTaxes')
 }
-#' Get Order field
+# Get Order field
 GetOrderReqOpenPrice<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderReqOpenPrice')
 }
-#' Get Order field
+# Get Order field
 GetOrderReqOpenAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderReqOpenAmount')
 }
-#' Get Order field
+# Get Order field
 GetOrderClientApp<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderClientApp')
 }
-#' Get Order field
+# Get Order field
 GetOrderIsReducedOpenCommission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderIsReducedOpenCommission')
 }
-#' Get Order field
+# Get Order field
 GetOrderIsReducedCloseCommission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderIsReducedCloseCommission')
 }
-#' Get Order field
+# Get Order field
 GetOrderMaxVisibleAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderMaxVisibleAmount')
 }
-#' Get Order field
+# Get Order field
 GetOrderFilledAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderFilledAmount')
 }
-#' Get Order field
+# Get Order field
 GetOrderVisibleAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderVisibleAmount')
 }
-#' Get Order field
+# Get Order field
 GetOrderTotalCommission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderTotalCommission')
 }
-#' Get Order field
+# Get Order field
 GetOrderActivation<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderActivation')
 }
-#' Get Order field
+# Get Order field
 GetOrderIsPending<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetOrderIsPending')
 }

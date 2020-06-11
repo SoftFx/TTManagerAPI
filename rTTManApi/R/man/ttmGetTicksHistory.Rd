@@ -11,12 +11,12 @@ ttmGetTicksHistory(symbol, endTime, count)
 
 \item{endTime}{a DateTime object. End time}
 
-\item{count}{a numeric. Integer ticks count (Can be positive or negative)}
+\item{count}{a numeric. Integer ticks count (Can be positive (to past) or negative (to future))}
 }
 \description{
 Get Ticks History
 }
 \examples{
-ttmGetTicks("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
+ttmGetTicksHistory("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
 
 }

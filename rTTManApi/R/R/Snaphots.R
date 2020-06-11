@@ -11,7 +11,7 @@ ttmGetAssetSnapshots <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, t
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAssetSnapshots',accId,from,to)
   GetSnapshotFrame()
 }
-#' Get Snapshot table
+# Get Snapshot table
 GetSnapshotFrame<-function()
 {
   Currency = GetSnapshotCurrency()
@@ -26,46 +26,46 @@ GetSnapshotFrame<-function()
   AccountId = GetSnapshotAccountId()
   data.table(AccountId,Currency,Amount,FreeAmount,LockedAmount,CurrencyToUsdConversionRate,UsdToCurrencyConversionRate,CurrencyToReportConversionRate,ReportToCurrencyConversionRate, Timestamp)
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotCurrency<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotCurrency')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotAmount')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotFreeAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotFreeAmount')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotLockedAmount<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotLockedAmount')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotCurrencyToUsdConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotCurrencyToUsdConversionRate')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotUsdToCurrencyConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotUsdToCurrencyConversionRate')
 }
 
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotCurrencyToReportConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotCurrencyToReportConversionRate')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotReportToCurrencyConversionRate<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotReportToCurrencyConversionRate')
 }
 
 
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotTimestamp<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotTimestamp')
 }
-#' Get Snapshot field
+# Get Snapshot field
 GetSnapshotAccountId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSnapshotAccountId')
 }

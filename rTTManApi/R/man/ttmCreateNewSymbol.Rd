@@ -2,12 +2,7 @@
 % Please edit documentation in R/Symbols.R
 \name{ttmCreateNewSymbol}
 \alias{ttmCreateNewSymbol}
-\title{#' Create New Symbol (For Test Only)
-ttmCreateNewSymbol <- function(symbolName = "",security = "",marginCurrency = "",profitCurrency = "", precision = 5, contractSize = 1) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbolName, security, marginCurrency, profitCurrency, precision, contractSize)
-  return(hResult)
-}
-Create new Symbol}
+\title{Create new Symbol}
 \usage{
 ttmCreateNewSymbol(symbol, security, isin, alias, marginCurrency,
   profitCurrency, precision, contractSize, marginFactorFractional = 1,
@@ -51,10 +46,5 @@ ttmCreateNewSymbol(symbol, security, isin, alias, marginCurrency,
 \item{description}{a character. SwapSizeShort}
 }
 \description{
-#' Create New Symbol (For Test Only)
-ttmCreateNewSymbol <- function(symbolName = "",security = "",marginCurrency = "",profitCurrency = "", precision = 5, contractSize = 1) {
-  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbolName, security, marginCurrency, profitCurrency, precision, contractSize)
-  return(hResult)
-}
 Create new Symbol
 }

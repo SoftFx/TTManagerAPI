@@ -1,9 +1,3 @@
-#' #' Create New Symbol (For Test Only)
-#' ttmCreateNewSymbol <- function(symbolName = "",security = "",marginCurrency = "",profitCurrency = "", precision = 5, contractSize = 1) {
-#'   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'CreateSymbol', symbolName, security, marginCurrency, profitCurrency, precision, contractSize)
-#'   return(hResult)
-#' }
-
 #' Create new Symbol
 #'
 #' @param symbol a character. Symbol
@@ -89,7 +83,7 @@ ttmModifySymbolSwap <- function(symbol = "",swapSizeShort = "",swapSizeLong = ""
 }
 
 
-#' Get Symbol table
+# Get Symbol table
 GetSymbolFrame<-function()
 {
   Id = GetSymbolId()
@@ -134,147 +128,147 @@ GetSymbolFrame<-function()
              SwapSizeLong,IsPrimary,SortOrder,IsQuotesFilteringDisabled,Schedule,DefaultSlippage,StopOrderMarginReduction,HiddenLimitOrderMarginReduction,
              SwapType,TripleSwapDay,ISIN,Alias)
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolId')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSymbol<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSymbol')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSecurity<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSecurity')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolPrecision<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolPrecision')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolTradeIsAllowed<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolTradeIsAllowed')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginMode<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginMode')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolProfitMode<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolProfitMode')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolQuotesWriteMode<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolQuotesWriteMode')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolContractSizeFractional<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolContractSizeFractional')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginHedged<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginHedged')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginFactorFractional<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginFactorFractional')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginStrongMode<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginStrongMode')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginCurrency<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginCurrency')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginCurrencyId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginCurrencyId')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginCurrencyPrecision<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginCurrencyPrecision')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolMarginCurrencySortOrder<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolMarginCurrencySortOrder')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolProfitCurrency<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolProfitCurrency')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolProfitCurrencyId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolProfitCurrencyId')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolProfitCurrencyPrecision<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolProfitCurrencyPrecision')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolProfitCurrencySortOrder<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolProfitCurrencySortOrder')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolColorRef<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolColorRef')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolDescription<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolDescription')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSwapEnabled<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSwapEnabled')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSwapSizeShort<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSwapSizeShort')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSwapSizeLong<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSwapSizeLong')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolIsPrimary<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolIsPrimary')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSortOrder<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSortOrder')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolIsQuotesFilteringDisabled<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolIsQuotesFilteringDisabled')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSchedule<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSchedule')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolDefaultSlippage<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolDefaultSlippage')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolStopOrderMarginReduction<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolStopOrderMarginReduction')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolHiddenLimitOrderMarginReduction<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolHiddenLimitOrderMarginReduction')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolSwapType<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolSwapType')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolTripleSwapDay<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolTripleSwapDay')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolISIN <- function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolISIN')
 }
-#' Get Symbol field
+# Get Symbol field
 GetSymbolAlias <- function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolAlias')
 }

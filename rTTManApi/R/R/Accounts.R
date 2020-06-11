@@ -13,7 +13,8 @@ ttmGetAllAccounts <- function() {
   ###
   return(accounts)
 }
-#' Get Account table
+
+# Get Account table
 GetAccountFrame<-function()
 {
   AccountId = GetAccountId()
@@ -55,123 +56,123 @@ GetAccountFrame<-function()
 ttmModifyAccount <- function(accountId,internalComment) {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifyAccount',accountId,internalComment)
 }
-#' Get Account field
+# Get Account field
 GetAccountId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountId')
 }
-#' Get Account field
+# Get Account field
 GetAccountName<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountName')
 }
-#' Get Account field
+# Get Account field
 GetAccountDomain<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountDomain')
 }
-#' Get Account field
+# Get Account field
 GetAccountGroup<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountGroup')
 }
-#' Get Account field
+# Get Account field
 GetAccountingType<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountingType')
 }
-#' Get Account field
+# Get Account field
 GetAccountBlocked<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetBlocked')
 }
-#' Get Account field
+# Get Account field
 GetAccountReadonly<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetReadonly')
 }
-#' Get Account field
+# Get Account field
 GetAccountLeveage<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetLeveage')
 }
-#' Get Account field
+# Get Account field
 GetAccountProfit<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetProfit')
 }
-#' Get Account field
+# Get Account field
 GetAccountComission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetComission')
 }
-#' Get Account field
+# Get Account field
 GetAccountAgentComission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAgentComission')
 }
-#' Get Account field
+# Get Account field
 GetAccountSwap<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSwap')
 }
-#' Get Account field
+# Get Account field
 GetAccountEquity<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetEquity')
 }
-#' Get Account field
+# Get Account field
 GetAccountMargin<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetMargin')
 }
-#' Get Account field
+# Get Account field
 GetAccountMarginLevel<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetMarginLevel')
 }
-#' Get Account field
+# Get Account field
 GetAccountBalance<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetBalance')
 }
-#' Get Account field
+# Get Account field
 GetAccountBalanceCurrency<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetBalanceCurrency')
 }
-#' Get Account field
+# Get Account field
 GetAccountMarginCallLevel<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetMarginCallLevel')
 }
-#' Get Account field
+# Get Account field
 GetAccountStopOutLevel<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountStopOutLevel')
 }
-#' Get Account field
+# Get Account field
 GetAccountIsValid<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetIsValid')
 }
-#' Get Account field
+# Get Account field
 GetAccountIsWebApiEnabled<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountIsWebApiEnabled')
 }
-#' Get Account field
+# Get Account field
 GetAccountIsTwoFactorAuthSet<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetIsTwoFactorAuthSet')
 }
-#' Get Account field
+# Get Account field
 GetAccountIsArchived<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetIsArchived')
 }
-#' Get Account field
+# Get Account field
 GetAccountFeedPriority<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetFeedPriority')
 }
-#' Get Account field
+# Get Account field
 GetAccountVersion<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetVersion')
 }
-#' Get Account field
+# Get Account field
 GetAccountMarginFree<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetMarginFree')
 }
-#' Get Account field
+# Get Account field
 GetAccountTotalComission<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetComission')
 }
-#' Get Account field
+# Get Account field
 GetAccountCountry<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountCountry')
 }
-#' Get Account field
+# Get Account field
 GetAccountEmail<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountEmail')
 }
-#' Get Account field
+# Get Account field
 GetAccountInternalComment<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountInternalComment')
 }

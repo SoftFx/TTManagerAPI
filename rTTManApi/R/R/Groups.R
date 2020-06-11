@@ -6,7 +6,7 @@ ttmGetAllGroups <- function() {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllGroups')
   GetGroupFrame()
 }
-#' Get group table
+# Get group table
 GetGroupFrame<-function()
 {
   Id = GetGroupId()
@@ -21,43 +21,43 @@ GetGroupFrame<-function()
   IsWebApiEnabled = GetGroupIsWebApiEnabled()
   data.table(Id,GroupName,Domain,MarginalCallLevel,StopOutLevel,MarginLevelType,RolloverType,StopOutMode,IsWebApiEnabled,Securities )
 }
-#' Get group field
+# Get group field
 GetGroupId<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetId')
 }
-#' Get group field
+# Get group field
 GetGroupName<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupName')
 }
-#' Get group field
+# Get group field
 GetGroupDomain<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetDomain')
 }
-#' Get group field
+# Get group field
 GetGroupMarginalCallLevel<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetMarginalCallLevel')
 }
-#' Get group field
+# Get group field
 GetGroupStopOutLevel<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetStopOutLevel')
 }
-#' Get group field
+# Get group field
 GetGroupMarginLevelType<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetMarginLevelType')
 }
-#' Get group field
+# Get group field
 GetGroupRolloverType<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetRolloverType')
 }
-#' Get group field
+# Get group field
 GetSecurities<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSecurities')
 }
-#' Get group field
+# Get group field
 GetGroupStopOutMode<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetStopOutMode')
 }
-#' Get group field
+# Get group field
 GetGroupIsWebApiEnabled<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetIsWebApiEnabled')
 }

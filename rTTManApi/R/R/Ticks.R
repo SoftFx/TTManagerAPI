@@ -143,25 +143,25 @@ ttmDeleteQuotes <- function(symbol, from, to, periodicityLevel) {
   hResult
 }
 
-#' Get Quotes
+#' Get Ticks History Cache
 #' @param symbol a character. Symbol name
 #' @param endTime a DateTime object. End time
-#' @param count a numeric. Integer ticks count (Can be positive or negative)
+#' @param count a numeric. Integer ticks count (Can be positive (to future) or negative (to past))
 #' @examples 
-#' ttmGetTicks("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
+#' ttmGetTickHistoryCache("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
 #' 
 #' @export
-ttmGetTicks <- function(symbol, endTime, count) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicks', symbol, endTime, count)
+ttmGetTickHistoryCache <- function(symbol, endTime, count) {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTickHistoryCache', symbol, endTime, count)
   GetTicksFrame()
 }
 
 #' Get Ticks History
 #' @param symbol a character. Symbol name
 #' @param endTime a DateTime object. End time
-#' @param count a numeric. Integer ticks count (Can be positive or negative)
+#' @param count a numeric. Integer ticks count (Can be positive (to past) or negative (to future))
 #' @examples 
-#' ttmGetTicks("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
+#' ttmGetTicksHistory("EURUSD", ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), -100)
 #' 
 #' @export
 ttmGetTicksHistory <- function(symbol, endTime, count) {
@@ -175,7 +175,8 @@ GetTicksFrame <- function(){
     BidPrice = GetTicksBidPrice(),
     BidVolume = GetTicksBidVolume(),
     AskPrice = GetTicksAskPrice(),
-    AskVolume = GetTicksAskVolume()
+    AskVolume = GetTicksAskVolume(),
+    TickType = GetTicksType()
   )
 }
 
@@ -199,6 +200,9 @@ GetTicksBidVolume <- function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksBidVolume')
 }
 
+GetTicksType <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTicksType')
+}
 
 UpstreamTypes <- list("Level2ToTicks" = 1,
                       "TicksToM1" = 2,
