@@ -12,7 +12,7 @@ namespace TTManApi
         {
             if (args.Length < 4)
             {
-                Console.WriteLine("Usage: TTManApi.exe TickTraderAddress ManagerLogin ManagerPassword");
+                Console.WriteLine("Usage: TTManApi.exe serverAddress managerLogin managerPassword userAccount");
                 return;
             }
 

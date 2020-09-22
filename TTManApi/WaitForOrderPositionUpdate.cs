@@ -23,9 +23,16 @@ namespace TTManApi
 
         public override void Run()
         {
-            var tick = Manager.DirectQuery.GetSymbolTick("EURUSD");
-            Order order = Manager.DirectQuery.OpenOrder(OpenOrderRequest.CreateClient(_account, OrderTypes.Limit,
-                OrderSides.Buy, "EURUSD", 10000, null, tick.Ask - 0.00009m, null, null, null, null, null, null, 0, null));
+            try
+            {
+                var tick = Manager.DirectQuery.GetSymbolTick("EURUSD");
+                Order order = Manager.DirectQuery.OpenOrder(OpenOrderRequest.CreateClient(_account, OrderTypes.Limit,
+                    OrderSides.Buy, "EURUSD", 10000, null, tick.Ask - 0.00009m, null, null, null, null, null, null, 0, null));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
