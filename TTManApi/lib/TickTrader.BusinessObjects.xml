@@ -1260,7 +1260,8 @@
         </member>
         <member name="M:TickTrader.BusinessObjects.Order.#ctor(TickTrader.BusinessObjects.IOrder)">
             <summary>
-            Create a copy of existing order
+            Create a copy of existing IOrder.
+            DO NOT use it directly. USE method Clone() instead.
             </summary>
             <param name="order"></param>
         </member>
@@ -1544,12 +1545,6 @@
             
              </summary>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Order.Clone">
-             <summary>
-            
-             </summary>
-             <returns></returns>
-        </member>
         <member name="P:TickTrader.BusinessObjects.Order.FilledAmount">
              <summary>
             
@@ -1594,6 +1589,12 @@
             </summary>
             <param name="order">New order with the same OrderId</param>
             <returns>Returns true if it has any major changes</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Order.Clone">
+             <summary>
+            
+             </summary>
+             <returns></returns>
         </member>
         <member name="T:TickTrader.BusinessObjects.OrderExtension">
              <summary>
@@ -2045,6 +2046,11 @@
         <member name="P:TickTrader.BusinessObjects.SymbolTick.TickType">
             <summary>
             Tick type info
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.SymbolTick.Index">
+            <summary>
+            Tick index
             </summary>
         </member>
         <member name="M:TickTrader.BusinessObjects.SymbolTick.Clone">
@@ -2827,6 +2833,11 @@
             The currency of Rebate
             </summary>
         </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.RelatedOrderId">
+            <summary>
+            Related order
+            </summary>
+        </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.IsIoC">
             <summary>
             Is IoC flag
@@ -2835,8 +2846,14 @@
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.IsMarketWithSlippage">
             <summary>
-            Is "market with slippage" flag
-            Determines whether order has "market with slippage" option
+            Is Market with slippage flag
+            Determines whether order has "MarketWithSlippage" option
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.IsOneCancelsTheOther">
+            <summary>
+            Is One Cancels The Other flag
+            Determines whether order has "OneCancelsTheOther" option
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.IsHiddenIceberg">
@@ -2967,6 +2984,11 @@
             </summary>
         </member>
         <member name="P:TickTrader.Common.Business.FeedTick.Time">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TickTrader.Common.Business.FeedTick.Index">
             <summary>
             
             </summary>

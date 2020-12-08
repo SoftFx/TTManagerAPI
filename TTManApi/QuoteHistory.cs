@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TickTrader.BusinessObjects;
+using TickTrader.BusinessObjects.QuoteHistory;
+using TickTrader.Common.Business;
 
 namespace TTManApi
 {
@@ -25,7 +27,13 @@ namespace TTManApi
             {
                 foreach (SymbolInfo symbol in symbols)
                 {
-                    var tickHistory = Manager.DirectQuery.QueryTickHistory(DateTime.UtcNow, -100, symbol.Symbol, true);
+                    //var tickHistory = Manager.DirectQuery.QueryTickHistory(DateTime.UtcNow, -100, symbol.Symbol, true);
+                    MarketHistoryItemsReport<HistoryBar> itemsReport = Manager.DirectQuery.QueryBarHistory(DateTime.UtcNow.Date, -1, symbol.Symbol, "D1", FxPriceType.Bid);
+                    foreach (HistoryBar bar in itemsReport.Items)
+                    {
+                        Console.WriteLine(bar);
+                    }
+                    Thread.Sleep(100);
                 }
             }
         }

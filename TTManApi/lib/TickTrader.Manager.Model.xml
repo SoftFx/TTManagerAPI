@@ -504,6 +504,16 @@
             Event is raised when the pumping received update of particular stock event.
             </summary>
         </member>
+        <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingUpdateSplitExecution">
+            <summary>
+            Event is raised when the pumping received update of particular stock event.
+            </summary>
+        </member>
+        <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingUpdateSplitRollback">
+            <summary>
+            Event is raised when the pumping received update of particular stock event.
+            </summary>
+        </member>
         <member name="P:TickTrader.Manager.Model.TickTraderManagerModel.IsPumpingEnabled">
             <summary>
             Get the current pumping state.
@@ -2467,6 +2477,13 @@
             <param name="requests">List of requests</param>
             <returns></returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteCurrency(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.CurrencyDeleteRequest})">
+            <summary>
+            Perform bulk delete currencies
+            </summary>
+            <param name="requests">List of requests</param>
+            <returns></returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkCreateSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityNewRequest})">
             <summary>
             Perform bulk create securities
@@ -2523,6 +2540,13 @@
             <param name="symbolModifyRequests">Modify symbol requests</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteSymbol(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SymbolDeleteRequest})">
+            <summary>
+            Delete symbols.
+            </summary>
+            <param name="symbolDeleteRequests">Delete symbol requests</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkModifyGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupModifyRequest})">
             <summary>
             Modify Group.
@@ -2535,6 +2559,20 @@
             Modify group securities.
             </summary>
             <param name="groupSecurityModifyRequests">Modify group security requests</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteGroupSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupSecurityDeleteRequest})">
+            <summary>
+            Delete group securities.
+            </summary>
+            <param name="groupSecurityDeleteRequests">Delete group security requests</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityDeleteRequest})">
+            <summary>
+            Delete securities.
+            </summary>
+            <param name="securityDeleteRequests">Delete security requests</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.QHTransferFileDownnloadToStream(System.String,System.IO.Stream,System.Action{System.Int64})">
@@ -3397,12 +3435,30 @@
             <param name="to">End Id of the interval for deleting</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.DeleteSymbolHistory(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.BusinessObjects.FeedTickId)">
+            <summary>
+            Delete specified symbol history in specified time interval
+            </summary>
+            <param name="symbol">All history will be deleted for this symbol</param>
+            <param name="from">Start Id of the interval for deleting</param>
+            <param name="to">End Id of the interval for deleting</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.InsertSymbolTicks(System.String,System.Collections.Generic.List{TickTrader.BusinessObjects.TickValue})">
             <summary>
             Insert symbol ticks
             </summary>
             <param name="symbol">Ticks will be inserted from this symbol history</param>
             <param name="ticks">List of symbol ticks</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.InsertM1Bars(System.String,System.Collections.Generic.List{TickTrader.Common.Business.HistoryBar},TickTrader.Common.Business.FxPriceType)">
+            <summary>
+            Insert symbol M1 bars
+            </summary>
+            <param name="symbol">Bars will be inserted to this symbol history</param>
+            <param name="bars">List of symbol ticks</param>
+            <param name="priceType">Type of bars (asks or bids)</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.Upstream(System.String,System.DateTime,System.DateTime,TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.UpstreamTypes)">
@@ -4352,6 +4408,12 @@
             <param name="password">Manager password</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.SetNewPassword(System.String)">
+            <summary>
+            Set new password if needed.
+            </summary>
+            <param name="password">Password</param>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.CreateManagerTwoFactorAuthKey(System.Nullable{System.Int32},System.Int16)">
             <summary>
             Create 2FA for manager
@@ -4518,6 +4580,13 @@
             </summary>
             <param name="validateMarginActivateRequest">Validate activate margin request</param>
             <returns>Validate activate margin report or null if failed</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.LockOrder(TickTrader.BusinessObjects.Requests.ExecutionLockRequest)">
+            <summary>
+            Lock order for execution for a cpecified timeout in seconds. Any related order will be locked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GetPositionById(System.Int64)">
             <summary>
@@ -4749,6 +4818,20 @@
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.DeleteSplit(System.Int64)">
             <summary>
             Delete existing Split.
+            </summary>
+            <param name="splitId">splitId</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ExecuteSplit(System.Int64)">
+            <summary>
+            Execute existing Split.
+            </summary>
+            <param name="splitId">splitId</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RollbackSplit(System.Int64)">
+            <summary>
+            Rollback existing Split.
             </summary>
             <param name="splitId">splitId</param>
             <returns>Successful status</returns>
@@ -5183,6 +5266,30 @@
             </summary>
             <param name="groupSecurityModifyRequests">List of requests</param>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteGroupSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupSecurityDeleteRequest})">
+            <summary>
+            Perform bulk delete group securities
+            </summary>
+            <param name="groupSecurityDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityDeleteRequest})">
+            <summary>
+            Perform bulk delete securities
+            </summary>
+            <param name="securityDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteSymbol(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SymbolDeleteRequest})">
+            <summary>
+            Perform bulk delete symbols
+            </summary>
+            <param name="symbolDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteCurrency(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.CurrencyDeleteRequest})">
+            <summary>
+            Perform bulk delete currencies
+            </summary>
+            <param name="currencyDeleteRequests">List of requests</param>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.InsertSymbolTicksAsyncWithJournal(System.String,System.Collections.Generic.List{TickTrader.BusinessObjects.TickValue})">
             <summary>
             Insert symbol ticks
@@ -5313,6 +5420,14 @@
             Run scheduled task by ID
             </summary>
             <param name="taskId">Scheduled task Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.SetTaskPasswords(System.Guid,System.String)">
+            <summary>
+            Change passwords in scheduled task
+            </summary>
+            <param name="taskId">Scheduled task Id</param>
+            <param name="passwords">Json with pairs where key is fieldName of Task, value is password</param>
             <returns></returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GetQHModifyEventById(System.Guid)">
