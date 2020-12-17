@@ -25,7 +25,7 @@ namespace TTManApi
 
                 using (TTManager manager = new TTManager(ttsAddress, managerLogin, managerPassword))
                 //using (Sample sample = new WaitForOrderPositionUpdate(manager, account))
-                using (Sample sample = new QuoteHistory(manager))
+                using (Sample sample = new SubscribeLastTrades(manager, new []{"EURUSD"}))
                 {
                     sample.Run();
                     Console.ReadKey();
