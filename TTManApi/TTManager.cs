@@ -22,7 +22,7 @@ namespace TTManApi
         public bool isMarginCalled;
         public ITickTraderManagerModel DirectQuery { get => _manager; }
 
-        public TTManager(string server, long login, string password)
+        public TTManager(string server, long login, string password, bool enablePumping = true)
         {
             isMarginCalled = false;
             //var settings = ConfigReader.GetConfig(typeof(BaseTest).Assembly.GetPath());
@@ -32,6 +32,29 @@ namespace TTManApi
 
             _manager.Connect(server, login, password);
 
+            if (enablePumping)
+            {
+                EnablePumping();
+            }
+        }
+
+        private void ModelStateChanged(object sender, ConnectionStatusEventArgs args)
+        {
+            Console.WriteLine($"\n{args.Module} {args.Status}");
+        }
+
+
+        public void Disconnect()
+        {
+            if (!CheckManagerIsConnected()) return;
+
+            DisablePumping();
+
+            _manager.ModelStateChanged -= ModelStateChanged;
+        }
+
+        public void EnablePumping()
+        {
             // Bind pumping events.
             _manager.PumpingUpdateAccount += ModelPumpingUpdateAccount;
             _manager.PumpingUpdateOrder += ModelPumpingUpdateOrder;
@@ -50,16 +73,8 @@ namespace TTManApi
             _manager.WaitForPumping(60000);
         }
 
-        private void ModelStateChanged(object sender, ConnectionStatusEventArgs args)
+        public void DisablePumping()
         {
-            Console.WriteLine($"\n{args.Module} {args.Status}");
-        }
-
-
-        public void Disconnect()
-        {
-            if (!CheckManagerIsConnected()) return;
-
             _manager.PumpingUpdateAccount -= ModelPumpingUpdateAccount;
             _manager.PumpingUpdateOrder -= ModelPumpingUpdateOrder;
             _manager.PumpingUpdateSymbolSecurity -= ModelPumpingUpdateSymbolSecurity;
@@ -74,8 +89,6 @@ namespace TTManApi
 
             _manager.DisablePumping();
             _manager.Disconnect();
-
-            _manager.ModelStateChanged -= ModelStateChanged;
         }
 
         private long waitingAccountId;

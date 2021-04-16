@@ -4,6 +4,13 @@
         <name>TickTrader.Manager.Contract</name>
     </assembly>
     <members>
+        <member name="M:TickTrader.Manager.Model.ManagerVersionSpecExtensions.SupportsMethod(TickTrader.BusinessObjects.Versioning.ManagerVersionSpec,System.String)">
+            <summary>
+            Check that method supports in current manager model version
+            </summary>
+            <param name="methodName"></param>
+            <returns>true if method supports, ovewise false</returns>
+        </member>
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryTickHistory(System.DateTime,System.Int32,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.GetTicksFromHistory(System.DateTime,System.DateTime,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryTickHistoryCache(System.DateTime,System.Int32,System.String,System.Boolean)" -->
@@ -168,6 +175,14 @@
             Run scheduled task with Id
             </summary>
             <param name="taskId">Scheduled task Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.TickTraderManagerClient.SetTaskPasswords(System.Guid,System.String)">
+            <summary>
+            Change passwords in scheduled task
+            </summary>
+            <param name="taskId">Scheduled task Id</param>
+            <param name="passwords">Json with pairs where key is fieldName of Task, value is password</param>
             <returns></returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.TickTraderManagerClient.GetQHModifyEventById(System.Guid)">
@@ -611,7 +626,16 @@
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.DeleteSymbolTicks(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.BusinessObjects.FeedTickId)">
             <summary>
-            Delete symbol ticks to the Trading Platform.
+            Delete symbol ticks from the Trading Platform.
+            </summary>
+            <param name="symbol">Symbol name</param>F
+            <param name="from">From time</param>
+            <param name="to">To time</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.DeleteSymbolHistory(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.BusinessObjects.FeedTickId)">
+            <summary>
+            Delete symbol history from the Trading Platform.
             </summary>
             <param name="symbol">Symbol name</param>F
             <param name="from">From time</param>
@@ -621,6 +645,14 @@
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.InsertSymbolTicks(System.String,System.Collections.Generic.List{TickTrader.BusinessObjects.TickValue})">
             <summary>
             Insert ticks to the Trading Platform.
+            </summary>
+            <param name="symbol">Symbol name</param>
+            <param name="ticks">List of symbol ticks</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.InsertM1Bars(System.String,System.Collections.Generic.List{TickTrader.Common.Business.HistoryBar},TickTrader.Common.Business.FxPriceType)">
+            <summary>
+            Insert M1 bars to the Trading Platform.
             </summary>
             <param name="symbol">Symbol name</param>
             <param name="ticks">List of symbol ticks</param>
@@ -1610,6 +1642,18 @@
             <param name="password">Password</param>
             <returns>Manager info or null if failed</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.ValidateChangePasswordFlag">
+            <summary>
+            Validate if password change is needed
+            </summary>
+            <returns>validation result</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.SetNewPassword(System.String)">
+            <summary>
+            Set new password if needed.
+            </summary>
+            <param name="password">Password</param>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.CreateManagerTwoFactorAuthKey(System.Nullable{System.Int32},System.Int16)">
             <summary>
             Create 2FA for manager
@@ -1731,6 +1775,13 @@
             </summary>
             <param name="validateMarginActivateRequest">Validate activate margin request</param>
             <returns>Validate activate margin report or null if failed</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.LockOrder(TickTrader.BusinessObjects.Requests.ExecutionLockRequest)">
+            <summary>
+            Lock order for execution for a cpecified timeout in seconds. Any related order will be locked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetSplitById(System.Int64)">
             <summary>
@@ -2064,6 +2115,13 @@
             <param name="requests"></param>
             <returns></returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkDeleteCurrency(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.CurrencyDeleteRequest})">
+            <summary>
+            Delete currencies
+            </summary>
+            <param name="requests"></param>
+            <returns></returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkCreateSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityNewRequest})">
             <summary>
             Create new securities
@@ -2074,6 +2132,13 @@
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkModifySecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityModifyRequest})">
             <summary>
             Modify securities
+            </summary>
+            <param name="requests"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkDeleteSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityDeleteRequest})">
+            <summary>
+            Delete securities
             </summary>
             <param name="requests"></param>
             <returns></returns>
@@ -2120,6 +2185,13 @@
             <param name="symbolModifyRequests">Modify symbol info requests</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkDeleteSymbol(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SymbolDeleteRequest})">
+            <summary>
+            Delete existing symbol info.
+            </summary>
+            <param name="symbolDeleteRequests">Delete symbol info requests</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkModifyGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupModifyRequest})">
             <summary>
             Modify existing group info.
@@ -2132,6 +2204,13 @@
             Modify existing group security info.
             </summary>
             <param name="groupSecurityModifyRequests">Modify group security info requests</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkDeleteGroupSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupSecurityDeleteRequest})">
+            <summary>
+            Delete existing group security info.
+            </summary>
+            <param name="groupSecurityDeleteRequests">Delete group security info requests</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetAllScheduledTasks">
@@ -2180,6 +2259,14 @@
             Immediatly run scheduled task by ID
             </summary>
             <param name="taskId">Scheduled task Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.SetTaskPasswords(System.Guid,System.String)">
+            <summary>
+            Change passwords in scheduled task
+            </summary>
+            <param name="taskId">Scheduled task Id</param>
+            <param name="passwords">Json with pairs where key is fieldName of Task, value is password</param>
             <returns></returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetQHModifyEventById(System.Guid)">

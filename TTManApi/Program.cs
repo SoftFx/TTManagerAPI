@@ -24,9 +24,11 @@ namespace TTManApi
                 long.TryParse(args[3], out var account);
 
                 using (TTManager manager = new TTManager(ttsAddress, managerLogin, managerPassword))
-                using (Sample sample = new WaitForOrderPositionUpdate(manager, account))
+                //using (Sample sample = new WaitForOrderPositionUpdate(manager, account))
+                using (Sample sample = new SubscribeLastTrades(manager, new []{"EURUSD"}))
                 {
                     sample.Run();
+                    Console.ReadKey();
                 }
             }
             catch (Exception e)
