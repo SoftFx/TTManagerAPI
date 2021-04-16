@@ -228,6 +228,31 @@ namespace rTTManApi
             }
             return 0;
         }
+
+        public static int GetTicksHistoryTime(string symbol, DateTime startTime, DateTime endTime, int step = 100000)
+        {
+            _tickValues?.Clear();
+            try
+            {
+                var tempStartTime = startTime;
+                while(tempStartTime < endTime)
+                {
+                    var historyChunk = _manager.QueryTickHistory(tempStartTime, -Math.Abs(step), symbol, false).Items.ToList();
+                    if (historyChunk.Count == 0)
+                        break;
+                    _tickValues.AddRange(historyChunk);
+                    tempStartTime = _tickValues.Last().Time;
+                }
+                _tickValues = _tickValues.Where(it => it.Time < endTime).ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get ticks because {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+
         #endregion
 
         #region Get BarHistory
@@ -1736,7 +1761,6 @@ namespace rTTManApi
             }catch(Exception ex)
             {
                 Logger.Log.ErrorFormat("Requesting all aseets failed because {0}", ex.Message);
-                Console.ReadLine();
                 return -1;
             }
             return 0;
