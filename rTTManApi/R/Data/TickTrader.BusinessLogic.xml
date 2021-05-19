@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TickTrader.BusinessLogic</name>
+    </assembly>
+    <members>
+        <member name="F:TickTrader.BusinessLogic.CalcErrorCode.None">
+            <summary>
+            No error.
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessLogic.CalcErrorCode.OffQuotes">
+            <summary>
+            Quote is missing.
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessLogic.CalcErrorCode.Misconfiguration">
+            <summary>
+            Configuration is incorrect.
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessLogic.CalcErrorCode.NegativeAsset">
+            <summary>
+            Account has negative asset(s).
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessLogic.CalcErrorCode.Overdraft">
+            <summary>
+            Account overdraft exceeds limit
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.CalcError">
+            <summary>
+            Represents order calculation error.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.CalcError.Code">
+            <summary>
+            Gets order calculation error code.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.CalcError.Description">
+            <summary>
+            Gets order calculatiion error description.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.IOrderModel">
+            <summary>
+            Defines methods and properties for order which is subject of market summary calculations.
+            Properties Profit, Margin and CalculationError are updated only in NettingCalculationTypes.OneByOne mode.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.IAccountInfo">
+            <summary>
+            Defines methods and properties for account.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IAccountInfo.Id">
+            <summary>
+            Account Id.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IAccountInfo.AccountingType">
+            <summary>
+            Account type.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IAccountInfo.Orders">
+            <summary>
+            Account orders.
+            </summary>
+        </member>
+        <member name="E:TickTrader.BusinessLogic.IAccountInfo.OrderAdded">
+            <summary>
+            Fired when single order was added.
+            </summary>
+        </member>
+        <member name="E:TickTrader.BusinessLogic.IAccountInfo.OrdersAdded">
+            <summary>
+            Fired when multiple orders were added.
+            </summary>
+        </member>
+        <member name="E:TickTrader.BusinessLogic.IAccountInfo.OrderRemoved">
+            <summary>
+            Fired when order was removed.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.IMarginAccountInfo">
+            <summary>
+            Defines methods and properties for marginal account.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IMarginAccountInfo.Balance">
+            <summary>
+            Account balance.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IMarginAccountInfo.Leverage">
+            <summary>
+            Account leverage.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IMarginAccountInfo.BalanceCurrency">
+            <summary>
+            Account currency.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.IMarginAccountInfo.Positions">
+            <summary>
+            Account positions.
+            </summary>
+        </member>
+        <member name="E:TickTrader.BusinessLogic.IMarginAccountInfo.PositionChanged">
+            <summary>
+            Fired when position changed.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.ICashAccountInfo">
+            <summary>
+            Defines methods and properties for cash account.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.ICashAccountInfo.Assets">
+            <summary>
+            Cash account assets.
+            </summary>
+        </member>
+        <member name="E:TickTrader.BusinessLogic.ICashAccountInfo.AssetsChanged">
+            <summary>
+            Fired when underlying assests list was changed.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.NettingCalculationTypes">
+            <summary>
+            Netting calculation types.
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessLogic.NettingCalculationTypes.OneByOne">
+            <summary>
+            Calculate and update each order separately, then aggragate results.
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessLogic.NettingCalculationTypes.Optimized">
+            <summary>
+            Calculate netted margin/profit. Orders are not updated.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketManager">
+            <summary>
+            Manages state (configuration and rates) within all accounts. Creates and keeps updated MarketState object for each account group.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketState">
+            <summary>
+            Manages state (configuration and rates) within accounts with the same configuration (group).
+            Can be used as a child object of MarketManager or as stand-alone market state.
+            </summary>
+        </member>
+    </members>
+</doc>

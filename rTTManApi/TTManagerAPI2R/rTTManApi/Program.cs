@@ -11,6 +11,7 @@ using TickTrader.Common.Business;
 using TickTrader.Manager.Model;
 using TickTrader.BusinessLogic;
 using TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask;
+using TickTrader.BusinessLogic.Core;
 namespace rTTManApi
 {
     public class rTTManApiHost
@@ -18,14 +19,7 @@ namespace rTTManApi
         #region MarketManager
         static MarketManager InitMarketManager()
         {
-            var manager = new MarketManager(NettingCalculationTypes.Optimized);
-            manager.Update(_manager.RequestAllSymbols(), _manager.RequestAllGroupSecurities());
-            manager.Update(_manager.RequestAllCurrencies());
-            var ticks = _manager.RequestAllSymbolsTicks();
-            foreach(var tick in ticks)
-            {
-                var buf = manager.Update(tick).ToList();
-            }
+            var manager = new MarketManager(null, NettingCalculationTypes.Optimized);
             return manager;
         }
         #endregion
@@ -34,9 +28,9 @@ namespace rTTManApi
         struct DepCurrencyToUSD
         {
             public string Currency;
-            public decimal ConversionToUsdRate;
+            public double ConversionToUsdRate;
 
-            public DepCurrencyToUSD(string currency, decimal conversionRate)
+            public DepCurrencyToUSD(string currency, double conversionRate)
             {
                 Currency = currency;
                 ConversionToUsdRate = conversionRate;
@@ -51,7 +45,7 @@ namespace rTTManApi
             for(int i = 0; i < accId.Length; ++i)
             {
                 var account = _manager.RequestAccountById(Convert.ToInt64(accId[i]));
-                decimal rate = 0;
+                double rate = 0;
                 try
                 {
                     rate = marketManager.GetGroupState(account.Group).ConversionMap.GetPositiveAssetConversion(account.BalanceCurrency, "USD").Value;
@@ -1122,40 +1116,12 @@ namespace rTTManApi
 
         #region Get trade history
 
-        public static int GetTradeReports(double accId, DateTime from, DateTime to, bool skipCancelled)
+        public static int GetTradeReports(double accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
         {
-            try
-            {
-                _tradeReportList?.Clear();
-                var req = new TradeHistoryOverallRequest
-                {
-                    Accounts = new List<long> { Convert.ToInt64(accId) },
-                    FromDate = from,
-                    ToDate = to,
-                    IsUTC = true,
-                    SkipCancelOrder = skipCancelled
-                };
-                Logger.Log.InfoFormat("Requesting trade history of {0} from {1} to {2}", accId, from, to);
-                var tradeHistory = _manager.QueryTradeHistoryOverall(req);
-                _tradeReportList = tradeHistory.Reports;
-                while (!tradeHistory.IsEndOfStream)
-                {
-                    req.Streaming = new StreamingInfo<string> { PosId = tradeHistory.LastId };
-                    tradeHistory = _manager.QueryTradeHistoryOverall(req);
-                    _tradeReportList.AddRange(tradeHistory.Reports);
-                }
-                Logger.Log.InfoFormat("Recieved {0} trade reports", _tradeReportList.Count);
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.ErrorFormat("Requesting trade history failed because {0}", ex.Message);
-                _tradeReportList?.Clear();
-                return -1;
-            }
+            return GetTradeReports(new double[] { accId }, from, to, transType, reason, skipCancelled);
         }
 
-        public static int GetTradeReports(double[] accId, DateTime from, DateTime to, bool skipCancelled)
+        public static int GetTradeReports(double[] accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
         {
             try
             {
@@ -1168,6 +1134,30 @@ namespace rTTManApi
                     IsUTC = true,
                     SkipCancelOrder = skipCancelled
                 };
+                char[] delimiterChars = { ' ', ',', '.', ':', '\t' };
+                if (!String.IsNullOrWhiteSpace(transType))
+                {
+                    var transTypes = transType.Split(delimiterChars);
+                    List<WEnum<TradeTransTypes>> types = new List<WEnum<TradeTransTypes>>();
+                    foreach (var typeItem in transTypes)
+                    {
+                        if (Enum.TryParse(typeItem, out TradeTransTypes type))
+                            types.Add(type);
+                    }
+                    req.Types = types;
+                }
+                if (!String.IsNullOrWhiteSpace(reason))
+                {
+                    
+                    var reasonsString = reason.Split(delimiterChars);
+                    List<WEnum<TradeTransReasons>> reasons = new List<WEnum<TradeTransReasons>>();
+                    foreach (var reasonString in reasonsString)
+                    {
+                        if (Enum.TryParse(reasonString, out TradeTransReasons r))
+                            reasons.Add(r);
+                    }
+                    req.Reasons = reasons;
+                }
                 var accList = accId[0].ToString();
                 for (var i = 1; i < accId.Length; i++)
                 {
@@ -1178,9 +1168,12 @@ namespace rTTManApi
                 _tradeReportList = tradeHistory.Reports;
                 while (!tradeHistory.IsEndOfStream)
                 {
+                    var time = DateTime.UtcNow;
                     req.Streaming = new StreamingInfo<string> { PosId = tradeHistory.LastId };
                     tradeHistory = _manager.QueryTradeHistoryOverall(req);
+                    var time2 = DateTime.UtcNow;
                     _tradeReportList.AddRange(tradeHistory.Reports);
+                    Logger.Log.Info($"Trades Count {_tradeReportList.Count} - time:{(time2 - time).TotalSeconds} - seconds");
                 }
                 Logger.Log.InfoFormat("Recieved {0} trade reports", _tradeReportList.Count);
                 return 0;
@@ -1717,8 +1710,8 @@ namespace rTTManApi
             public decimal FreeAmount;
             public decimal LockedAmount;
             public long AccountId;
-            public decimal ConversionToUsd;
-            public MyAssetsInfo(AssetInfo info, long id, decimal conversionToUsd)
+            public double ConversionToUsd;
+            public MyAssetsInfo(AssetInfo info, long id, double conversionToUsd)
             {
                 Currency = info.Currency;
                 CurrencyId = info.CurrencyId;
@@ -1744,7 +1737,7 @@ namespace rTTManApi
                     var assets = item.Assets;
                     foreach(var asset in assets)
                     {
-                        decimal rate = 0;
+                        double rate = 0;
                         try
                         {
                             rate = marketManager.GetGroupState(item.Group).ConversionMap.GetPositiveAssetConversion(asset.Currency, "USD").Value;

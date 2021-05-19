@@ -6,7 +6,7 @@
 \usage{
 ttmGetTradeReports(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
   "GMT"), to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"),
-  skipCancelled = TRUE)
+  transTypes = "", reasons = "", skipCancelled = TRUE)
 }
 \arguments{
 \item{accId}{a numeric vector. Accounts ids.}
@@ -14,6 +14,10 @@ ttmGetTradeReports(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
 \item{from}{a POSIXct object. Start time. By default, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT").}
 
 \item{to}{a POSIXct object. End time. By default, to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT").}
+
+\item{transTypes}{a string. Values from set (OrderOpened, OrderCanceled, OrderExpired, OrderFilled, PositionClosed, Balance, Credit, PositionOpened, OrderActivated, TradeModified) are delimited by ' ', ',', '.', ':'.}
+
+\item{reasons}{a string. Values from set (ClientRequest, PndOrdAct, StopOut, StopLossAct, TakeProfitAct, DealerDecision, Rollover, Delete, Expired, TransferMoney, Split, Dividend, OneCancelsTheOther) are delimited by ' ', ',', '.', ':'.}
 
 \item{skipCancelled}{a logical. If TRUE (default), cancelled orders are not displayed.}
 }
