@@ -2979,6 +2979,191 @@ namespace rTTManApi
             }
         }
 
+        #region Get All Currencies
+        private static List<CurrencyInfo> _currencies;
+        public static int GetAllCurrencies()
+        {
+            try
+            {
+                _currencies?.Clear();
+                _currencies = _manager.RequestAllCurrencies();
+            }
+            catch(Exception e)
+            {
+                Logger.Log.ErrorFormat("Can't get currencies {0}", e.Message);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static int[] GetAllCurrenciesId()
+        {
+            return _currencies.Select(it => (int)it.Id).ToArray();
+        }
+        public static string[] GetAllCurrenciesName()
+        {
+            return _currencies.Select(it => it.Name).ToArray();
+        }
+        public static string[] GetAllCurrenciesDescription()
+        {
+            return _currencies.Select(it => it.Description).ToArray();
+        }
+        public static int[] GetAllCurrenciesDigits()
+        {
+            return _currencies.Select(it => (int)it.Precision).ToArray();
+        }
+        public static string[] GetAllCurrenciesType()
+        {
+            return _currencies.Select(it => it.TypeName).ToArray();
+        }
+        public static double[] GetAllCurrenciesTax()
+        {
+            return _currencies.Select(it => it.Tax).ToArray();
+        }
+        public static double[] GetAllCurrenciesDefaultStockFee()
+        {
+            return _currencies.Select(it => it.DefaultStockFee).ToArray();
+        }
+        #endregion
+
+        #region Get All Domains
+        private static List<DomainInfo> _domains;
+        public static int GetAllDomains()
+        {
+            try
+            {
+                _domains?.Clear();
+                _domains = _manager.RequestAllDomains();
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get domains {0}", ex);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static string[] GetAllDomainsName()
+        {
+            return _domains.Select(it => it.DomainName).ToArray();
+        }
+
+        public static string[] GetAllDomainsReportCurrency()
+        {
+            return _domains.Select(it => it.ReportCurrency).ToArray();
+        }
+        public static string[] GetAllDomainsTokeCommCurrency()
+        {
+            return _domains.Select(it => it.TokenCommissionCurrency).ToArray();
+        }
+        public static string[] GetAllDomainsCompanyFullName()
+        {
+            return _domains.Select(it => it.CompanyFullName).ToArray();
+        }
+
+        public static string[] GetAllDomainsCompanyEmail()
+        {
+            return _domains.Select(it => it.CompanyEmail).ToArray();
+        }
+        public static string[] GetAllDomainsRestAddress()
+        {
+            return _domains.Select(it => it.ServerAddress).ToArray();
+        }
+        public static string[] GetAllDomainsServerAddress()
+        {
+            return _domains.Select(it => it.ServerAddress).ToArray();
+        }
+        public static string[] GetAllDomainsRestPort()
+        {
+            return _domains.Select(it => it.ServerRestPort).ToArray();
+        }
+        public static double[] GetAllDomainsPublicWebApiAccount()
+        {
+            return _domains.Select(it => (double)(it.PublicWebApiAccount ?? 0)).ToArray();
+        }
+        #endregion
+
+        #region Dividends
+        private static List<DividendInfo> _dividends;
+        public static int GetAllDividends()
+        {
+            try
+            {
+                _dividends?.Clear();
+                _dividends = _manager.RequestAllDividends();
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get Dividends {0}", ex);
+                return -1;
+            }
+            return 0;
+        }
+
+        public static double[] GetAllDividendsId()
+        {
+            return _dividends.Select(it => (double)it.Id).ToArray();
+        }
+        public static DateTime[] GetAllDividendsTimestamp()
+        {
+            return _dividends.Select(it => new DateTime(it.Time.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+        public static string[] GetAllDividendsSymbol()
+        {
+            return _dividends.Select(it => it.Symbol).ToArray();
+        }
+        public static double[] GetAllDividendsGrossRate()
+        {
+            return _dividends.Select(it => it.GrossRate).ToArray();
+        }
+        public static double[] GetAllDividendsFee()
+        {
+            return _dividends.Select(it => it.Fee).ToArray();
+        }
+        #endregion
+        #region Online Sessions
+        private static List<OnlineSession> _onlineSessions;
+        public static int GetAllOnlineSessions()
+        {
+            try
+            {
+                _onlineSessions?.Clear();
+                _onlineSessions = _manager.RequestOnlineSessions();
+            }catch(Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get online session {0}", ex.Message);
+                return -1;
+            }
+            return 0;
+        }
+        public static string[] GetOnlineSessionId()
+        {
+            return _onlineSessions.Select(it => it.SessionId).ToArray();
+        }
+        public static double[] GetOnlineSessionAccountId()
+        {
+            return _onlineSessions.Select(it => (double)it.Account).ToArray();
+        }
+        public static string[] GetOnlineSessionAccountGroup()
+        {
+            return _onlineSessions.Select(it => it.Group).ToArray();
+        }
+        public static string[] GetOnlineSessionType()
+        {
+            return _onlineSessions.Select(it => it.SessionType.ToString()).ToArray();
+        }
+        public static string[] GetOnlineSessionManagerType()
+        {
+            return _onlineSessions.Select(it => it.ManagerSessionType.ToString()).ToArray();
+        }
+        public static string[] GetOnlineSessionIp()
+        {
+            return _onlineSessions.Select(it => it.IpAddress).ToArray();
+        }
+        public static DateTime[] GetOnlineSessionTimeCreated()
+        {
+            return _onlineSessions.Select(it => new DateTime(it.Created.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+        #endregion
+
         static void Main(string[] args)
         {
         }
