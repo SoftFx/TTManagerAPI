@@ -14,12 +14,16 @@ using TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask;
 using TickTrader.BusinessLogic.Core;
 namespace rTTManApi
 {
+    
+
     public class rTTManApiHost
     {
         #region MarketManager
         static MarketManager InitMarketManager()
         {
             var manager = new MarketManager(null, NettingCalculationTypes.Optimized);
+            manager.Update(_manager.RequestAllSymbols(), _manager.RequestAllGroupSecurities(), _manager.RequestAllCurrencies(), _manager.RequestAllGroups());
+            manager.Update(_manager.RequestAllSymbolsTicks());
             return manager;
         }
         #endregion
@@ -112,7 +116,11 @@ namespace rTTManApi
             public string ClientApp;
             public double Id;
             public double AccountId;
-
+            public decimal Price;
+            public decimal Profit;
+            public decimal TransferringCoefficient;
+            public decimal CurrentBestBid;
+            public decimal CurrentBestAsk;
             public PositionDailySnapshot(PositionSnapshot pos, DateTime timestamp, double accountId)
             {
                 Symbol = pos.Symbol;
@@ -128,6 +136,11 @@ namespace rTTManApi
                 Id = pos.Id;
                 Timestamp = timestamp;
                 AccountId = accountId;
+                Price = pos.Price;
+                Profit = pos.Profit ?? 0;
+                TransferringCoefficient = pos.TransferringCoefficient ?? -1;
+                CurrentBestBid = pos.CurrentBestBid ?? 0;
+                CurrentBestAsk = pos.CurrentBestAsk ?? 0;
             }
         }
 
@@ -1729,6 +1742,7 @@ namespace rTTManApi
             Logger.Log.InfoFormat("Requesting All Assets");
             try
             {
+                var ticks = _manager.RequestAllSymbolsTicks();
                 var accounts = _manager.RequestAllAccounts();
                 var marketManager = InitMarketManager();
                 _allAssets = new List<MyAssetsInfo>();
@@ -1742,9 +1756,9 @@ namespace rTTManApi
                         {
                             rate = marketManager.GetGroupState(item.Group).ConversionMap.GetPositiveAssetConversion(asset.Currency, "USD").Value;
                         }
-                        catch
+                        catch(Exception ex)
                         {
-                            Logger.Log.ErrorFormat("Can not calculate conversionToUsd rate, account - {0}; currency - {1}", item.AccountId, asset.Currency);
+                            Logger.Log.ErrorFormat("Can not calculate conversionToUsd rate, account - {0}; currency - {1} - {2}", item.AccountId, asset.Currency, ex.Message);
                             rate = 0;
                         }
                         var myAssetInfo = new MyAssetsInfo(asset, item.AccountId, rate);
@@ -2205,27 +2219,36 @@ namespace rTTManApi
 
         public static int ModifySymbolSwap(string symbolName, double swapSizeShort, double swapSizeLong)
         {
+            return ModifySymbolSwap(new string[] { symbolName }, new double[] { swapSizeShort }, new double[] { swapSizeLong });
+        }
+
+        public static int ModifySymbolSwap(string[] symbolName, double[] swapSizeShort, double[] swapSizeLong)
+        {
             try
             {
-                var symbol = _manager.RequestSymbol(symbolName);
-                /*if (!swapType.Equals(symbol.SwapType.ToString()))
+                if (!(symbolName.Length == swapSizeShort.Length && symbolName.Length == swapSizeLong.Length))
+                    throw new Exception("Wrong paramaters length");
+                var symbolModifyReq = new List<SymbolModifyRequest>();
+                for (int i = 0; i < symbolName.Length; ++i)
                 {
-                    throw new ArgumentException("wrong swap type for this symbol");
-                }*/
-                var request = new SymbolModifyRequest { SymbolName = symbolName, IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort, SwapSizeLong = (float?)swapSizeLong };
-                if (_manager.ModifySymbol(request))
-                {
-                    return 0;
+                    symbolModifyReq.Add(new SymbolModifyRequest { SymbolName = symbolName[i], IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort[i], SwapSizeLong = (float?)swapSizeLong[i] });
                 }
-                Logger.Log.Error("Modifying symbol swap failed");
-                return -1;
+                var result = _manager.BulkModifySymbol(symbolModifyReq);
+                if (result.Count != 0)
+                {
+                    foreach (var item in result)
+                    {
+                        Logger.Log.ErrorFormat($"Modifying symbol swap failed because {item.Key} - {item.Value}");
+                    }
+                    return -1;
+                }
+                return 0;
             }
             catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Modifying symbol swap failed because {0}", ex);
                 return -2;
             }
-
         }
 
         #endregion
@@ -2250,16 +2273,7 @@ namespace rTTManApi
         
         public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double upstreamType)
         {
-            int taskId = _manager.UpstreamAsync(symbol.ToList(), from, to, (UpstreamTypes)Convert.ToInt32(upstreamType));
-            var info = _manager.GetHistoryTaskInfo(taskId);
-            while (info.Status == TaskStatus.Running)
-            {
-                System.Threading.Thread.Sleep(1000);
-                info = _manager.GetHistoryTaskInfo(taskId);
-            }
-            if (info.Status == TaskStatus.RanToCompletion)
-                return 0;
-            return -1;
+            return UpstreamAsync(symbol, from, to, new double[] { upstreamType });
         }
 
         public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double[] upstreamType)
@@ -2279,33 +2293,12 @@ namespace rTTManApi
 
         public static int UpstreamAsync(string symbol, DateTime from, DateTime to, double upstreamType)
         {
-            List<string> symbols = new List<string> { symbol };
-            int taskId = _manager.UpstreamAsync(symbols, from, to, (UpstreamTypes)Convert.ToInt32(upstreamType));
-            var info = _manager.GetHistoryTaskInfo(taskId);
-            while (info.Status == TaskStatus.Running)
-            {
-                System.Threading.Thread.Sleep(1000);
-                info = _manager.GetHistoryTaskInfo(taskId);
-            }
-            if (info.Status == TaskStatus.RanToCompletion)
-                return 0;
-            return -1;
+            return UpstreamAsync(new string[] { symbol }, from, to, new double[] { upstreamType });
         }
 
         public static int UpstreamAsync(string symbol, DateTime from, DateTime to, double[] upstreamType)
         {
-            List<string> symbols = new List<string> { symbol };
-            var result = upstreamType.Select(i => (UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
-            int taskId = _manager.UpstreamAsync(symbols, from, to, result);
-            var info = _manager.GetHistoryTaskInfo(taskId);
-            while (info.Status == TaskStatus.Running)
-            {
-                System.Threading.Thread.Sleep(1000);
-                info = _manager.GetHistoryTaskInfo(taskId);
-            }
-            if (info.Status == TaskStatus.RanToCompletion)
-                return 0;
-            return -1;
+            return UpstreamAsync(new string[] { symbol }, from, to, upstreamType);
         }
 
         public static bool DeleteSymbolTicks(string symbol, DateTime fromTime, double fromIndex, DateTime toTime, double toIndex)
@@ -2315,28 +2308,7 @@ namespace rTTManApi
 
         public static int DeleteFromStorageAsync(string symbol, DateTime from, DateTime to, double periodicityLevel)
         {
-            try
-            {
-                List<string> symbolList = new List<string> { symbol };
-                int id = _manager.DeleteFromStorageAsync(symbolList, from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
-                TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
-                while (info.Status == TaskStatus.Running)
-                {
-                    System.Threading.Thread.Sleep(1000);
-                    info = _manager.GetHistoryTaskInfo(id);
-                }
-                if (info.Status != TaskStatus.RanToCompletion)
-                {
-                    Logger.Log.ErrorFormat("Delete operation status is {0}", info.Status.ToString());
-                    return -1;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.ErrorFormat("Delete Quotes failed because {0}", ex.Message);
-                return -1;
-            }
-            return 0;
+            return DeleteFromStorageAsync(new string[] { symbol }, from, to, periodicityLevel);
         }
 
         public static int DeleteFromStorageAsync(string[] symbols, DateTime from, DateTime to, double periodicityLevel)
@@ -2370,40 +2342,7 @@ namespace rTTManApi
         #region Get account snapshots
         public static int GetAccountSnapshots(double accId, DateTime from, DateTime to)
         {
-            _accountSnapshotList?.Clear();
-            try
-            {
-                var req = new DailyAccountsSnapshotRequest
-                {
-                    AccountIds = new List<long> { Convert.ToInt64(accId) },
-                    fromDate = from,
-                    toDate = to,
-                    IsUTC = true,
-                };
-                _accountSnapshotList = new List<AccountSnapshotEntity>();
-                Logger.Log.InfoFormat("Requesting account snapshots of {0} from {1} to {2}", accId, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(req);
-                foreach (var snapshot in query.Reports)
-                {
-                    _accountSnapshotList.Add(snapshot);
-                }
-                while (!query.IsEndOfStream)
-                {
-                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(req);
-                    foreach (var snapshot in query.Reports)
-                    {
-                        _accountSnapshotList.Add(snapshot);
-                    }
-                }
-                Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.ErrorFormat("Requesting account snapshots failed because {0}", ex.Message);
-                return -1;
-            }
+            return GetAccountSnapshots(new double[] { accId }, from, to);
         }
 
         public static int GetAccountSnapshots(double[] accId, DateTime from, DateTime to)
@@ -2604,39 +2543,7 @@ namespace rTTManApi
 
         public static int GetPositionSnapshots(double accId, DateTime from, DateTime to)
         {
-            try
-            {
-                var req = new DailyAccountsSnapshotRequest
-                {
-                    AccountIds = new List<long> { Convert.ToInt64(accId) },
-                    fromDate = from,
-                    toDate = to,
-                    IsUTC = true,
-                };
-                _positionList = new List<PositionDailySnapshot>();
-                Logger.Log.InfoFormat("Requesting position snapshots of {0} from {1} to {2}", accId, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(req);
-                _positionList.AddRange(query.Reports.SelectMany(
-                                snapshot =>
-                                    snapshot.Positions.Select(
-                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
-                while (!query.IsEndOfStream)
-                {
-                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(req);
-                    _positionList.AddRange(query.Reports.SelectMany(
-                                snapshot =>
-                                    snapshot.Positions.Select(
-                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
-                }
-                Logger.Log.InfoFormat("Recieved {0} position snapshots", _positionList.Count);
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.ErrorFormat("Requesting position snapshots failed because {0}", ex.Message);
-                return -1;
-            }
+            return GetPositionSnapshots(new double[] { accId }, from, to);
         }
 
         public static int GetPositionSnapshots(double[] accId, DateTime from, DateTime to)
@@ -2664,12 +2571,18 @@ namespace rTTManApi
                                         pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
                 while (!query.IsEndOfStream)
                 {
+                    var time = DateTime.UtcNow;
                     req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
                     query = _manager.QueryDailyAccountsSnapshot(req);
+                    var time2 = DateTime.UtcNow;
+                    Logger.Log.Info($"DailyReport Count {query.Reports.Count} - time:{(time2 - time).TotalSeconds} - seconds");
                     _positionList.AddRange(query.Reports.SelectMany(
                                 snapshot =>
                                     snapshot.Positions.Select(
                                         pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
+                    var time3 = DateTime.UtcNow;
+                    Logger.Log.Info($"Positions Snapshots Count {_positionList.Count} - time:{(time3 - time).TotalSeconds} - seconds");
+
                 }
                 Logger.Log.InfoFormat("Recieved {0} position snapshots", _positionList.Count);
                 return 0;
@@ -2746,6 +2659,27 @@ namespace rTTManApi
             return _positionList.Select(it => it.ClientApp).ToArray();
         }
 
+        public static double[] GetPositionPrice()
+        {
+            return _positionList.Select(it => (double)it.Price).ToArray();
+        }
+
+        public static double[] GetPositionProfit()
+        {
+            return _positionList.Select(it => (double)it.Profit).ToArray();
+        }
+        public static double[] GetPositionTransferringCoefficient()
+        {
+            return _positionList.Select(it => (double)it.TransferringCoefficient).ToArray();
+        }
+        public static double[] GetPositionCurrentBestBid()
+        {
+            return _positionList.Select(it => (double)it.CurrentBestBid).ToArray();
+        }
+        public static double[] GetPositionCurrentBestAsk()
+        {
+            return _positionList.Select(it => (double)it.CurrentBestAsk).ToArray();
+        }
         #endregion
 
         #region Uploading ticks

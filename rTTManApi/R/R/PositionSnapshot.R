@@ -21,13 +21,19 @@ GetPositionSnapshotFrame<-function()
   SymbolAliasOrName = GetPositionSymbolAliasOrName()
   Side = GetPositionSide()
   Amount = GetPositionAmount()
+  Price = GetPositionPrice()
   AveragePrice = GetPositionAveragePrice()
   Swap = GetPositionSwap()
   Commission = GetPositionCommission()
   Modified = GetPositionModified()
   Timestamp = GetPositionTimestamp()
   ClientApp = GetPositionClientApp()
-  data.table(Id, AccountId, Symbol, SymbolAlias, SymbolAliasOrName, Side, Amount, AveragePrice, Swap, Commission, Modified, Timestamp, ClientApp)
+  Profit = GetPositionProfit()
+  TransferringCoefficient = GetPositionTransferringCoefficient()
+  CurrentBestBid = GetPositionCurrentBestBid()
+  CurrentBestAsk = GetPositionCurrentBestAsk()
+  data.table(Id, AccountId, Symbol, SymbolAlias, SymbolAliasOrName, Side, Amount, Price, AveragePrice, 
+             Swap, Commission, Modified, Timestamp, ClientApp, Profit, TransferringCoefficient, CurrentBestBid, CurrentBestAsk)
 }
 # Get position snapshot field
 GetPositionId<-function(){
@@ -80,4 +86,23 @@ GetPositionTimestamp<-function(){
 # Get position snapshot field
 GetPositionClientApp<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetPositionClientApp')
+}
+GetPositionPrice <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetPositionPrice')
+}
+
+GetPositionProfit <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetPositionProfit')
+}
+
+GetPositionTransferringCoefficient <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetPositionTransferringCoefficient')
+}
+
+GetPositionCurrentBestBid <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetPositionCurrentBestBid')
+}
+
+GetPositionCurrentBestAsk <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetPositionCurrentBestAsk')
 }

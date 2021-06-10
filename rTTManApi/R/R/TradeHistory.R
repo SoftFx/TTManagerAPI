@@ -10,7 +10,7 @@
 #' ttmGetTradeReports(c(100181, 100182), ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), TRUE)
 #' 
 #' @export
-ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), transTypes = "", reasons = "", skipCancelled = TRUE) {
+ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), skipCancelled = TRUE, transTypes = "", reasons = "") {
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', accId, from, to, transTypes, reasons, skipCancelled)
   GetTradeFrame()
 }
