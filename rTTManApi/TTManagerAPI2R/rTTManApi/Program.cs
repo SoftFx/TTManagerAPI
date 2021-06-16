@@ -21,7 +21,7 @@ namespace rTTManApi
         #region MarketManager
         static MarketManager InitMarketManager()
         {
-            var manager = new MarketManager(null, NettingCalculationTypes.Optimized);
+            var manager = new MarketManager(null, NettingCalculationTypes.Optimized, false);
             manager.Update(_manager.RequestAllSymbols(), _manager.RequestAllGroupSecurities(), _manager.RequestAllCurrencies(), _manager.RequestAllGroups());
             manager.Update(_manager.RequestAllSymbolsTicks());
             return manager;
@@ -1742,21 +1742,21 @@ namespace rTTManApi
             Logger.Log.InfoFormat("Requesting All Assets");
             try
             {
-                var ticks = _manager.RequestAllSymbolsTicks();
                 var accounts = _manager.RequestAllAccounts();
                 var marketManager = InitMarketManager();
                 _allAssets = new List<MyAssetsInfo>();
                 foreach( var item in accounts)
                 {
+
                     var assets = item.Assets;
-                    foreach(var asset in assets)
+                    foreach (var asset in assets)
                     {
                         double rate = 0;
                         try
                         {
-                            rate = marketManager.GetGroupState(item.Group).ConversionMap.GetPositiveAssetConversion(asset.Currency, "USD").Value;
+                            rate = (double)marketManager.GetGroupState(item.Group).ConversionMap.GetPositiveAssetConversion(asset.Currency, "USD").GetValueOrThrow();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             Logger.Log.ErrorFormat("Can not calculate conversionToUsd rate, account - {0}; currency - {1} - {2}", item.AccountId, asset.Currency, ex.Message);
                             rate = 0;
