@@ -47,9 +47,10 @@ GetAccountFrame<-function()
   Country = GetAccountCountry()
   Email = GetAccountEmail()
   InternalComment = GetAccountInternalComment()
+  RegistrationDate = GetAccountRegistrationDate()
   data.table(AccountId,Name,Domain,Group,AccountingType,Blocked,Readonly,Leveage,Profit,Comission,AgentComission,TotalComission,Swap,
   Equity,Margin,MarginLevel,Balance,BalanceCurrency,MarginCallLevel,MarginFree,StopOutLevel,IsValid,IsWebApiEnabled,
-  IsTwoFactorAuthSet,IsArchived,FeedPriority,Version,Country, Email,InternalComment)
+  IsTwoFactorAuthSet,IsArchived,FeedPriority,Version,Country, Email,InternalComment, RegistrationDate)
 }
 #' Modify account
 #' @export
@@ -175,6 +176,10 @@ GetAccountEmail<-function(){
 # Get Account field
 GetAccountInternalComment<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountInternalComment')
+}
+
+GetAccountRegistrationDate <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountRegistrationDate')
 }
 
 GetAccountCustomPropertiesId <- function() {

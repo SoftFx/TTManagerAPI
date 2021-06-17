@@ -605,6 +605,11 @@ namespace rTTManApi
             return _accountList.Select(it => it.InternalComment).ToArray();
         }
 
+        public static DateTime[] GetAccountRegistrationDate()
+        {
+            return _accountList.Select(it => new DateTime(it.RegistrationDate.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+
         public static bool ModifyAccount(string accountId, string internalComment)
         {
             var request = new AccountModifyRequest
