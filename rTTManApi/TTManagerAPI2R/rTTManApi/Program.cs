@@ -438,6 +438,23 @@ namespace rTTManApi
 
         #region Get accounts
 
+        public static int GetAccountByLogin(int accountId)
+        {
+            try
+            {
+                _accountList?.Clear();
+                Logger.Log.Info("Requesting all accounts");
+                _accountList = new List<AccountInfo>() { _manager.RequestAccountById((int)accountId) };
+                Logger.Log.InfoFormat("Recieved {0} accounts", _accountList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting all accounts failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+
         public static int GetAllAccounts()
         {
             try
@@ -2224,8 +2241,24 @@ namespace rTTManApi
 
         public static int ModifySymbolSwap(string symbolName, double swapSizeShort, double swapSizeLong)
         {
-            return ModifySymbolSwap(new string[] { symbolName }, new double[] { swapSizeShort }, new double[] { swapSizeLong });
+            //return ModifySymbolSwap(new string[] { symbolName }, new double[] { swapSizeShort }, new double[] { swapSizeLong });
+            try
+            {
+                var symbolModifyRequest = new SymbolModifyRequest { SymbolName = symbolName, IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort, SwapSizeLong = (float?)swapSizeLong };
+                var result = _manager.ModifySymbol(symbolModifyRequest);
+                if (!result) {
+                    Logger.Log.ErrorFormat($"Modifying symbol swap returned FALSE");
+                    return -1;
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Modifying symbol swap failed because {0}", ex);
+                return -2;
+            }
         }
+        
 
         public static int ModifySymbolSwap(string[] symbolName, double[] swapSizeShort, double[] swapSizeLong)
         {

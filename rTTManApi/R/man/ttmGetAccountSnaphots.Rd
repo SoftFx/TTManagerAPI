@@ -4,8 +4,11 @@
 \alias{ttmGetAccountSnaphots}
 \title{Gets the Account snaphots as requested}
 \usage{
-ttmGetAccountSnaphots(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
-  "GMT"), to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"))
+ttmGetAccountSnaphots(
+  accId,
+  from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz = "GMT"),
+  to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT")
+)
 }
 \arguments{
 \item{accId}{a numeric vector. Accounts ids.}

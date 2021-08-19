@@ -4,8 +4,14 @@
 \alias{ttmInsertTicks}
 \title{Upload symbol ticks}
 \usage{
-ttmInsertTicks(symbol, timestamps, bidPrices, bidVolumes, askPrices,
-  askVolumes)
+ttmInsertTicks(
+  symbol,
+  timestamps,
+  bidPrices,
+  bidVolumes,
+  askPrices,
+  askVolumes
+)
 }
 \arguments{
 \item{symbol}{Symbol}

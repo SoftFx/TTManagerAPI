@@ -4,9 +4,21 @@
 \alias{ttmCreateNewOrder}
 \title{Create the Orders as requested}
 \usage{
-ttmCreateNewOrder(login, orderType, orderSide, symbol, amount, stopPrice,
-  price, stopLoss, takeProfit, UserComment, ManagerComment, Expiration,
-  reqType = 0)
+ttmCreateNewOrder(
+  login,
+  orderType,
+  orderSide,
+  symbol,
+  amount,
+  stopPrice,
+  price,
+  stopLoss,
+  takeProfit,
+  UserComment,
+  ManagerComment,
+  Expiration,
+  reqType = 0
+)
 }
 \description{
 Create the Orders as requested

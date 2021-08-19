@@ -4,8 +4,14 @@
 \alias{ttmExportQuotes}
 \title{Export Quotes}
 \usage{
-ttmExportQuotes(symbol, from, to, periodicityLevel, resultDirPath,
-  isLocalDownload = FALSE)
+ttmExportQuotes(
+  symbol,
+  from,
+  to,
+  periodicityLevel,
+  resultDirPath,
+  isLocalDownload = FALSE
+)
 }
 \arguments{
 \item{symbol}{a character vector. Symbol names}

@@ -4,11 +4,25 @@
 \alias{ttmCreateNewSymbol}
 \title{Create new Symbol}
 \usage{
-ttmCreateNewSymbol(symbol, security, isin, alias, marginCurrency,
-  profitCurrency, precision, contractSize, marginFactorFractional = 1,
-  swapEnabled = TRUE, marginMode = "CFD", profitMode = "CFD",
-  marginHedged = 0.5, swapType = "PercentPerYear", swapSizeLong = 0,
-  swapSizeShort = 0, description = "")
+ttmCreateNewSymbol(
+  symbol,
+  security,
+  isin,
+  alias,
+  marginCurrency,
+  profitCurrency,
+  precision,
+  contractSize,
+  marginFactorFractional = 1,
+  swapEnabled = TRUE,
+  marginMode = "CFD",
+  profitMode = "CFD",
+  marginHedged = 0.5,
+  swapType = "PercentPerYear",
+  swapSizeLong = 0,
+  swapSizeShort = 0,
+  description = ""
+)
 }
 \arguments{
 \item{symbol}{a character. Symbol}

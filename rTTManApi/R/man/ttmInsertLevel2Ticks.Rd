@@ -4,8 +4,15 @@
 \alias{ttmInsertLevel2Ticks}
 \title{Upload symbol ticks L2}
 \usage{
-ttmInsertLevel2Ticks(symbol, timestamps, bidPrices, bidVolumes, askPrices,
-  askVolumes, depth)
+ttmInsertLevel2Ticks(
+  symbol,
+  timestamps,
+  bidPrices,
+  bidVolumes,
+  askPrices,
+  askVolumes,
+  depth
+)
 }
 \arguments{
 \item{symbol}{Symbol}

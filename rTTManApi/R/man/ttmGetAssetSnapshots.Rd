@@ -4,8 +4,11 @@
 \alias{ttmGetAssetSnapshots}
 \title{Gets the Snapshots as requested}
 \usage{
-ttmGetAssetSnapshots(accId, from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz =
-  "GMT"), to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"))
+ttmGetAssetSnapshots(
+  accId,
+  from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz = "GMT"),
+  to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT")
+)
 }
 \arguments{
 \item{accId}{a numeric vector. Accounts ids.}

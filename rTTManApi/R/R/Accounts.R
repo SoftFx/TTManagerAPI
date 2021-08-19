@@ -14,6 +14,19 @@ ttmGetAllAccounts <- function() {
   return(accounts)
 }
 
+#' Gets the Accounts by login
+#' @examples
+#' GetAccountByLogin(100040)
+#' @export
+ttmGetAccountByLogin <- function(accountId){
+  t <- rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountByLogin', as.integer(accountId))
+  if(t != 0) stop(paste("Error in getting Account Info", accountId))
+  PropertyTable = GetAccountsCustomProperties()
+  accounts = GetAccountFrame()
+  accounts = merge(accounts, PropertyTable[PropertyName == "ewallet",.(AccountId, "EWallet" = PropertyValue)], by = "AccountId", all.x = TRUE)
+  return(accounts)
+}
+
 # Get Account table
 GetAccountFrame<-function()
 {
