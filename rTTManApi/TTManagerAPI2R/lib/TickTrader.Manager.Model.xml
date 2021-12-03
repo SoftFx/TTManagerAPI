@@ -272,6 +272,18 @@
             <param name="size">Page size</param>
             <returns>Snapshot list of monitoring events</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ClearMonitoringStates">
+            <summary>
+            Clear all monitoring states on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ClearMonitoringEvents">
+            <summary>
+            Clear all monitoring events on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
+        </member>
         <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingStarting">
             <summary>
             Event is raised when the pumping is starting.
@@ -577,6 +589,14 @@
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.SendDealerResponse(TickTrader.BusinessObjects.DealerResponse)">
             <summary>
             Send dealer response.
+            Works only in dealing mode!
+            </summary>
+            <param name="response">Dealer response</param>
+            <returns>Operation completion result</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.SendDealerResponseAsync(TickTrader.BusinessObjects.DealerResponse)">
+            <summary>
+            Send dealer response async.
             Works only in dealing mode!
             </summary>
             <param name="response">Dealer response</param>
@@ -901,6 +921,15 @@
             </summary>
             <param name="symbols">list of symbols</param>
             <param name="depth">book's depth</param>
+            <returns>true if success</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.SetLevel2SubscriptionFilter(System.String[],System.Int32,System.Int64)">
+            <summary>
+            Subscribe to symbols level2
+            </summary>
+            <param name="symbols">list of symbols</param>
+            <param name="depth">book's depth</param>
+            <param name="delay">frequency filter delay in ms</param>
             <returns>true if success</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.Level2Unsubscribe(System.String[])">
@@ -1889,7 +1918,21 @@
             <param name="openOrderRequest">Open order request</param>
             <returns>Info of successfully opened order or null if failed</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.OpenOrderAsync(TickTrader.BusinessObjects.Requests.OpenOrderRequest)">
+            <summary>
+            Open new order (market, limit or stop).
+            </summary>
+            <param name="openOrderRequest">Open order request</param>
+            <returns>Info of successfully opened order or null if failed</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ModifyOrder(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
+            <summary>
+            Modify existing order.
+            </summary>
+            <param name="modifyOrderRequest">Modify order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ModifyOrderAsync(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
             <summary>
             Modify existing order.
             </summary>
@@ -1903,7 +1946,21 @@
             <param name="activateOrderRequest">Activate order request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ActivateOrderAsync(TickTrader.BusinessObjects.Requests.ActivateOrderRequest)">
+            <summary>
+            Activate pending order (limit or stop).
+            </summary>
+            <param name="activateOrderRequest">Activate order request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.CancelOrder(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
+            <summary>
+            Cancel existing order.
+            </summary>
+            <param name="cancelOrderRequest">Cancel order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.CancelOrderAsync(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
             <summary>
             Cancel existing order.
             </summary>
@@ -2492,6 +2549,13 @@
             <param name="requests">List of requests</param>
             <returns></returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupDeleteRequest})">
+            <summary>
+            Perform bulk delete groups
+            </summary>
+            <param name="requests">List of requests</param>
+            <returns></returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkCreateSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityNewRequest})">
             <summary>
             Perform bulk create securities
@@ -2822,6 +2886,18 @@
             <param name="key">From Id (can be -1 for the first avaliable Id)</param>
             <param name="size">Page size</param>
             <returns>Snapshot list of monitoring events</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ClearMonitoringStates">
+            <summary>
+            Clear all monitoring states on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ClearMonitoringEvents">
+            <summary>
+            Clear all monitoring events on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
         </member>
         <member name="E:TickTrader.Manager.Model.ITickTraderManagerModel.PumpingStarting">
             <summary>
@@ -3500,6 +3576,15 @@
             </summary>
             <param name="symbols">list of symbols</param>
             <param name="depth">book's depth</param>
+            <returns>true if success</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.SetLevel2SubscriptionFilter(System.String[],System.Int32,System.Int64)">
+            <summary>
+            Subscribe to symbols level2
+            </summary>
+            <param name="symbols">list of symbols</param>
+            <param name="depth">book's depth</param>
+            <param name="delay">frequency filter delay in ms</param>
             <returns>true if success</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.Level2Unsubscribe(System.String[])">
@@ -4524,7 +4609,21 @@
             <param name="openOrderRequest">Open order request</param>
             <returns>Info of successfully opened order or null if failed</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.OpenOrderAsync(TickTrader.BusinessObjects.Requests.OpenOrderRequest)">
+            <summary>
+            Open new order (market, limit or stop).
+            </summary>
+            <param name="openOrderRequest">Open order request</param>
+            <returns>Info of successfully opened order or null if failed</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ModifyOrder(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
+            <summary>
+            Modify existing order.
+            </summary>
+            <param name="modifyOrderRequest">Modify order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ModifyOrderAsync(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
             <summary>
             Modify existing order.
             </summary>
@@ -4538,9 +4637,23 @@
             <param name="activateOrderRequest">Activate order request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ActivateOrderAsync(TickTrader.BusinessObjects.Requests.ActivateOrderRequest)">
+            <summary>
+            Activate pending order (limit or stop).
+            </summary>
+            <param name="activateOrderRequest">Activate order request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.CancelOrder(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
             <summary>
             Cancel existing order.
+            </summary>
+            <param name="cancelOrderRequest">Cancel order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.CancelOrderAsync(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
+            <summary>
+            Cancel existing order async.
             </summary>
             <param name="cancelOrderRequest">Cancel order request</param>
             <returns>Successful status</returns>
@@ -4596,6 +4709,13 @@
             <param name="request">Execution lock request</param>
             <returns>Execution lock report with list of orders were locked and expiration time.</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.LockOrderAsync(TickTrader.BusinessObjects.Requests.ExecutionLockRequest)">
+            <summary>
+            Lock order for execution for a cpecified timeout in seconds. Any related order will be locked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.UnlockOrder(TickTrader.BusinessObjects.Requests.ExecutionUnlockRequest)">
             <summary>
             Unlock order for execution. Any related order will be unlocked as well.
@@ -4603,7 +4723,21 @@
             <param name="request">Execution lock request</param>
             <returns>Execution lock report with list of orders were locked and expiration time.</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.UnlockOrderAsync(TickTrader.BusinessObjects.Requests.ExecutionUnlockRequest)">
+            <summary>
+            Unlock order for execution. Any related order will be unlocked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.OpenOCOOrders(TickTrader.BusinessObjects.Requests.OpenOCOOrdersRequest)">
+            <summary>
+            Open OCO Orders
+            </summary>
+            <param name="request">request</param>
+            <returns>report</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.OpenOCOOrdersAsync(TickTrader.BusinessObjects.Requests.OpenOCOOrdersRequest)">
             <summary>
             Open OCO Orders
             </summary>
@@ -5311,6 +5445,12 @@
             Perform bulk delete currencies
             </summary>
             <param name="currencyDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupDeleteRequest})">
+            <summary>
+            Perform bulk delete groups
+            </summary>
+            <param name="groupDeleteRequests">List of requests</param>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.InsertSymbolTicksAsyncWithJournal(System.String,System.Collections.Generic.List{TickTrader.BusinessObjects.TickValue})">
             <summary>

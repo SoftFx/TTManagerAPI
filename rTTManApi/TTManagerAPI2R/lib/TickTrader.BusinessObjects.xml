@@ -1570,12 +1570,6 @@
             Pumping activation flag. Used only in client manager model.
             </summary>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Order.ToString">
-             <summary>
-            
-             </summary>
-             <returns></returns>
-        </member>
         <member name="P:TickTrader.BusinessObjects.Order.IsPending">
              <summary>
             
@@ -2888,6 +2882,11 @@
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.RelatedOrderId">
+            <summary>
+            Related order
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.ParentOrderId">
             <summary>
             Related order
             </summary>

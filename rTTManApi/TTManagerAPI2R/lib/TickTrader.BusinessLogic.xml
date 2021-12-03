@@ -50,6 +50,11 @@
             Properties Profit, Margin and CalculationError are updated only in NettingCalculationTypes.OneByOne mode.
             </summary>
         </member>
+        <member name="T:TickTrader.BusinessLogic.OrderExtension">
+             <summary>
+            
+             </summary>
+        </member>
         <member name="T:TickTrader.BusinessLogic.IAccountInfo">
             <summary>
             Defines methods and properties for account.

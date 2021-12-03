@@ -143,7 +143,7 @@ namespace rTTManApi
                 CurrentBestAsk = pos.CurrentBestAsk ?? 0;
             }
         }
-
+        
         struct AccountCustomProperties
         {
             public long AccountId;
@@ -172,11 +172,14 @@ namespace rTTManApi
         private static List<SymbolInfo> _symbolList;
         private static List<AccountSnapshotEntity> _accountSnapshotList;
         private static List<PositionDailySnapshot> _positionList;
-
+        private static List<Order> _orderSnapshotList;
         private static List<NetPosition> _netPositions;
 
         private static List<TickValue> _tickValues;
         private static List<AccountCustomProperties> _customProperties;
+        private static string _server = "";
+        private static string _accounSnapshotServerName = "";
+        private static DailyAccountsSnapshotRequest _accSnapReq;
         #endregion
 
         #region GetTicks
@@ -318,6 +321,7 @@ namespace rTTManApi
                 if (_manager.Connect(address, int.Parse(login), password))
                 {
                     Logger.Log.Info("Connected successfully");
+                    _server = address;
                     return 0;
                 }
                 Logger.Log.Info("Connection failed");
@@ -338,6 +342,7 @@ namespace rTTManApi
                 if (_manager.Disconnect())
                 {
                     Logger.Log.Info("Disconnected successfully");
+                    _server = "";
                     return 0;
                 }
                 Logger.Log.Info("Disconnection failed");
@@ -1822,158 +1827,7 @@ namespace rTTManApi
         {
             return _allAssets.Select(it => (double)it.ConversionToUsd).ToArray();
         }
-        #endregion
-
-        #region Get asset snapshots
-
-        public static int GetAssetSnapshots(double accId, DateTime from, DateTime to)
-        {
-            _snapshotList?.Clear();
-            try
-            {
-                var req = new DailyAccountsSnapshotRequest
-                {
-                    AccountIds = new List<long> { Convert.ToInt64(accId) },
-                    fromDate = from,
-                    toDate = to,
-                    IsUTC = true,
-                };
-                _snapshotList = new List<AssetDailySnapshot>();
-                Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accId, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(req);
-                foreach (
-                    var ads in
-                        query.Reports.SelectMany(
-                                snapshot =>
-                                    snapshot.Assets.Select(
-                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
-                {
-                    _snapshotList.Add(ads);
-                }
-                while (!query.IsEndOfStream)
-                {
-                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(req);
-                    foreach (
-                        var ads in
-                            query.Reports.SelectMany(
-                                    snapshot =>
-                                        snapshot.Assets.Select(
-                                            asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
-                    {
-                        _snapshotList.Add(ads);
-                    }
-                }
-                Logger.Log.InfoFormat("Recieved {0} asset snapshots", _snapshotList.Count);
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.ErrorFormat("Requesting asset snapshots failed because {0}", ex.Message);
-                return -1;
-            }
-        }
-
-        public static int GetAssetSnapshots(double[] accId, DateTime from, DateTime to)
-        {
-            try
-            {
-                var req = new DailyAccountsSnapshotRequest
-                {
-                    AccountIds = accId.Select(Convert.ToInt64).ToList(),
-                    fromDate = from,
-                    toDate = to,
-                    IsUTC = true,
-                };
-                _snapshotList = new List<AssetDailySnapshot>();
-                var accList = accId[0].ToString();
-                for (var i = 1; i < accId.Length; i++)
-                {
-                    accList = string.Concat(accList, ", ", accId[i].ToString());
-                }
-                Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accList, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(req);
-                foreach (
-                    var ads in
-                        query.Reports.SelectMany(
-                                snapshot =>
-                                    snapshot.Assets.Select(
-                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
-                {
-                    _snapshotList.Add(ads);
-                }
-                while (!query.IsEndOfStream)
-                {
-                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(req);
-                    foreach (
-                        var ads in
-                            query.Reports.SelectMany(
-                                    snapshot =>
-                                        snapshot.Assets.Select(
-                                            asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))))
-                    {
-                        _snapshotList.Add(ads);
-                    }
-                }
-                Logger.Log.InfoFormat("Recieved {0} asset snapshots", _snapshotList.Count);
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.ErrorFormat("Requesting asset snapshots failed because {0}", ex.Message);
-                return -1;
-            }
-        }
-
-        public static double[] GetSnapshotAccountId()
-        {
-            return _snapshotList.Select(it => it.AccountId).ToArray();
-        }
-
-        public static string[] GetSnapshotCurrency()
-        {
-            return _snapshotList.Select(it => it.Currency).ToArray();
-        }
-
-        public static double[] GetSnapshotAmount()
-        {
-            return _snapshotList.Select(it => (double)it.Amount).ToArray();
-        }
-
-        public static double[] GetSnapshotFreeAmount()
-        {
-            return _snapshotList.Select(it => (double)it.FreeAmount).ToArray();
-        }
-
-        public static double[] GetSnapshotLockedAmount()
-        {
-            return _snapshotList.Select(it => (double)it.LockedAmount).ToArray();
-        }
-
-        public static double[] GetSnapshotCurrencyToUsdConversionRate()
-        {
-            return _snapshotList.Select(it => (double)it.CurrencyToUsdConversionRate).ToArray();
-        }
-
-        public static double[] GetSnapshotUsdToCurrencyConversionRate()
-        {
-            return _snapshotList.Select(it => (double)it.UsdToCurrencyConversionRate).ToArray();
-        }
-        public static double[] GetSnapshotCurrencyToReportConversionRate()
-        {
-            return _snapshotList.Select(it => (double)it.CurrencyToReportConversionRate).ToArray();
-        }
-        public static double[] GetSnapshotReportToCurrencyConversionRate()
-        {
-            return _snapshotList.Select(it => (double)it.ReportToCurrencyConversionRate).ToArray();
-        }
-        public static DateTime[] GetSnapshotTimestamp()
-        {
-            return _snapshotList.Select(it => new DateTime(it.Timestamp.Ticks, DateTimeKind.Utc)).ToArray();
-        }
-
-        #endregion
+        #endregion 
        
         #region Create Symbol
         public static bool CreateSymbol(string symbolName, string security, string isin, string alias, string marginCurrency, string profitCurrency, 
@@ -2385,10 +2239,21 @@ namespace rTTManApi
 
         public static int GetAccountSnapshots(double[] accId, DateTime from, DateTime to)
         {
-            _accountSnapshotList?.Clear();
+            //_accountSnapshotList?.Clear();
             try
             {
-                var req = new DailyAccountsSnapshotRequest
+                if (_accounSnapshotServerName.Equals(_server) && _accountSnapshotList != null && _accSnapReq != null)
+
+                {
+                    var isEqualAccountList = new HashSet<long>(_accSnapReq.AccountIds).SetEquals(accId.Select(Convert.ToInt64).ToList());
+                    if (isEqualAccountList && _accSnapReq.fromDate == from && _accSnapReq.toDate == to && _accSnapReq.IsUTC == true)
+                    {
+                        Logger.Log.InfoFormat($"{_server} - AccountSnapshot from memory will be used. {_accountSnapshotList.Count} - Snapshots.");
+                        return 0;
+                    }
+                }
+                _accounSnapshotServerName = _server;
+                _accSnapReq = new DailyAccountsSnapshotRequest
                 {
                     AccountIds = accId.Select(Convert.ToInt64).ToList(),
                     fromDate = from,
@@ -2396,18 +2261,13 @@ namespace rTTManApi
                     IsUTC = true,
                 };
                 _accountSnapshotList = new List<AccountSnapshotEntity>();
-                var accList = accId[0].ToString();
-                for (var i = 1; i < accId.Length; i++)
-                {
-                    accList = string.Concat(accList, ", ", accId[i].ToString());
-                }
-                Logger.Log.InfoFormat("Requesting asset snapshots of {0} from {1} to {2}", accList, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(req);
+                Logger.Log.InfoFormat("Requesting account snapshots of {0} accounts from {1} to {2}", accId.Length, from, to);
+                var query = _manager.QueryDailyAccountsSnapshot(_accSnapReq);
                 _accountSnapshotList.AddRange(query.Reports);
                 while (!query.IsEndOfStream)
                 {
-                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(req);
+                    _accSnapReq.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
+                    query = _manager.QueryDailyAccountsSnapshot(_accSnapReq);
                     _accountSnapshotList.AddRange(query.Reports);
                 }
                 Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
@@ -2420,6 +2280,7 @@ namespace rTTManApi
             }
         }
 
+        #region Acc Snaphots fields
         public static string[] GetAccountSnapshotId()
         {
             return _accountSnapshotList.Select(it => it.Id.ToString()).ToArray();
@@ -2574,6 +2435,7 @@ namespace rTTManApi
         {
             return _accountSnapshotList.Select(it => it.ReportCurrency).ToArray();
         }
+        #endregion
 
         #endregion
 
@@ -2588,40 +2450,14 @@ namespace rTTManApi
         {
             try
             {
-                var req = new DailyAccountsSnapshotRequest
-                {
-                    AccountIds = accId.Select(Convert.ToInt64).ToList(),
-                    fromDate = from,
-                    toDate = to,
-                    IsUTC = true,
-                };
+                var res = GetAccountSnapshots(accId, from, to);
+                if (res != 0)
+                    throw new Exception($"Can not get AccountSnapshots");
                 _positionList = new List<PositionDailySnapshot>();
-                var accList = accId[0].ToString();
-                for (var i = 1; i < accId.Length; i++)
-                {
-                    accList = string.Concat(accList, ", ", accId[i].ToString());
-                }
-                Logger.Log.InfoFormat("Requesting position snapshots of {0} from {1} to {2}", accList, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(req);
-                _positionList.AddRange(query.Reports.SelectMany(
+                _positionList.AddRange(_accountSnapshotList.SelectMany(
                                 snapshot =>
                                     snapshot.Positions.Select(
                                         pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
-                while (!query.IsEndOfStream)
-                {
-                    var time = DateTime.UtcNow;
-                    req.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(req);
-                    var time2 = DateTime.UtcNow;
-                    Logger.Log.Info($"DailyReport Count {query.Reports.Count} - time:{(time2 - time).TotalSeconds} - seconds");
-                    _positionList.AddRange(query.Reports.SelectMany(
-                                snapshot =>
-                                    snapshot.Positions.Select(
-                                        pos => new PositionDailySnapshot(pos, snapshot.Timestamp, snapshot.AccountId))));
-                    var time3 = DateTime.UtcNow;
-                    Logger.Log.Info($"Positions Snapshots Count {_positionList.Count} - time:{(time3 - time).TotalSeconds} - seconds");
-
-                }
                 Logger.Log.InfoFormat("Recieved {0} position snapshots", _positionList.Count);
                 return 0;
             }
@@ -2631,7 +2467,7 @@ namespace rTTManApi
                 return -1;
             }
         }
-
+        #region PosSnapshots fields
         public static double[] GetPositionId()
         {
             return _positionList.Select(it => it.Id).ToArray();
@@ -2717,6 +2553,114 @@ namespace rTTManApi
         public static double[] GetPositionCurrentBestAsk()
         {
             return _positionList.Select(it => (double)it.CurrentBestAsk).ToArray();
+        }
+
+        #endregion
+        #endregion
+
+        #region Get asset snapshots
+        //private static DailyAccountsSnapshotRequest _accSnapReq;
+        
+        public static int GetAssetSnapshots(double accId, DateTime from, DateTime to)
+        {
+            return GetAssetSnapshots(new double[] { accId }, from, to);
+        }
+
+        public static int GetAssetSnapshots(double[] accId, DateTime from, DateTime to)
+        {
+            try
+            {
+                var res = GetAccountSnapshots(accId, from, to);
+                if (res != 0)
+                    throw new Exception($"Can not get AccountSnapshots");
+                _snapshotList = new List<AssetDailySnapshot>();
+                _snapshotList.AddRange(_accountSnapshotList.SelectMany(
+                                snapshot =>
+                                    snapshot.Assets.Select(
+                                        asset => new AssetDailySnapshot(asset, snapshot.Timestamp, snapshot.AccountId))));
+                Logger.Log.InfoFormat("Recieved {0} Assets snapshots", _snapshotList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting Assets snapshots failed because {0}", ex.Message);
+                return -1;
+            }
+        }
+        #region Asset Snapshots fields
+        public static double[] GetSnapshotAccountId()
+        {
+            return _snapshotList.Select(it => it.AccountId).ToArray();
+        }
+
+        public static string[] GetSnapshotCurrency()
+        {
+            return _snapshotList.Select(it => it.Currency).ToArray();
+        }
+
+        public static double[] GetSnapshotAmount()
+        {
+            return _snapshotList.Select(it => (double)it.Amount).ToArray();
+        }
+
+        public static double[] GetSnapshotFreeAmount()
+        {
+            return _snapshotList.Select(it => (double)it.FreeAmount).ToArray();
+        }
+
+        public static double[] GetSnapshotLockedAmount()
+        {
+            return _snapshotList.Select(it => (double)it.LockedAmount).ToArray();
+        }
+
+        public static double[] GetSnapshotCurrencyToUsdConversionRate()
+        {
+            return _snapshotList.Select(it => (double)it.CurrencyToUsdConversionRate).ToArray();
+        }
+
+        public static double[] GetSnapshotUsdToCurrencyConversionRate()
+        {
+            return _snapshotList.Select(it => (double)it.UsdToCurrencyConversionRate).ToArray();
+        }
+        public static double[] GetSnapshotCurrencyToReportConversionRate()
+        {
+            return _snapshotList.Select(it => (double)it.CurrencyToReportConversionRate).ToArray();
+        }
+        public static double[] GetSnapshotReportToCurrencyConversionRate()
+        {
+            return _snapshotList.Select(it => (double)it.ReportToCurrencyConversionRate).ToArray();
+        }
+        public static DateTime[] GetSnapshotTimestamp()
+        {
+            return _snapshotList.Select(it => new DateTime(it.Timestamp.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+        #endregion
+        #endregion
+
+        #region Get Order Snapshots
+        public static int GetOrderSnapshots(double accId, DateTime from, DateTime to)
+        {
+            return GetOrderSnapshots(new double[] { accId }, from, to);
+        }
+        public static int GetOrderSnapshots(double[] accId, DateTime from, DateTime to)
+        {
+            try
+            {
+                var res = GetAccountSnapshots(accId, from, to);
+                if (res != 0)
+                    throw new Exception($"Can not get AccountSnapshots");
+                _orderList = new List<Order>();
+                _orderList.AddRange(_accountSnapshotList.SelectMany(
+                                snapshot =>
+                                    snapshot.Orders));
+                Logger.Log.InfoFormat("Recieved {0} orders snapshots", _orderList.Count);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Requesting orders snapshots failed because {0}", ex.Message);
+                return -1;
+            }
         }
         #endregion
 

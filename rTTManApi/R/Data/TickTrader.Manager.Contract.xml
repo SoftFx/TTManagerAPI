@@ -5,10 +5,14 @@
     </assembly>
     <members>
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryTickHistory(System.DateTime,System.Int32,System.String,System.Boolean)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryTickHistoryAsync(System.DateTime,System.Int32,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.GetTicksFromHistory(System.DateTime,System.DateTime,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryTickHistoryCache(System.DateTime,System.Int32,System.String,System.Boolean)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryTickHistoryCacheAsync(System.DateTime,System.Int32,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryVWAPTickHistory(System.DateTime,System.Int32,System.String,System.Int16)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryVWAPTickHistoryAsync(System.DateTime,System.Int32,System.String,System.Int16)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryVWAPTickHistoryCache(System.DateTime,System.Int32,System.String,System.Int16)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryVWAPTickHistoryCacheAsync(System.DateTime,System.Int32,System.String,System.Int16)" -->
         <member name="M:TickTrader.Manager.Contract.TickTraderManagerClient.GetSupportedBarPeriodicities(System.String)">
             <summary>
             Get supportted bar's periodicity
@@ -39,6 +43,17 @@
             <returns>Report</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryBarHistoryCache(System.DateTime,System.Int32,System.String,System.String,TickTrader.Common.Business.FxPriceType)">
+            <summary>
+            Query Bars history cache
+            </summary>
+            <param name="to">DateTime start point</param>
+            <param name="maxBars">Maximum bars to get. Query direction from future to past if negative</param>
+            <param name="symbol">Symbol</param>
+            <param name="periodicity">Period</param>
+            <param name="priceType">Price Type</param>
+            <returns>Report</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.TickTraderManagerClient.QueryBarHistoryCacheAsync(System.DateTime,System.Int32,System.String,System.String,TickTrader.Common.Business.FxPriceType)">
             <summary>
             Query Bars history cache
             </summary>
@@ -209,6 +224,13 @@
             is not necessary.
             </summary>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.PingAsync">
+            <summary>
+            Ping Trading Platform. Informs platform that manager is connected. 
+            Should be called one time in minute. For pumping mode calling ping 
+            is not necessary.
+            </summary>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetAccountRangesCount">
             <summary>
             Get account ranges count.
@@ -272,6 +294,16 @@
             <param name="fromTimestamp">From timestamp</param>
             <returns>Snapshot list of new monitoring states updated from the given timestamp.</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.ClearMonitoringStates">
+            <summary>
+            Delete all monitoring states from DB.
+            </summary>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.ClearMonitoringEvents">
+            <summary>
+            Delete all monitoring events from DB.
+            </summary>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetSnapshotOfConfiguration">
             <summary>
             Retrieve snapshot of configuration information.
@@ -285,6 +317,12 @@
             <returns>Snapshot of all symbols information</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetSnapshotOfSymbolsTicks">
+            <summary>
+            Retrieve snapshot of symbols tick information.
+            </summary>
+            <returns>Snapshot list of all symbols tick information.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetSnapshotOfSymbolsTicksAsync">
             <summary>
             Retrieve snapshot of symbols tick information.
             </summary>
@@ -388,7 +426,22 @@
             <param name="flags">Pumping flags combination (see PumpingFlag enum)</param>
             <param name="bookDepth">Pumping ticks depth subscription</param>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.EnablePumpingAsync(System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            Enable/Disable pumping for the current manager.
+            </summary>
+            <param name="enable">Enable flag</param>
+            <param name="flags">Pumping flags combination (see PumpingFlag enum)</param>
+            <param name="bookDepth">Pumping ticks depth subscription</param>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetPumpingUpdates">
+            <summary>
+            Retrieve updates from pumping.
+            Works only in pumping mode! 
+            </summary>
+            <returns>List of new updates from pumping.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetPumpingUpdatesAsync">
             <summary>
             Retrieve updates from pumping.
             Works only in pumping mode! 
@@ -401,6 +454,12 @@
             </summary>
             <param name="enable">Enable flag</param>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.EnableDealingAsync(System.Boolean)">
+            <summary>
+            Enable/Disable dealing for the current manager.
+            </summary>
+            <param name="enable">Enable flag</param>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetDealerRequest">
             <summary>
             Retrieve dealer request.
@@ -408,7 +467,21 @@
             </summary>
             <returns>Request from dealing or null.</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetDealerRequestAsync">
+            <summary>
+            Retrieve dealer request async.
+            Works only in dealing mode! 
+            </summary>
+            <returns>Request from dealing or null.</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.SendDealerResponse(TickTrader.BusinessObjects.DealerResponse)">
+            <summary>
+            Send dealer response.
+            Works only in dealing mode! 
+            </summary>
+            <param name="response">Dealer response</param>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.SendDealerResponseAsync(TickTrader.BusinessObjects.DealerResponse)">
             <summary>
             Send dealer response.
             Works only in dealing mode! 
@@ -776,6 +849,15 @@
             <param name="depth">book's depth</param>
             <returns>true if success</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.SetLevel2SubscriptionFilter(System.String[],System.Int32,System.Int64)">
+            <summary>
+            Subscribe to symbols level2
+            </summary>
+            <param name="symbols">list of symbols</param>
+            <param name="depth">book's depth</param>
+            <param name="delay">frequency filter delay in ms</param>
+            <returns>true if success</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.Level2Unsubscribe(System.String[])">
             <summary>
             Unsubscribe from symbols level2
@@ -784,10 +866,14 @@
             <returns>true if success</returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryTickHistory(System.DateTime,System.Int32,System.String,System.Boolean)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryTickHistoryAsync(System.DateTime,System.Int32,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetTicksFromHistory(System.DateTime,System.DateTime,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryTickHistoryCache(System.DateTime,System.Int32,System.String,System.Boolean)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryTickHistoryCacheAsync(System.DateTime,System.Int32,System.String,System.Boolean)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryVWAPTickHistory(System.DateTime,System.Int32,System.String,System.Int16)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryVWAPTickHistoryAsync(System.DateTime,System.Int32,System.String,System.Int16)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryVWAPTickHistoryCache(System.DateTime,System.Int32,System.String,System.Int16)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryVWAPTickHistoryCacheAsync(System.DateTime,System.Int32,System.String,System.Int16)" -->
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetSupportedBarPeriodicities(System.String)">
             <summary>
             Get supportted bar's periodicity
@@ -825,6 +911,17 @@
             <returns>Report</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryBarHistoryCache(System.DateTime,System.Int32,System.String,System.String,TickTrader.Common.Business.FxPriceType)">
+            <summary>
+            Query Bars history cache
+            </summary>
+            <param name="to">DateTime start point</param>
+            <param name="maxBars">Maximum bars to get. Query direction from future to past if negative</param>
+            <param name="symbol">Symbol</param>
+            <param name="periodicity">Period</param>
+            <param name="priceType">Price Type</param>
+            <returns>Report</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.QueryBarHistoryCacheAsync(System.DateTime,System.Int32,System.String,System.String,TickTrader.Common.Business.FxPriceType)">
             <summary>
             Query Bars history cache
             </summary>
@@ -1104,6 +1201,13 @@
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetAccountById(System.Int64)">
+            <summary>
+            Request account info by its account login.
+            </summary>
+            <param name="accountLogin">Account login</param>
+            <returns>Account info</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetAccountByIdAsync(System.Int64)">
             <summary>
             Request account info by its account login.
             </summary>
@@ -1698,6 +1802,13 @@
             <param name="accountLogin">Account Login</param>
             <returns>List of order infos</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetOrdersByAccountIdAsync(System.Int64)">
+            <summary>
+            Request orders info for the given account Id.
+            </summary>
+            <param name="accountLogin">Account Login</param>
+            <returns>List of order infos</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.GetPositionById(System.Int64)">
             <summary>
             Request position info by its Id.
@@ -1726,7 +1837,21 @@
             <param name="openOrderRequest">Open order request</param>
             <returns>Info of successfully opened order or null if failed</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.OpenOrderAsync(TickTrader.BusinessObjects.Requests.OpenOrderRequest)">
+            <summary>
+            Open new order (market, limit or stop).
+            </summary>
+            <param name="openOrderRequest">Open order request</param>
+            <returns>Info of successfully opened order or null if failed</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.ModifyOrder(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
+            <summary>
+            Modify existing order.
+            </summary>
+            <param name="modifyOrderRequest">Modify order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.ModifyOrderAsync(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
             <summary>
             Modify existing order.
             </summary>
@@ -1740,7 +1865,21 @@
             <param name="activateOrderRequest">Activate order request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.ActivateOrderAsync(TickTrader.BusinessObjects.Requests.ActivateOrderRequest)">
+            <summary>
+            Activate pending order (limit or stop).
+            </summary>
+            <param name="activateOrderRequest">Activate order request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.CancelOrder(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
+            <summary>
+            Cancel existing order.
+            </summary>
+            <param name="cancelOrderRequest">Cancel order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.CancelOrderAsync(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
             <summary>
             Cancel existing order.
             </summary>
@@ -1763,6 +1902,14 @@
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.CloseAll(System.Int64,System.Boolean)">
+            <summary>
+            Close all orders for the account with the given account login.
+            </summary>
+            <param name="accountLogin">Account login</param>
+            <param name="stopoutFlag">Stopout flag</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.CloseAllAsync(System.Int64,System.Boolean)">
             <summary>
             Close all orders for the account with the given account login.
             </summary>
@@ -1798,7 +1945,21 @@
             <param name="request">Execution lock request</param>
             <returns>Execution lock report with list of orders were locked and expiration time.</returns>
         </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.LockOrderAsync(TickTrader.BusinessObjects.Requests.ExecutionLockRequest)">
+            <summary>
+            Lock order for execution for a cpecified timeout in seconds. Any related order will be locked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.UnlockOrder(TickTrader.BusinessObjects.Requests.ExecutionUnlockRequest)">
+            <summary>
+            Unlock order for execution. Any related order will be unlocked as well.
+            </summary>
+            <param name="request">Execution unlock request</param>
+            <returns>Execution unlock report with list of orders were unlocked.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.UnlockOrderAsync(TickTrader.BusinessObjects.Requests.ExecutionUnlockRequest)">
             <summary>
             Unlock order for execution. Any related order will be unlocked as well.
             </summary>
@@ -2140,6 +2301,13 @@
         <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkDeleteCurrency(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.CurrencyDeleteRequest})">
             <summary>
             Delete currencies
+            </summary>
+            <param name="requests"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Contract.ITickTraderManagerContract.BulkDeleteGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupDeleteRequest})">
+            <summary>
+            Delete groups
             </summary>
             <param name="requests"></param>
             <returns></returns>
