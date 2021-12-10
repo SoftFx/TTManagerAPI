@@ -1690,7 +1690,55 @@ namespace rTTManApi
         {
             return _tradeReportList.Select(it => (double)(it.ProfitToReportConversionRate ?? 0)).ToArray();
         }
-        
+
+        private static string CreatePosIdValue(TradeReport t)
+        {
+            if (t.TrReason == TradeTransReasons.Split)
+                return $"{t.OrderId} # {t.OrderActionNo}";
+            
+            if (!t.PosId.HasValue)
+                return "";
+
+            if (t.TrType == TradeTransTypes.Balance || t.TrType == TradeTransTypes.Credit)
+                return $"{t.PosId}";
+
+            if (t.TrType == TradeTransTypes.Balance || t.TrType == TradeTransTypes.Credit)
+               return $"{t.PosId}";
+
+            if (t.TrType == TradeTransTypes.Balance || t.TrType == TradeTransTypes.Credit)
+                return $"{t.PosId}";
+
+            var HasRemainigVolume = (t.OrderRemainingAmount.HasValue && t.OrderRemainingAmount.Value != 0);
+            var FullActivated = ((t.OrderActionNo <= 1) && !HasRemainigVolume);
+            if (FullActivated ||
+                FullActivated && (t.OrderType == OrderTypes.Market || t.OrderType == OrderTypes.Position))
+                return $"{t.PosId}";
+
+            var PendingDeleted = (t.TrType == TradeTransTypes.OrderCanceled || t.TrType == TradeTransTypes.OrderExpired);
+            if (PendingDeleted)
+            {
+                if (t.OrderRemainingAmount.HasValue && t.OrderAmount.HasValue &&
+                    t.OrderRemainingAmount.Value != t.OrderAmount.Value)
+                {
+                    return $"{t.PosId} # {t.OrderActionNo}";
+                }
+
+                if (t.OrderActionNo <= 1)
+                    return $"{t.PosId}";
+                return $"{t.PosId} # {t.OrderActionNo}";
+            }
+            return $"{t.PosId} # {t.OrderActionNo}";
+        }
+
+        public static string[] GetStringPositionId()
+        {
+            string[] posId = new string[_tradeReportList.Count];
+            for(int i = 0; i < _tradeReportList.Count; ++i)
+            {
+                posId[i] = CreatePosIdValue(_tradeReportList[i]);
+            }
+            return posId;
+        }
         #endregion
 
         #region Get assets

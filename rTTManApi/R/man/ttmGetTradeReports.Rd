@@ -10,7 +10,8 @@ ttmGetTradeReports(
   to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"),
   skipCancelled = TRUE,
   transTypes = "",
-  reasons = ""
+  reasons = "",
+  getStringPosId = FALSE
 )
 }
 \arguments{
