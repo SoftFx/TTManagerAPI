@@ -631,6 +631,15 @@ namespace rTTManApi
         {
             return _accountList.Select(it => new DateTime(it.RegistrationDate.Ticks, DateTimeKind.Utc)).ToArray();
         }
+        public static DateTime[] GetAccountLastModifyTime()
+        {
+            return _accountList.Select(it => new DateTime(it.LastModifyTime.Ticks, DateTimeKind.Utc)).ToArray();
+        }
+
+        public static DateTime[] GetAccountLastLoginTime()
+        {
+            return _accountList.Select(it => new DateTime((it.LastLoginTime ?? DateTime.MinValue).Ticks, DateTimeKind.Utc)).ToArray();
+        }
 
         public static bool ModifyAccount(string accountId, string internalComment)
         {
