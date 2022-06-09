@@ -19,7 +19,8 @@ namespace TTManApi.Samples
 
         public override void Run()
         {
-            Manager.EnablePumping();
+            if (!Manager.DirectQuery.IsPumpingEnabled)
+                Manager.EnablePumping();
 
             List<string> lastsToSubsribe = new List<string>(_subscription.Select(s => $"{s}_L"));
             var domains = Manager.DirectQuery.GetAllDomains();

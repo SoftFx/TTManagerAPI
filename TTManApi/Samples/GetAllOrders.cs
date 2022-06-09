@@ -19,6 +19,9 @@ namespace TTManApi.Samples
 
         public override void Run()
         {
+            if (!Manager.DirectQuery.IsPumpingEnabled)
+                Manager.EnablePumping();
+
             List<Order> Orders = Manager.DirectQuery.GetAllOrders();
             foreach (var item in Orders)
             {
