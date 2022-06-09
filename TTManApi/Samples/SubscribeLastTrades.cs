@@ -7,7 +7,7 @@ using TickTrader.BusinessObjects;
 using TickTrader.BusinessObjects.EventArguments;
 using TickTrader.Common.Business;
 
-namespace TTManApi
+namespace TTManApi.Samples
 {
     class SubscribeLastTrades : Sample
     {

@@ -8,9 +8,9 @@ using TickTrader.BusinessObjects;
 using TickTrader.BusinessObjects.EventArguments;
 using TickTrader.BusinessObjects.Requests;
 
-namespace TTManApi
+namespace TTManApi.Samples
 {
-    class WaitForOrderPositionUpdate :Sample
+    class WaitForOrderPositionUpdate : Sample
     {
         private readonly long _account;
 

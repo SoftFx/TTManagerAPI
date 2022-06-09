@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TTManApi
+namespace TTManApi.Samples
 {
     abstract class Sample : IDisposable
     {

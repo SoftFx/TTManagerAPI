@@ -8,7 +8,7 @@ using TickTrader.BusinessObjects;
 using TickTrader.BusinessObjects.QuoteHistory;
 using TickTrader.Common.Business;
 
-namespace TTManApi
+namespace TTManApi.Samples
 {
     class QuoteHistory : Sample
     {
@@ -45,7 +45,7 @@ namespace TTManApi
 
         public override void Dispose()
         {
-            
+
         }
     }
 }

@@ -19,10 +19,11 @@ namespace TTManApi
         private readonly string _address;
         private readonly long _login;
         private readonly string _password;
-        public bool isMarginCalled;
-        public ITickTraderManagerModel DirectQuery { get => _manager; }
+        private bool isMarginCalled;
 
-        public TTManager(string server, long login, string password, bool enablePumping = true)
+        public ITickTraderManagerModel DirectQuery => _manager;
+
+        public TTManager(string server, long login, string password, bool enablePumping)
         {
             isMarginCalled = false;
             //var settings = ConfigReader.GetConfig(typeof(BaseTest).Assembly.GetPath());
