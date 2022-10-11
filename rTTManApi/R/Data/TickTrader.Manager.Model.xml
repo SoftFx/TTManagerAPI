@@ -1184,6 +1184,66 @@
             <param name="accountLogin">Account login</param>
             <returns>Account info</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccountsCache">
+            <summary>
+            Request all accounts directly from Trading Platform.
+            </summary>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccountsCacheFilter(System.String)">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccountsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllOrdersCache">
+            <summary>
+            Request all orders directly from Trading Platform.
+            </summary>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllOrdersCacheFilter(System.String)">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllOrdersCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllPositionsCache">
+            <summary>
+            Request all positions directly from Trading Platform.
+            </summary>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllPositionsCacheFilter(System.String)">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllPositionsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccounts">
             <summary>
             Request all accounts directly from Trading Platform.
@@ -2392,6 +2452,13 @@
             Perform a rollover operation.
             </summary>
             <param name="rolloverRequest">Rollover request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ChargeSwaps(TickTrader.BusinessObjects.Requests.ChargeSwapsRequest)">
+            <summary>
+            Perform charge swaps.
+            </summary>
+            <param name="request">Charge swaps request</param>
             <returns>Successful status</returns>
         </member>
         <member name="F:TickTrader.Manager.Model.TickTraderManagerModel._isPumpingDropping">
@@ -3846,6 +3913,66 @@
             </summary>
             <returns>List of accounts or null</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountsCache">
+            <summary>
+            Request all accounts directly from Trading Platform.
+            </summary>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountsCacheFilter(System.String)">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllOrdersCache">
+            <summary>
+            Request all orders directly from Trading Platform.
+            </summary>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllOrdersCacheFilter(System.String)">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllOrdersCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllPositionsCache">
+            <summary>
+            Request all positions directly from Trading Platform.
+            </summary>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllPositionsCacheFilter(System.String)">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllPositionsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountLogins">
             <summary>
             Request all accounts logins directly from Trading Platform.
@@ -5180,6 +5307,13 @@
             Perform a rollover operation.
             </summary>
             <param name="rolloverRequest">Rollover request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ChargeSwaps(TickTrader.BusinessObjects.Requests.ChargeSwapsRequest)">
+            <summary>
+            Perform charge swaps.
+            </summary>
+            <param name="request">Charge swaps request</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GetTradeConfiguration">

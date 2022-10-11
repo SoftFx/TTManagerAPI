@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,12 +13,148 @@ using TickTrader.Manager.Model;
 using TickTrader.BusinessLogic;
 using TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask;
 using TickTrader.BusinessLogic.Core;
+using TickTrader.Common.StringParsing;
+
 namespace rTTManApi
 {
-    
+
 
     public class rTTManApiHost
     {
+        #region OLSON Windows tz map
+        public static string OlsonTimeZoneToTimeZoneInfo(string windowsTimeZoneId)
+        {
+            var olsonWindowsTimes = new Dictionary<string, string>()
+            {
+             #region Olson
+                { "Africa/Bangui", "W. Central Africa Standard Time" },
+                { "Africa/Cairo", "Egypt Standard Time" },
+                { "Africa/Casablanca", "Morocco Standard Time" },
+                { "Africa/Harare", "South Africa Standard Time" },
+                { "Africa/Johannesburg", "South Africa Standard Time" },
+                { "Africa/Lagos", "W. Central Africa Standard Time" },
+                { "Africa/Monrovia", "Greenwich Standard Time" },
+                { "Africa/Nairobi", "E. Africa Standard Time" },
+                { "Africa/Windhoek", "Namibia Standard Time" },
+                { "America/Anchorage", "Alaskan Standard Time" },
+                { "America/Argentina/San_Juan", "Argentina Standard Time" },
+                { "America/Asuncion", "Paraguay Standard Time" },
+                { "America/Bahia", "Bahia Standard Time" },
+                { "America/Bogota", "SA Pacific Standard Time" },
+                { "America/Buenos_Aires", "Argentina Standard Time" },
+                { "America/Caracas", "Venezuela Standard Time" },
+                { "America/Cayenne", "SA Eastern Standard Time" },
+                { "America/Chicago", "Central Standard Time" },
+                { "America/Chihuahua", "Mountain Standard Time (Mexico)" },
+                { "America/Cuiaba", "Central Brazilian Standard Time" },
+                { "America/Denver", "Mountain Standard Time" },
+                { "America/Fortaleza", "SA Eastern Standard Time" },
+                { "America/Godthab", "Greenland Standard Time" },
+                { "America/Guatemala", "Central America Standard Time" },
+                { "America/Halifax", "Atlantic Standard Time" },
+                { "America/Indianapolis", "US Eastern Standard Time" },
+                { "America/Indiana/Indianapolis", "US Eastern Standard Time" },
+                { "America/La_Paz", "SA Western Standard Time" },
+                { "America/Los_Angeles", "Pacific Standard Time" },
+                { "America/Mexico_City", "Mexico Standard Time" },
+                { "America/Montevideo", "Montevideo Standard Time" },
+                { "America/New_York", "Eastern Standard Time" },
+                { "America/Noronha", "UTC-02" },
+                { "America/Phoenix", "US Mountain Standard Time" },
+                { "America/Regina", "Canada Central Standard Time" },
+                { "America/Santa_Isabel", "Pacific Standard Time (Mexico)" },
+                { "America/Santiago", "Pacific SA Standard Time" },
+                { "America/Sao_Paulo", "E. South America Standard Time" },
+                { "America/St_Johns", "Newfoundland Standard Time" },
+                { "America/Tijuana", "Pacific Standard Time" },
+                { "Antarctica/McMurdo", "New Zealand Standard Time" },
+                { "Atlantic/South_Georgia", "UTC-02" },
+                { "Asia/Almaty", "Central Asia Standard Time" },
+                { "Asia/Amman", "Jordan Standard Time" },
+                { "Asia/Baghdad", "Arabic Standard Time" },
+                { "Asia/Baku", "Azerbaijan Standard Time" },
+                { "Asia/Bangkok", "SE Asia Standard Time" },
+                { "Asia/Beirut", "Middle East Standard Time" },
+                { "Asia/Calcutta", "India Standard Time" },
+                { "Asia/Colombo", "Sri Lanka Standard Time" },
+                { "Asia/Damascus", "Syria Standard Time" },
+                { "Asia/Dhaka", "Bangladesh Standard Time" },
+                { "Asia/Dubai", "Arabian Standard Time" },
+                { "Asia/Irkutsk", "North Asia East Standard Time" },
+                { "Asia/Jerusalem", "Israel Standard Time" },
+                { "Asia/Kabul", "Afghanistan Standard Time" },
+                { "Asia/Kamchatka", "Kamchatka Standard Time" },
+                { "Asia/Karachi", "Pakistan Standard Time" },
+                { "Asia/Katmandu", "Nepal Standard Time" },
+                { "Asia/Kolkata", "India Standard Time" },
+                { "Asia/Krasnoyarsk", "North Asia Standard Time" },
+                { "Asia/Kuala_Lumpur", "Singapore Standard Time" },
+                { "Asia/Kuwait", "Arab Standard Time" },
+                { "Asia/Magadan", "Magadan Standard Time" },
+                { "Asia/Muscat", "Arabian Standard Time" },
+                { "Asia/Novosibirsk", "N. Central Asia Standard Time" },
+                { "Asia/Oral", "West Asia Standard Time" },
+                { "Asia/Rangoon", "Myanmar Standard Time" },
+                { "Asia/Riyadh", "Arab Standard Time" },
+                { "Asia/Seoul", "Korea Standard Time" },
+                { "Asia/Shanghai", "China Standard Time" },
+                { "Asia/Singapore", "Singapore Standard Time" },
+                { "Asia/Taipei", "Taipei Standard Time" },
+                { "Asia/Tashkent", "West Asia Standard Time" },
+                { "Asia/Tbilisi", "Georgian Standard Time" },
+                { "Asia/Tehran", "Iran Standard Time" },
+                { "Asia/Tokyo", "Tokyo Standard Time" },
+                { "Asia/Ulaanbaatar", "Ulaanbaatar Standard Time" },
+                { "Asia/Vladivostok", "Vladivostok Standard Time" },
+                { "Asia/Yakutsk", "Yakutsk Standard Time" },
+                { "Asia/Yekaterinburg", "Ekaterinburg Standard Time" },
+                { "Asia/Yerevan", "Armenian Standard Time" },
+                { "Atlantic/Azores", "Azores Standard Time" },
+                { "Atlantic/Cape_Verde", "Cape Verde Standard Time" },
+                { "Atlantic/Reykjavik", "Greenwich Standard Time" },
+                { "Australia/Adelaide", "Cen. Australia Standard Time" },
+                { "Australia/Brisbane", "E. Australia Standard Time" },
+                { "Australia/Darwin", "AUS Central Standard Time" },
+                { "Australia/Hobart", "Tasmania Standard Time" },
+                { "Australia/Perth", "W. Australia Standard Time" },
+                { "Australia/Sydney", "AUS Eastern Standard Time" },
+                { "Etc/GMT", "UTC" },
+                { "Etc/GMT+11", "UTC-11" },
+                { "Etc/GMT+12", "Dateline Standard Time" },
+                { "Etc/GMT+2", "UTC-02" },
+                { "Etc/GMT-12", "UTC+12" },
+                { "Europe/Amsterdam", "W. Europe Standard Time" },
+                { "Europe/Athens", "GTB Standard Time" },
+                { "Europe/Belgrade", "Central Europe Standard Time" },
+                { "Europe/Berlin", "W. Europe Standard Time" },
+                { "Europe/Brussels", "Romance Standard Time" },
+                { "Europe/Budapest", "Central Europe Standard Time" },
+                { "Europe/Dublin", "GMT Standard Time" },
+                { "Europe/Helsinki", "FLE Standard Time" },
+                { "Europe/Istanbul", "GTB Standard Time" },
+                { "Europe/Kiev", "FLE Standard Time" },
+                { "Europe/London", "GMT Standard Time" },
+                { "Europe/Minsk", "E. Europe Standard Time" },
+                { "Europe/Moscow", "Russian Standard Time" },
+                { "Europe/Paris", "Romance Standard Time" },
+                { "Europe/Sarajevo", "Central European Standard Time" },
+                { "Europe/Warsaw", "Central European Standard Time" },
+                { "Indian/Mauritius", "Mauritius Standard Time" },
+                { "Pacific/Apia", "Samoa Standard Time" },
+                { "Pacific/Auckland", "New Zealand Standard Time" },
+                { "Pacific/Fiji", "Fiji Standard Time" },
+                { "Pacific/Guadalcanal", "Central Pacific Standard Time" },
+                { "Pacific/Guam", "West Pacific Standard Time" },
+                { "Pacific/Honolulu", "Hawaiian Standard Time" },
+                { "Pacific/Pago_Pago", "UTC-11" },
+                { "Pacific/Port_Moresby", "West Pacific Standard Time" },
+                { "Pacific/Tongatapu", "Tonga Standard Time" }
+            };
+            #endregion Olson
+            var myKey = olsonWindowsTimes.FirstOrDefault(x => x.Value == windowsTimeZoneId).Key;
+            return myKey;
+        }
+        #endregion OLSON Windows tz map
         #region MarketManager
         static MarketManager InitMarketManager()
         {
@@ -46,7 +183,7 @@ namespace rTTManApi
         {
             _depCurrencyToUSDs = new List<DepCurrencyToUSD>();
             var marketManager = InitMarketManager();
-            for(int i = 0; i < accId.Length; ++i)
+            for (int i = 0; i < accId.Length; ++i)
             {
                 var account = _manager.RequestAccountById(Convert.ToInt64(accId[i]));
                 double rate = 0;
@@ -143,7 +280,7 @@ namespace rTTManApi
                 CurrentBestAsk = pos.CurrentBestAsk ?? 0;
             }
         }
-        
+
         struct AccountCustomProperties
         {
             public long AccountId;
@@ -189,7 +326,7 @@ namespace rTTManApi
             try
             {
                 _tickValues = _manager.QueryTickHistoryCache(endTime, (int)count, symbol, includeLevel2);
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Can not get ticks because {0}", ex.Message);
                 return -1;
@@ -221,7 +358,7 @@ namespace rTTManApi
 
         public static string[] GetTicksType()
         {
-            return _tickValues.Select(it => it.TickType.ToString()).ToArray();
+            return _tickValues.Select(it => it.Type.ToString()).ToArray();
         }
 
         public static int GetTicksHistory(string symbol, DateTime endTime, double count, bool includeLevel2 = false)
@@ -245,7 +382,7 @@ namespace rTTManApi
             try
             {
                 var tempStartTime = startTime;
-                while(tempStartTime < endTime)
+                while (tempStartTime < endTime)
                 {
                     var historyChunk = _manager.QueryTickHistory(tempStartTime, -Math.Abs(step), symbol, false).Items.ToList();
                     if (historyChunk.Count == 0)
@@ -274,7 +411,7 @@ namespace rTTManApi
             try
             {
                 _barHistory = _manager.QueryBarHistory(to, Convert.ToInt32(count), symbol, periodicity, (FxPriceType)(Convert.ToInt32(barType))).Items.ToList();
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Can not get bars because {0}", ex.Message);
                 return -1;
@@ -658,7 +795,7 @@ namespace rTTManApi
                 return false;
             }
         }
-        
+
         public static int GetAccountsCustomProperties()
         {
             _customProperties?.Clear();
@@ -1089,7 +1226,7 @@ namespace rTTManApi
             return _orderList.Select(it => it.IsPending).ToArray();
         }
 
-        public static int CreateNewOrder(double login, double orderType, double orderSide, string symbol, double amount, double stopPrice, double price, double stopLoss,  double takeProfit, string UserComment, string ManagerComment, DateTime Expiration, double reqType = 0)
+        public static int CreateNewOrder(double login, double orderType, double orderSide, string symbol, double amount, double stopPrice, double price, double stopLoss, double takeProfit, string UserComment, string ManagerComment, DateTime Expiration, double reqType = 0)
         {
             try
             {
@@ -1117,7 +1254,7 @@ namespace rTTManApi
                 {
                     Logger.Log.ErrorFormat("Order {0} could not be created");
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Order {0} could not be created because", ex.Message);
                 return -1;
@@ -1125,7 +1262,7 @@ namespace rTTManApi
             return 0;
         }
 
-        public static int CreateNewOrder(double[]login, double[] orderType, double[] orderSide, string[] symbol, double[] amount, double[] stopPrice, double[] price, double[] stopLoss, double[] takeProfit, string[] UserComment, string[] ManagerComment, DateTime[] Expiration, double reqType = 0)
+        public static int CreateNewOrder(double[] login, double[] orderType, double[] orderSide, string[] symbol, double[] amount, double[] stopPrice, double[] price, double[] stopLoss, double[] takeProfit, string[] UserComment, string[] ManagerComment, DateTime[] Expiration, double reqType = 0)
         {
             try
             {
@@ -1197,7 +1334,7 @@ namespace rTTManApi
                 }
                 if (!String.IsNullOrWhiteSpace(reason))
                 {
-                    
+
                     var reasonsString = reason.Split(delimiterChars);
                     List<WEnum<TradeTransReasons>> reasons = new List<WEnum<TradeTransReasons>>();
                     foreach (var reasonString in reasonsString)
@@ -1704,7 +1841,7 @@ namespace rTTManApi
         {
             if (t.TrReason == TradeTransReasons.Split)
                 return $"{t.OrderId} # {t.OrderActionNo}";
-            
+
             if (!t.PosId.HasValue)
                 return "";
 
@@ -1712,7 +1849,7 @@ namespace rTTManApi
                 return $"{t.PosId}";
 
             if (t.TrType == TradeTransTypes.Balance || t.TrType == TradeTransTypes.Credit)
-               return $"{t.PosId}";
+                return $"{t.PosId}";
 
             if (t.TrType == TradeTransTypes.Balance || t.TrType == TradeTransTypes.Credit)
                 return $"{t.PosId}";
@@ -1742,7 +1879,7 @@ namespace rTTManApi
         public static string[] GetStringPositionId()
         {
             string[] posId = new string[_tradeReportList.Count];
-            for(int i = 0; i < _tradeReportList.Count; ++i)
+            for (int i = 0; i < _tradeReportList.Count; ++i)
             {
                 posId[i] = CreatePosIdValue(_tradeReportList[i]);
             }
@@ -1819,7 +1956,7 @@ namespace rTTManApi
                 ConversionToUsd = conversionToUsd;
             }
         }
- 
+
         public static int GetAllAssets()
         {
             _allAssets?.Clear();
@@ -1829,7 +1966,7 @@ namespace rTTManApi
                 var accounts = _manager.RequestAllAccounts();
                 var marketManager = InitMarketManager();
                 _allAssets = new List<MyAssetsInfo>();
-                foreach( var item in accounts)
+                foreach (var item in accounts)
                 {
 
                     var assets = item.Assets;
@@ -1849,7 +1986,7 @@ namespace rTTManApi
                         _allAssets.Add(myAssetInfo);
                     }
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Requesting all aseets failed because {0}", ex.Message);
                 return -1;
@@ -1868,7 +2005,7 @@ namespace rTTManApi
         {
             return _allAssets.Select(it => (double)it.CurrencyId).ToArray();
         }
-        public static double [] GetAllAssetAmount()
+        public static double[] GetAllAssetAmount()
         {
             return _allAssets.Select(it => (double)it.Amount).ToArray();
         }
@@ -1884,11 +2021,11 @@ namespace rTTManApi
         {
             return _allAssets.Select(it => (double)it.ConversionToUsd).ToArray();
         }
-        #endregion 
-       
+        #endregion
+
         #region Create Symbol
-        public static bool CreateSymbol(string symbolName, string security, string isin, string alias, string marginCurrency, string profitCurrency, 
-            double precision, double contractSize, double marginFactorFractional = 1, bool swapEnabled = true, double marginMode = 1, 
+        public static bool CreateSymbol(string symbolName, string security, string isin, string alias, string marginCurrency, string profitCurrency,
+            double precision, double contractSize, double marginFactorFractional = 1, bool swapEnabled = true, double marginMode = 1,
             double profitMode = 1, double marginHedged = 0.5, double swapType = 1, double swapSizeLong = 0, double swapSizeShort = 0, string description = "")
         {
             var req2 = new SymbolNewRequest
@@ -1943,7 +2080,7 @@ namespace rTTManApi
             {
                 return _manager.ModifySymbol(req);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Modify symbol failed because {0}", ex.Message);
                 return false;
@@ -1951,7 +2088,7 @@ namespace rTTManApi
         }
 
         #endregion
-        
+
         #region Get symbols info
         public static int GetSymbolsInfo()
         {
@@ -2155,7 +2292,13 @@ namespace rTTManApi
             //return ModifySymbolSwap(new string[] { symbolName }, new double[] { swapSizeShort }, new double[] { swapSizeLong });
             try
             {
-                var symbolModifyRequest = new SymbolModifyRequest { SymbolName = symbolName, IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort, SwapSizeLong = (float?)swapSizeLong };
+                var symbolModifyRequest = new SymbolModifyRequest
+                {
+                    SymbolName = symbolName,
+                    IgnoreConfigVersion = true,
+                    SwapSizeShort = float.Parse(swapSizeShort.ToString()),
+                    SwapSizeLong = float.Parse(swapSizeLong.ToString())
+                };
                 var result = _manager.ModifySymbol(symbolModifyRequest);
                 if (!result) {
                     Logger.Log.ErrorFormat($"Modifying symbol swap returned FALSE");
@@ -2169,7 +2312,7 @@ namespace rTTManApi
                 return -2;
             }
         }
-        
+
 
         public static int ModifySymbolSwap(string[] symbolName, double[] swapSizeShort, double[] swapSizeLong)
         {
@@ -2203,7 +2346,7 @@ namespace rTTManApi
         #endregion
 
         #region Symbol ticks
-        
+
         public static bool Upstream(string symbol, DateTime from, DateTime to)
         {
             return _manager.Upstream(symbol, from, to, UpstreamTypes.Level2ToAll);
@@ -2219,7 +2362,7 @@ namespace rTTManApi
             var result = upstreamTypes.Select(i => (UpstreamTypes)(Convert.ToInt32(i))).Aggregate((x, y) => x | y);
             return _manager.Upstream(symbol, from, to, result);
         }
-        
+
         public static int UpstreamAsync(string[] symbol, DateTime from, DateTime to, double upstreamType)
         {
             return UpstreamAsync(symbol, from, to, new double[] { upstreamType });
@@ -2264,7 +2407,7 @@ namespace rTTManApi
         {
             try
             {
-                int id = _manager.DeleteFromStorageAsync(symbols.ToList(), from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
+                var id = _manager.DeleteFromStorageAsync(symbols.ToList(), from, to, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel));
                 TickTrader.BusinessObjects.QuoteHistory.HistoryTaskInfo info = _manager.GetHistoryTaskInfo(id);
                 while (info.Status == TaskStatus.Running)
                 {
@@ -2284,6 +2427,33 @@ namespace rTTManApi
             }
             return 0;
 
+        }
+
+        public static int DeleteSymbolHistory(string symbol, DateTime from, DateTime to)
+        {
+            return DeleteSymbolHistory(new string[] { symbol }, from, to);
+        }
+
+        public static int DeleteSymbolHistory(string[] symbols, DateTime from, DateTime to)
+        {
+            var res = 0;
+            try
+            {
+                for (int i = 0; i < symbols.Length; ++i)
+                {
+                    if (!_manager.DeleteSymbolHistory(symbols[i], new FeedTickId(from), new FeedTickId(to)))
+                    {
+                        Logger.Log.ErrorFormat($"Error delete {symbols[i]} History");
+                        res = -2;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat($"Error delete History {ex.Message}");
+                res = -1;
+            }
+            return res;
         }
 
         #endregion
@@ -2617,7 +2787,7 @@ namespace rTTManApi
 
         #region Get asset snapshots
         //private static DailyAccountsSnapshotRequest _accSnapReq;
-        
+
         public static int GetAssetSnapshots(double accId, DateTime from, DateTime to)
         {
             return GetAssetSnapshots(new double[] { accId }, from, to);
@@ -2787,7 +2957,7 @@ namespace rTTManApi
                 {
                     _manager.QHImportFromStream(symbol, (StoragePeriodicityLevel)Convert.ToInt32(periodicityLevel), stream);
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Uploading quotes failed because {0}", ex.Message);
                 return -1;
@@ -2815,7 +2985,7 @@ namespace rTTManApi
                     Logger.Log.ErrorFormat("Export operation status is {0}", info.Status.ToString());
                     return -1;
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
                 return -1;
@@ -2846,7 +3016,7 @@ namespace rTTManApi
                         }
                     }
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
                 return -1;
@@ -2890,7 +3060,7 @@ namespace rTTManApi
                 {
                     if (isLocalDownload)
                     {
-                        for(int i = 0; i < symbols.Length; ++i)
+                        for (int i = 0; i < symbols.Length; ++i)
                         {
                             string fileName = string.Format("{0}_{1}_{2}_{3}.zip", symbols[i], (StoragePeriodicityLevel)periodicityLevel, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
                             if (transferFiles.Any(d => d.FileName.Equals(fileName)))
@@ -2906,8 +3076,8 @@ namespace rTTManApi
 
                         }
                     }
-                } 
-            }      
+                }
+            }
             catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Export Quotes failed because {0}", ex.Message);
@@ -2945,7 +3115,7 @@ namespace rTTManApi
             {
                 _symbolTicks = _manager.GetAllSymbolsTicks();
                 return 0;
-            }catch(Exception e)
+            } catch (Exception e)
             {
                 Logger.Log.ErrorFormat("Can't get symbols tick {0}", e.Message);
                 return -1;
@@ -2961,7 +3131,7 @@ namespace rTTManApi
                 _currencies?.Clear();
                 _currencies = _manager.RequestAllCurrencies();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Log.ErrorFormat("Can't get currencies {0}", e.Message);
                 return -1;
@@ -3007,7 +3177,7 @@ namespace rTTManApi
             {
                 _domains?.Clear();
                 _domains = _manager.RequestAllDomains();
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Can not get domains {0}", ex);
                 return -1;
@@ -3063,7 +3233,7 @@ namespace rTTManApi
             {
                 _dividends?.Clear();
                 _dividends = _manager.RequestAllDividends();
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Can not get Dividends {0}", ex);
                 return -1;
@@ -3100,7 +3270,7 @@ namespace rTTManApi
             {
                 _onlineSessions?.Clear();
                 _onlineSessions = _manager.RequestOnlineSessions();
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Log.ErrorFormat("Can not get online session {0}", ex.Message);
                 return -1;
@@ -3137,8 +3307,230 @@ namespace rTTManApi
         }
         #endregion
 
-        static void Main(string[] args)
+        public List<ScheduleInfo> _info;
+
+        public int GetSchedules()
         {
+            _info = _manager.RequestAllSchedules();
+            return 0;
         }
+
+
+        struct OffTimeRules
+        {
+            public string ScheduleName;
+            public int ScheduleId;
+            public string ScheduleDescription;
+            public List<string> RelatedSchedule;
+            public string TimeZoneId;
+            public string OffTimeName;
+            public string OffTimeDescription;
+            public string OffTimePeriodicity;
+            public long OffTimeOffset;
+            public long OffTimeDuration;
+            public TimeZoneInfo TZInfo;
+            //public TimeZoneInfo temp;
+            public WEnum<OffTimeDisabledFeatures> OffTimeDisabledFeatures;
+
+            public OffTimeRules(OffTimeRuleInfo rule, string scheduleName, int scheduleId, string scheduleDescription, List<string> relatedSchedule, string timeZone)
+            {
+                ScheduleName = scheduleName;
+                ScheduleId = scheduleId;
+                ScheduleDescription = scheduleDescription;
+                RelatedSchedule = relatedSchedule;
+                TimeZoneId = timeZone;
+                OffTimeName = rule.Name;
+                OffTimeDescription = rule.Description;
+                OffTimePeriodicity = rule.Periodicity;
+                OffTimeOffset = rule.Offset;
+                OffTimeDuration = rule.Duration;
+                OffTimeDisabledFeatures = rule.DisabledFeatures;
+                //olsonTZ = OlsonTimeZoneToTimeZoneInfo(timeZone);
+                TZInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+                //BaseUTCOffsetSec = TimeZoneInfo.FindSystemTimeZoneById(timeZone).BaseUtcOffset.TotalSeconds;
+
+            }
+        }
+
+        private static List<OffTimeRules> _offTimeRules = new List<OffTimeRules>();
+        public static int GetScheduleInfo()
+        {
+            try
+            {
+                _offTimeRules?.Clear();
+                var schedules = _manager.RequestAllSchedules();
+                _offTimeRules.AddRange(schedules.SelectMany(it => it.OffTimeRules.Select(rule =>
+                    new OffTimeRules(rule, it.Name, it.Id, it.Description, it.RelatedSchedules, it.TimezoneId))));
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get online dividends {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static int[] GetScheduleId()
+        {
+            return _offTimeRules.Select(it => it.ScheduleId).ToArray();
+        }
+        public static string[] GetScheduleName()
+        {
+            return _offTimeRules.Select(it => it.ScheduleName).ToArray();
+        }
+
+        public static string[] GetScheduleDescription()
+        {
+            return _offTimeRules.Select(it => it.ScheduleDescription).ToArray();
+        }
+
+        public static string[] GetScheduleTimezoneId()
+        {
+            return _offTimeRules.Select(it => it.TimeZoneId).ToArray();
+        }
+        public static string[] GetScheduleRelatedSchedules()
+        {
+            return _offTimeRules.Select(it => string.Join(",", it.RelatedSchedule)).ToArray();
+        }
+        public static string[] GetScheduleOffTimeName()
+        {
+            return _offTimeRules.Select(it => it.OffTimeName).ToArray();
+        }
+        public static string[] GetScheduleOffTimeDescription()
+        {
+            return _offTimeRules.Select(it => it.OffTimeDescription).ToArray();
+        }
+        public static string[] GetScheduleOffTimePeriodicity()
+        {
+            return _offTimeRules.Select(it => it.OffTimePeriodicity).ToArray();
+        }
+        public static double[] GetScheduleOffTimeOffset()
+        {
+            return _offTimeRules.Select(it => (double)it.OffTimeOffset).ToArray();
+        }
+        public static double[] GetScheduleOffTimeDuration()
+        {
+            return _offTimeRules.Select(it => (double)it.OffTimeDuration).ToArray();
+        }
+        public static string[] GetScheduleOffTimeDisabledFeatures()
+        {
+            return _offTimeRules.Select(it => string.Join(",", it.OffTimeDisabledFeatures.ToString())).ToArray();
+        }
+
+        /*struct CorporateActionTask
+        {
+            public string Name;
+            public string Module;
+            public string TaskID;
+            public string Trigger;
+            public string SourceURL;
+            public string SecurityList;
+            public string SymbolMapping;
+
+            public CorporateActionTask()
+            {
+                Name = 
+            }
+        */
+        private static List<TickTrader.BusinessObjects.Tasks.CorporateActionFeedTaskInfo> _tasks = new List<TickTrader.BusinessObjects.Tasks.CorporateActionFeedTaskInfo>();
+        public static int GetAllCorporateActionFeedTasks()
+        {
+            try
+            {
+                _tasks?.Clear();
+                var allTask = _manager.GetAllScheduledTasks();
+                _tasks = allTask.Where(it => it.GetType() == typeof(TickTrader.BusinessObjects.Tasks.CorporateActionFeedTaskInfo)).Cast<TickTrader.BusinessObjects.Tasks.CorporateActionFeedTaskInfo>().ToList();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get Tasks info {0}", ex.Message);
+                return -1;
+            }
+        }
+        public static string[] GetTaskNames()
+        {
+            return _tasks.Select(it => it.Name).ToArray();
+        }
+
+        public static string[] GetTaskModules()
+        {
+            return _tasks.Select(it => it.ModuleType.ToString()).ToArray();
+        }
+        public static string[] GetTaskIDs()
+        {
+            return _tasks.Select(it => it.Id.ToString()).ToArray();
+        }
+        public static string[] GetTaskTriggers()
+        {
+            return _tasks.Select(it => it.Triggers.ToString()).ToArray();
+        }
+        public static string[] GetTaskSourceURLs()
+        {
+            return _tasks.Select(it => it.SourceId).ToArray();
+        }
+        public static string[] GetTaskSecurityList()
+        {
+            return _tasks.Select(it => string.Join(", ", it.Securities)).ToArray();
+        }
+        public static string[] GetTaskSymbolMappings()
+        {
+            return _tasks.Select(it => string.Join(" ", it.SymbolMapping.Select(it2 => it2.Key + " " + it2.Value))).ToArray();
+        }
+        public static double[] GetBaseUTCOffsetSec()
+        {
+            return _offTimeRules.Select(it => it.TZInfo.BaseUtcOffset.TotalSeconds).ToArray();
+        }
+        public static bool[] GetIsSupportDST()
+        {
+            return _offTimeRules.Select(it => it.TZInfo.SupportsDaylightSavingTime).ToArray();
+        }
+
+        public static string[] GetTZDisplayName()
+        {
+            return _offTimeRules.Select(it => it.TZInfo.DisplayName).ToArray();
+        }
+
+        public static double[] GetUTCOffsetSec()
+        {
+            var t = DateTime.UtcNow;
+            return _offTimeRules.Select(it => (TimeZoneInfo.ConvertTimeFromUtc(t, it.TZInfo) - t).TotalSeconds).ToArray();
+        }
+
+        private static IReadOnlyCollection<TimeZoneInfo> _tz = new List<TimeZoneInfo>();
+        public static int GetSystemTZInfo()
+        {
+            try
+            {
+                _tz = TimeZoneInfo.GetSystemTimeZones();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Can not get Tasks info {0}", ex.Message);
+                return -1;
+            }
+        }
+
+        public static double[] GetSystemTZBaseOffsetSec()
+        {
+            return _tz.Select(it => it.BaseUtcOffset.TotalSeconds).ToArray();
+        }
+
+        public static string[] GetSystemTZDisplayName()
+        {
+            return _tz.Select(it => it.DisplayName).ToArray();
+        }
+
+        public static string[] GetSystemTZId()
+        {
+            return _tz.Select(it => it.Id).ToArray();
+        }
+
+        public static bool[] GetSystemTZIsSupportsDST()
+        {
+            return _tz.Select(it => it.SupportsDaylightSavingTime).ToArray();
+        }
+
     }
 }

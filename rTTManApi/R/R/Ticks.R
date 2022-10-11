@@ -143,6 +143,21 @@ ttmDeleteQuotes <- function(symbol, from, to, periodicityLevel) {
   hResult
 }
 
+
+#' Delete Quotes for all Periodicity
+#' @param symbol a character vector. Symbol names
+#' @param from a DateTime object. Start time to delete
+#' @param to a DateTime object. End time to delete
+#' @examples 
+#' ttmDeleteSymbolHistory(c("EURUSD"), ISOdatetime(2019,06,05,0,00,00, tz ="GMT"), ISOdatetime(2019,06,06,0,00,00, tz ="GMT"))
+#' 
+#' @export
+ttmDeleteSymbolHistory <- function(symbol, from, to) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'DeleteSymbolHistory', symbol, from, to)
+  hResult
+}
+
+
 #' Get Ticks History Cache
 #' @param symbol a character. Symbol name
 #' @param endTime a DateTime object. End time
