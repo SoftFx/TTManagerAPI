@@ -1,0 +1,29 @@
+<root>
+  <!--Local
+  <address>localhost</address>
+  <login>1</login>
+  <password>123qwe!</password>
+  <machine>TickTraderServer</machine>
+  Local-->
+
+  <!--Alpha
+  <address>alpha.tts.st.soft-fx.eu</address>
+  <login>1</login>
+  <password>123qwe!</password>
+  <machine>AlphaTTS</machine>
+  Alpha-->
+
+  <!--Beta-->
+  <address>beta.tts.st.soft-fx.eu</address>
+  <login>1</login>
+  <password>123qwe!</password>
+  <machine>BetaTTS</machine>
+  <!--Beta-->
+
+  <libpath>..\TTManApi\lib\</libpath>
+  <!--<libpath>..\..\..\..\src\TickTrader.Manager.Model\bin\Debug\</libpath>-->
+
+  <!--Modules-->
+  <feedserver>FeedServer</feedserver>
+  <tradehost>TradeHost</tradehost>
+</root>

@@ -4,6 +4,14 @@
         <name>TickTrader.Manager.Model</name>
     </assembly>
     <members>
+        <member name="M:TickTrader.Manager.Model.ManagerVersionSpecExtensions.SupportsMethod(TickTrader.BusinessObjects.Versioning.ManagerVersionSpec,System.String)">
+            <summary>
+            Check that method supports in current manager model version
+            </summary>
+            <param name="managerSpec"></param>
+            <param name="methodName">Method name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
         <member name="T:TickTrader.Manager.Model.ThreadedExecutionQueue">
             <summary>
             Notifier in separate Thread class
@@ -263,6 +271,18 @@
             <param name="key">From Id (can be -1 for the first available Id)</param>
             <param name="size">Page size</param>
             <returns>Snapshot list of monitoring events</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ClearMonitoringStates">
+            <summary>
+            Clear all monitoring states on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ClearMonitoringEvents">
+            <summary>
+            Clear all monitoring events on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
         </member>
         <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingStarting">
             <summary>
@@ -574,6 +594,14 @@
             <param name="response">Dealer response</param>
             <returns>Operation completion result</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.SendDealerResponseAsync(TickTrader.BusinessObjects.DealerResponse)">
+            <summary>
+            Send dealer response async.
+            Works only in dealing mode!
+            </summary>
+            <param name="response">Dealer response</param>
+            <returns>Operation completion result</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.GetFeedSource(System.String)">
             <summary>
             Get the current feed source info from the Trading Platform pumping.
@@ -763,7 +791,7 @@
             Set sort order for multiple securities
             </summary>
             <param name="configVersion">Configuration version</param>
-            <param name="currencySortOrders">A list of currencies names and their sort order</param>
+            <param name="securitySortOrders">A list of securities names and their sort order</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.GetSymbolConfig(System.String)">
@@ -893,6 +921,15 @@
             </summary>
             <param name="symbols">list of symbols</param>
             <param name="depth">book's depth</param>
+            <returns>true if success</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.SetLevel2SubscriptionFilter(System.String[],System.Int32,System.Int64)">
+            <summary>
+            Subscribe to symbols level2
+            </summary>
+            <param name="symbols">list of symbols</param>
+            <param name="depth">book's depth</param>
+            <param name="delay">frequency filter delay in ms</param>
             <returns>true if success</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.Level2Unsubscribe(System.String[])">
@@ -1107,7 +1144,7 @@
             Set sort order for multiple group securities
             </summary>
             <param name="configVersion">Configuration version</param>
-            <param name="groupSecuritySortOrders">A list of group security names and their sort order</param>
+            <param name="groupSecuritySortOrders">A list of group security ids and their sort order</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.GetAccountById(System.Int64)">
@@ -1146,6 +1183,66 @@
             </summary>
             <param name="accountLogin">Account login</param>
             <returns>Account info</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccountsCache">
+            <summary>
+            Request all accounts directly from Trading Platform.
+            </summary>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccountsCacheFilter(System.String)">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccountsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllOrdersCache">
+            <summary>
+            Request all orders directly from Trading Platform.
+            </summary>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllOrdersCacheFilter(System.String)">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllOrdersCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllPositionsCache">
+            <summary>
+            Request all positions directly from Trading Platform.
+            </summary>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllPositionsCacheFilter(System.String)">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllPositionsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.RequestAllAccounts">
             <summary>
@@ -1881,7 +1978,21 @@
             <param name="openOrderRequest">Open order request</param>
             <returns>Info of successfully opened order or null if failed</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.OpenOrderAsync(TickTrader.BusinessObjects.Requests.OpenOrderRequest)">
+            <summary>
+            Open new order (market, limit or stop).
+            </summary>
+            <param name="openOrderRequest">Open order request</param>
+            <returns>Info of successfully opened order or null if failed</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ModifyOrder(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
+            <summary>
+            Modify existing order.
+            </summary>
+            <param name="modifyOrderRequest">Modify order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ModifyOrderAsync(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
             <summary>
             Modify existing order.
             </summary>
@@ -1895,7 +2006,21 @@
             <param name="activateOrderRequest">Activate order request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ActivateOrderAsync(TickTrader.BusinessObjects.Requests.ActivateOrderRequest)">
+            <summary>
+            Activate pending order (limit or stop).
+            </summary>
+            <param name="activateOrderRequest">Activate order request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.CancelOrder(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
+            <summary>
+            Cancel existing order.
+            </summary>
+            <param name="cancelOrderRequest">Cancel order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.CancelOrderAsync(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
             <summary>
             Cancel existing order.
             </summary>
@@ -2329,6 +2454,13 @@
             <param name="rolloverRequest">Rollover request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ChargeSwaps(TickTrader.BusinessObjects.Requests.ChargeSwapsRequest)">
+            <summary>
+            Perform charge swaps.
+            </summary>
+            <param name="request">Charge swaps request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="F:TickTrader.Manager.Model.TickTraderManagerModel._isPumpingDropping">
             <summary>
             Drop session is in progress
@@ -2484,6 +2616,13 @@
             <param name="requests">List of requests</param>
             <returns></returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupDeleteRequest})">
+            <summary>
+            Perform bulk delete groups
+            </summary>
+            <param name="requests">List of requests</param>
+            <returns></returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkCreateSecurity(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SecurityNewRequest})">
             <summary>
             Perform bulk create securities
@@ -2573,6 +2712,27 @@
             Delete securities.
             </summary>
             <param name="securityDeleteRequests">Delete security requests</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteDividend(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.DividendDeleteRequest})">
+            <summary>
+            Delete dividends.
+            </summary>
+            <param name="dividendDeleteRequests">Delete dividend requests</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteSplit(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SplitDeleteRequest})">
+            <summary>
+            Delete splits.
+            </summary>
+            <param name="splitRequests">Delete split requests</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.BulkDeleteMergerAndAcquisition(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.MergerAndAcquisitionDeleteRequest})">
+            <summary>
+            Delete mergers and acquisitions.
+            </summary>
+            <param name="mergerAndAcquisitionDeleteRequests">Delete merger and acquisition requests</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.QHTransferFileDownnloadToStream(System.String,System.IO.Stream,System.Action{System.Int64})">
@@ -2814,6 +2974,18 @@
             <param name="key">From Id (can be -1 for the first avaliable Id)</param>
             <param name="size">Page size</param>
             <returns>Snapshot list of monitoring events</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ClearMonitoringStates">
+            <summary>
+            Clear all monitoring states on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ClearMonitoringEvents">
+            <summary>
+            Clear all monitoring events on Trading Platform
+            Security: manager should have administrator's rights to remove monitoring information from the Trading Platform.
+            </summary>
         </member>
         <member name="E:TickTrader.Manager.Model.ITickTraderManagerModel.PumpingStarting">
             <summary>
@@ -3317,7 +3489,7 @@
             Set sort order for multiple securities
             </summary>
             <param name="configVersion">Configuration version</param>
-            <param name="currencySortOrders">A list of currencies names and their sort order</param>
+            <param name="securitySortOrders">A list of securities names and their sort order</param>
             <returns>Successful status</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GetSymbolConfig(System.String)">
@@ -3492,6 +3664,15 @@
             </summary>
             <param name="symbols">list of symbols</param>
             <param name="depth">book's depth</param>
+            <returns>true if success</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.SetLevel2SubscriptionFilter(System.String[],System.Int32,System.Int64)">
+            <summary>
+            Subscribe to symbols level2
+            </summary>
+            <param name="symbols">list of symbols</param>
+            <param name="depth">book's depth</param>
+            <param name="delay">frequency filter delay in ms</param>
             <returns>true if success</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.Level2Unsubscribe(System.String[])">
@@ -3753,6 +3934,66 @@
             </summary>
             <returns>List of accounts or null</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountsCache">
+            <summary>
+            Request all accounts directly from Trading Platform.
+            </summary>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountsCacheFilter(System.String)">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered accounts directly from Trading Platform.
+            </summary>
+            <param name="accountFilter">Accounts filter (groups, logins)</param>
+            <returns>List of accounts or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllOrdersCache">
+            <summary>
+            Request all orders directly from Trading Platform.
+            </summary>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllOrdersCacheFilter(System.String)">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllOrdersCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered orders directly from Trading Platform.
+            </summary>
+            <param name="ordersFilter">Orders filter (groups, logins, order IDs)</param>
+            <returns>List of orders or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllPositionsCache">
+            <summary>
+            Request all positions directly from Trading Platform.
+            </summary>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllPositionsCacheFilter(System.String)">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllPositionsCacheFilterList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Request filtered positions directly from Trading Platform.
+            </summary>
+            <param name="positionsFilter">Position filter (groups, logins, position IDs)</param>
+            <returns>List of positions or null</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAllAccountLogins">
             <summary>
             Request all accounts logins directly from Trading Platform.
@@ -3940,6 +4181,13 @@
         </member>
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Model.ITickTraderManagerModel.ValidateWebApiToken(System.String,System.String,System.String)" -->
         <!-- Badly formed XML comment ignored for member "M:TickTrader.Manager.Model.ITickTraderManagerModel.ResetWebApiTokenSecret(System.String)" -->
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAuthenticationToken(TickTrader.BusinessObjects.Requests.AuthTokenRequest)">
+            <summary>
+            Request to create new Authentication Token for client
+            </summary>
+            <param name="request">Request params</param>
+            <returns>Auth token</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestAccessListRecord(System.String)">
             <summary>
             Request access list record by name.
@@ -4516,7 +4764,21 @@
             <param name="openOrderRequest">Open order request</param>
             <returns>Info of successfully opened order or null if failed</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.OpenOrderAsync(TickTrader.BusinessObjects.Requests.OpenOrderRequest)">
+            <summary>
+            Open new order (market, limit or stop).
+            </summary>
+            <param name="openOrderRequest">Open order request</param>
+            <returns>Info of successfully opened order or null if failed</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ModifyOrder(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
+            <summary>
+            Modify existing order.
+            </summary>
+            <param name="modifyOrderRequest">Modify order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ModifyOrderAsync(TickTrader.BusinessObjects.Requests.OrderReplaceRequest)">
             <summary>
             Modify existing order.
             </summary>
@@ -4530,9 +4792,23 @@
             <param name="activateOrderRequest">Activate order request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ActivateOrderAsync(TickTrader.BusinessObjects.Requests.ActivateOrderRequest)">
+            <summary>
+            Activate pending order (limit or stop).
+            </summary>
+            <param name="activateOrderRequest">Activate order request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.CancelOrder(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
             <summary>
             Cancel existing order.
+            </summary>
+            <param name="cancelOrderRequest">Cancel order request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.CancelOrderAsync(TickTrader.BusinessObjects.Requests.CancelOrderRequest)">
+            <summary>
+            Cancel existing order async.
             </summary>
             <param name="cancelOrderRequest">Cancel order request</param>
             <returns>Successful status</returns>
@@ -4587,6 +4863,41 @@
             </summary>
             <param name="request">Execution lock request</param>
             <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.LockOrderAsync(TickTrader.BusinessObjects.Requests.ExecutionLockRequest)">
+            <summary>
+            Lock order for execution for a cpecified timeout in seconds. Any related order will be locked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.UnlockOrder(TickTrader.BusinessObjects.Requests.ExecutionUnlockRequest)">
+            <summary>
+            Unlock order for execution. Any related order will be unlocked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.UnlockOrderAsync(TickTrader.BusinessObjects.Requests.ExecutionUnlockRequest)">
+            <summary>
+            Unlock order for execution. Any related order will be unlocked as well.
+            </summary>
+            <param name="request">Execution lock request</param>
+            <returns>Execution lock report with list of orders were locked and expiration time.</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.OpenOCOOrders(TickTrader.BusinessObjects.Requests.OpenOCOOrdersRequest)">
+            <summary>
+            Open OCO Orders
+            </summary>
+            <param name="request">request</param>
+            <returns>report</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.OpenOCOOrdersAsync(TickTrader.BusinessObjects.Requests.OpenOCOOrdersRequest)">
+            <summary>
+            Open OCO Orders
+            </summary>
+            <param name="request">request</param>
+            <returns>report</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GetPositionById(System.Int64)">
             <summary>
@@ -5026,6 +5337,13 @@
             <param name="rolloverRequest">Rollover request</param>
             <returns>Successful status</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ChargeSwaps(TickTrader.BusinessObjects.Requests.ChargeSwapsRequest)">
+            <summary>
+            Perform charge swaps.
+            </summary>
+            <param name="request">Charge swaps request</param>
+            <returns>Successful status</returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GetTradeConfiguration">
             <summary>
             Get trade configuration
@@ -5290,6 +5608,30 @@
             </summary>
             <param name="currencyDeleteRequests">List of requests</param>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteGroup(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.GroupDeleteRequest})">
+            <summary>
+            Perform bulk delete groups
+            </summary>
+            <param name="groupDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteDividend(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.DividendDeleteRequest})">
+            <summary>
+            Perform bulk delete dividends
+            </summary>
+            <param name="dividendDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteSplit(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.SplitDeleteRequest})">
+            <summary>
+            Perform bulk delete splits
+            </summary>
+            <param name="splitDeleteRequests">List of requests</param>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.BulkDeleteMergerAndAcquisition(System.Collections.Generic.List{TickTrader.BusinessObjects.Requests.MergerAndAcquisitionDeleteRequest})">
+            <summary>
+            Perform bulk delete mergers and acquisitions
+            </summary>
+            <param name="mergerAndAcquisitionDeleteRequests">List of requests</param>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.InsertSymbolTicksAsyncWithJournal(System.String,System.Collections.Generic.List{TickTrader.BusinessObjects.TickValue})">
             <summary>
             Insert symbol ticks
@@ -5442,6 +5784,34 @@
             Get all QHModify events registred after timestamp
             </summary>
             <returns>QHModifyEvents list</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestManagerWebApiToken(System.Int16)">
+            <summary>
+            Request Manager Web API token by manager Id directly from Trading Platform.
+            </summary>
+            <param name="managerId">Manager Web Api Token Id</param>
+            <returns>Web API token</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.CreateManagerWebApiToken(TickTrader.BusinessObjects.Requests.WebApiTokenNewRequest)">
+            <summary>
+            Create new Manager Web API token.
+            </summary>
+            <param name="webApiNewTokenRequest">New Web API token request</param>
+            <returns>Info of successfully created Web API token or null if failed</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ModifyManagerWebApiToken(TickTrader.BusinessObjects.Requests.WebApiTokenModifyRequest)">
+            <summary>
+            Modify existing Web API token.
+            </summary>
+            <param name="webApiModifyTokenRequest">Modify Web API token request</param>
+            <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.DeleteManagerWebApiToken(System.String)">
+            <summary>
+            Delete existing Web API token.
+            </summary>
+            <param name="webApiId">Manager Web Api Token Id</param>
+            <returns>Successful status</returns>
         </member>
     </members>
 </doc>
