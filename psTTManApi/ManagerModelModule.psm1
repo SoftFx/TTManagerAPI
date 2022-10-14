@@ -610,7 +610,8 @@ function DeleteDividend{
 
 function TransferMoneyMethod{
     param([System.Collections.Generic.List[TickTrader.BusinessObjects.AccountInfo]]$souceAccountInfo,`
-            [System.Collections.Generic.List[TickTrader.BusinessObjects.AccountInfo]]$destAccountInfo);
+            [System.Collections.Generic.List[TickTrader.BusinessObjects.AccountInfo]]$destAccountInfo,`
+            [System.Collections.Generic.List[string]]$currencyToProcessList1);
 
     Start-Sleep -s 1;
     
@@ -621,24 +622,32 @@ function TransferMoneyMethod{
 
     if($srcAccType -ne [TickTrader.BusinessObjects.AccountingTypes]::Cash)
     {
-        $request = New-Object TickTrader.BusinessObjects.Requests.TransferMoneyRequest;
-        $request.SrcAccount = $sourceAccountId;
-        $request.DstAccount = $destAccountId;
-        $request.Amount = $souceAccountInfo.Balance;
-        $request.Currency = $souceAccountInfo.BalanceCurrency;
-        $request.Comment = "";
-        try{
-            $mm.TransferMoney($request);
-        }
-        catch{
-            "Error During Transfer Money {$request}"
+        if($currencyToProcessList1.Count -gt 0 -and $souceAccountInfo.BalanceCurrency -in $currencyToProcessList1 -or $currencyToProcessList1.Count -eq 0)
+        {
+            $request = New-Object TickTrader.BusinessObjects.Requests.TransferMoneyRequest;
+            $request.SrcAccount = $sourceAccountId;
+            $request.DstAccount = $destAccountId;
+            $request.Amount = $souceAccountInfo.Balance;
+            $request.Currency = $souceAccountInfo.BalanceCurrency;
+            $request.Comment = "";
+            try{
+                $mm.TransferMoney($request);
+            }
+            catch{
+                "Error During Transfer Money {$request}"
+            }
         }
     }
     else
     {
         if($srcAccType -eq [TickTrader.BusinessObjects.AccountingTypes]::Cash -and $dstAccType -eq [TickTrader.BusinessObjects.AccountingTypes]::Cash)
         {
-            foreach($asset in $souceAccountInfo.Assets)
+            $assetsToProcess = $souceAccountInfo.Assets;
+            if($currencyToProcessList1.Count -gt 0){
+                $assetsToProcess = $assetsToProcess | Where-Object -Property Currency -In $currencyToProcessList1;
+                "Only {$assetsToProcess} will be proccessed";
+            }
+            foreach($asset in $assetsToProcess)
             {
                 $request = New-Object TickTrader.BusinessObjects.Requests.TransferMoneyRequest;
                 $request.SrcAccount = $sourceAccountId;
@@ -667,7 +676,8 @@ function TransferMoneyMethod{
 function DepositWithdrawalMethod{
     param([System.Collections.Generic.List[TickTrader.BusinessObjects.AccountInfo]]$souceAccountInfo,`
             [System.Collections.Generic.List[TickTrader.BusinessObjects.AccountInfo]]$destAccountInfo,`
-            [System.Collections.Generic.Dictionary[string,string]]$symbolMapDict);
+            [System.Collections.Generic.Dictionary[string,string]]$symbolMapDict,`
+            [System.Collections.Generic.List[string]]$currencyToProcessList1);
     
     Start-Sleep -s 1;
 
@@ -678,45 +688,55 @@ function DepositWithdrawalMethod{
     
     if($srcAccType -ne [TickTrader.BusinessObjects.AccountingTypes]::Cash)
     {
-        try{
-            $requestWithdrawal = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
-            $requestWithdrawal.Amount = -$souceAccountInfo.Balance;
-            $requestWithdrawal.Currency = $souceAccountInfo.BalanceCurrency;
-            $requestWithdrawal.AccountId = $sourceAccountId;
-            $report = $mm.DepositWithdrawal($requestWithdrawal);
-            try{
-                $requestDeposit = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
-                $requestDeposit.Amount = $souceAccountInfo.Balance;
-                $targetCurrency = $symbolMapDict[$souceAccountInfo.BalanceCurrency];
-                if($null -eq $targetCurrency) 
-                {
-                    $targetCurrency = $souceAccountInfo.BalanceCurrency;
-                }
-                $requestDeposit.Currency = $targetCurrency;
-                $requestDeposit.AccountId = $destAccountId;
-                $report = $mm.DepositWithdrawal($requestDeposit);
-            }
-            catch{
-                     "Error During Deposit for {$destAccountId}. Start Rollback Operation";
-                     $requestRollback = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
-                     $requestRollback.Amount = $souceAccountInfo.Balance;
-                     $requestRollback.Currency = $souceAccountInfo.BalanceCurrency;
-                     $requestRollback.AccountId = $sourceAccountId;
-                     $requestRollback.TransferMoney = $true;
-                     $requestRollback.Comment = "Rollback Operation";
-                     $report = $mm.DepositWithdrawal($requestRollback);
-                 }
-        }
-        catch
+        if($currencyToProcessList1.Count -gt 0 -and $souceAccountInfo.BalanceCurrency -in $currencyToProcessList1 -or $currencyToProcessList1.Count -eq 0)
         {
-             "Error During Withdrawal Operation for {$sourceAccountId}.";
-        }
+            try{
+                $requestWithdrawal = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
+                $requestWithdrawal.Amount = -$souceAccountInfo.Balance;
+                $requestWithdrawal.Currency = $souceAccountInfo.BalanceCurrency;
+                $requestWithdrawal.AccountId = $sourceAccountId;
+                $report = $mm.DepositWithdrawal($requestWithdrawal);
+                "Balance Operation for {$requestWithdrawal.AccountId}: {$requestWithdrawal.Amount} {$requestWithdrawal.Currency} - Success;"
+                try{
+                    $requestDeposit = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
+                    $requestDeposit.Amount = $souceAccountInfo.Balance;
+                    $targetCurrency = $symbolMapDict[$souceAccountInfo.BalanceCurrency];
+                    if($null -eq $targetCurrency) 
+                    {
+                        $targetCurrency = $souceAccountInfo.BalanceCurrency;
+                    }
+                    $requestDeposit.Currency = $targetCurrency;
+                    $requestDeposit.AccountId = $destAccountId;
+                    $report = $mm.DepositWithdrawal($requestDeposit);
+                    "Balance Operation for {$requestDeposit.AccountId}: {$requestDeposit.Amount} {$requestDeposit.Currency} - Success;"
+                }
+                catch{
+                         "Error During Deposit for {$destAccountId}. Start Rollback Operation";
+                         $requestRollback = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
+                         $requestRollback.Amount = $souceAccountInfo.Balance;
+                         $requestRollback.Currency = $souceAccountInfo.BalanceCurrency;
+                         $requestRollback.AccountId = $sourceAccountId;
+                         $requestRollback.TransferMoney = $true;
+                         $requestRollback.Comment = "Rollback Operation";
+                         $report = $mm.DepositWithdrawal($requestRollback);
+                     }
+            }
+            catch
+            {
+                 "Error During Withdrawal Operation for {$sourceAccountId}.";
+            }
+      }
     }
     else
     {
         if($srcAccType -eq [TickTrader.BusinessObjects.AccountingTypes]::Cash -and $dstAccType -eq [TickTrader.BusinessObjects.AccountingTypes]::Cash)
         {
-            foreach($asset in $souceAccountInfo.Assets)
+            $assetsToProcess = $souceAccountInfo.Assets;# | Where-Object -Property FreeAmount -gt 0;
+            if($currencyToProcessList1.Count -gt 0){
+                $assetsToProcess = $assetsToProcess | Where-Object -Property Currency -In $currencyToProcessList1;
+                "Only {$assetsToProcess} will be proccessed";
+            }
+            foreach($asset in $assetsToProcess)
             {
                 try{
                      $requestWithdrawal = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
@@ -724,6 +744,7 @@ function DepositWithdrawalMethod{
                      $requestWithdrawal.Currency = $asset.Currency;
                      $requestWithdrawal.AccountId = $sourceAccountId;
                      $report = $mm.DepositWithdrawal($requestWithdrawal);
+                     "Balance Operation for Account - $($requestWithdrawal.AccountId): Amount - $($requestWithdrawal.Amount) Currency - $($requestWithdrawal.Currency) - Success;"
                      try{
                          $requestDeposit = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
                          $requestDeposit.Amount = $asset.FreeAmount;
@@ -735,6 +756,7 @@ function DepositWithdrawalMethod{
                          $requestDeposit.Currency = $targetCurrency;
                          $requestDeposit.AccountId = $destAccountId;
                          $report = $mm.DepositWithdrawal($requestDeposit);
+                         "Balance Operation for Account - $($requestDeposit.AccountId): Amount - $($requestDeposit.Amount) Currency - $($requestDeposit.Currency) - Success;"
                      }
                      catch{
                          "Error During Deposit for {$destAccountId}. Start Rollback Operation";
@@ -762,42 +784,50 @@ function DepositWithdrawalMethod{
 }
 
 function TransferMoney{
-    param([long]$sourceAccountId, [long]$destAccountId, [string]$symbolMapString);
+    param([long]$sourceAccountId, [long]$destAccountId, [string]$symbolMapString, [string]$currenciesToProcessString);
 
+    "Start Transfer Money for $sourceAccountId to $destAccountId";
+    if(![System.String]::IsNullOrEmpty($symbolMapString))
+    {
+        $symbols =  $symbolMapString.Replace(" ", "").Split(",", [System.StringSplitOptions]::RemoveEmptyEntries).Split([System.String[]]("->"), [System.StringSplitOptions]::RemoveEmptyEntries);
+    }
+
+    $currencyToProcessList = New-Object System.Collections.Generic.List[string];
+    if(![System.String]::IsNullOrEmpty($currenciesToProcessString))
+    {
+        $currencyToProcessList = $currenciesToProcessString.Replace(" ", "").Split(",;".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries);
+    }
+
+    $allCurrencies = $mm.RequestAllCurrencies();
+    $allCurrencies = $allCurrencies | Select-Object -ExpandProperty Name;
     $souceAccountInfo1 = $mm.RequestAccountById($sourceAccountId);
     $destAccountInfo1 = $mm.RequestAccountById($destAccountId);
 
     $symbolMapDict1 = New-Object System.Collections.Generic.Dictionary[string`,string];
-    if(![System.String]::IsNullOrEmpty($symbolMapString))
+    $length = $symbols.Length;
+    if($length % 2 -ne 0)
     {
-        $symbols = $symbolMapString.Split(" ".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries);
-        $length = $symbols.Length;
-        if($length % 2 -ne 0)
-        {
-            "Wrong Symbol Map string length. Odd symbols {$length}"
-            return;
-        }
+        "Wrong Symbol Map string length. Odd symbols {$length}";
+        return;
+    }
 
-        $allCurrencies = $mm.RequestAllCurrencies();
-        $allCurrencies = $allCurrencies | Select-Object -ExpandProperty Name
-
-        for ($i = 0; $i -lt $length - 1 ; $i += 2)
+    for ($i = 0; $i -lt $length - 1 ; $i += 2)
+    {
+        if($allCurrencies -contains $symbols[$i] -and $allCurrencies -contains $symbols[$i + 1])
         {
-            if($allCurrencies -contains $symbols[$i] -and $allCurrencies -contains $symbols[$i + 1])
+            if($souceAccountInfo1.BalanceCurrency -eq $symbols[$i] -or ($souceAccountInfo1.Assets | Select-Object -ExpandProperty Currency) -contains $symbols[$i])
             {
-                if($souceAccountInfo1.BalanceCurrency -eq $symbols[$i] -or ($souceAccountInfo1.Assets | Select-Object -ExpandProperty Currency) -contains $symbols[$i])
-                {
-                    $symbolMapDict1.Add($symbols[$i], $symbols[$i + 1]);
-                }
+                $symbolMapDict1.Add($symbols[$i], $symbols[$i + 1]);
             }
         }
     }
+        
     if($symbolMapDict1.Count -gt 0)
     {
-        DepositWithdrawalMethod $souceAccountInfo1 $destAccountInfo1 $symbolMapDict1;
+        DepositWithdrawalMethod $souceAccountInfo1 $destAccountInfo1 $symbolMapDict1 $currencyToProcessList;
     }
     else
     {
-        TransferMoneyMethod $souceAccountInfo1 $destAccountInfo1
+        TransferMoneyMethod $souceAccountInfo1 $destAccountInfo1 $currencyToProcessList;
     }
 }
