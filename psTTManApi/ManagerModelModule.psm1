@@ -613,7 +613,7 @@ function TransferMoneyMethod{
             [System.Collections.Generic.List[TickTrader.BusinessObjects.AccountInfo]]$destAccountInfo,`
             [System.Collections.Generic.List[string]]$currencyToProcessList1);
 
-    Start-Sleep -s 1;
+    # Start-Sleep -s 1;
     
     $sourceAccountId = $souceAccountInfo.AccountId;
     $destAccountId = $destAccountInfo.AccountId;
@@ -679,7 +679,7 @@ function DepositWithdrawalMethod{
             [System.Collections.Generic.Dictionary[string,string]]$symbolMapDict,`
             [System.Collections.Generic.List[string]]$currencyToProcessList1);
     
-    Start-Sleep -s 1;
+    # Start-Sleep -s 1;
 
     $sourceAccountId = $souceAccountInfo.AccountId;
     $destAccountId = $destAccountInfo.AccountId;
