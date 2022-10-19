@@ -2,6 +2,14 @@ $config = ([xml](Get-Content .\config.xml)).root;
 Add-Type -Path (Join-Path $config.libPath "TickTrader.Manager.Model.dll");
 Add-Type -Path (Join-Path $config.libPath "TickTrader.BusinessObjects.dll");
 
+Function Log {
+    param(
+        [Parameter(Mandatory=$true)][String]$msg
+    )
+    
+    Add-Content log.txt $msg
+}
+
 $mm = New-Object TickTrader.Manager.Model.TickTraderManagerModel;
 
 function Connect{
@@ -634,7 +642,7 @@ function TransferMoneyMethod{
                 $mm.TransferMoney($request);
             }
             catch{
-                "Error During Transfer Money {$request}"
+                Log "Error During Transfer Money {$request}"
             }
         }
     }
@@ -659,13 +667,13 @@ function TransferMoneyMethod{
                     $mm.TransferMoney($request);
                 }
                 catch{
-                    "Error During Transfer Money {$request}"
+                    Log "Error During Transfer Money {$request}"
                 }
             }   
         }
         else
         {
-            "Source Account is Cash, Dst Acc is Margin - can not transfer";
+            Log "Source Account is Cash, Dst Acc is Margin - can not transfer";
             return;
         }
     }
@@ -696,7 +704,7 @@ function DepositWithdrawalMethod{
                 $requestWithdrawal.Currency = $souceAccountInfo.BalanceCurrency;
                 $requestWithdrawal.AccountId = $sourceAccountId;
                 $report = $mm.DepositWithdrawal($requestWithdrawal);
-                "Balance Operation for {$requestWithdrawal.AccountId}: {$requestWithdrawal.Amount} {$requestWithdrawal.Currency} - Success;"
+                Log "Balance Operation for {$requestWithdrawal.AccountId}: {$requestWithdrawal.Amount} {$requestWithdrawal.Currency} - Success;"
                 try{
                     $requestDeposit = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
                     $requestDeposit.Amount = $souceAccountInfo.Balance;
@@ -708,10 +716,10 @@ function DepositWithdrawalMethod{
                     $requestDeposit.Currency = $targetCurrency;
                     $requestDeposit.AccountId = $destAccountId;
                     $report = $mm.DepositWithdrawal($requestDeposit);
-                    "Balance Operation for {$requestDeposit.AccountId}: {$requestDeposit.Amount} {$requestDeposit.Currency} - Success;"
+                    Log "Balance Operation for {$requestDeposit.AccountId}: {$requestDeposit.Amount} {$requestDeposit.Currency} - Success;"
                 }
                 catch{
-                         "Error During Deposit for {$destAccountId}. Start Rollback Operation";
+                         Log "Error During Deposit for {$destAccountId}. Start Rollback Operation";
                          $requestRollback = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
                          $requestRollback.Amount = $souceAccountInfo.Balance;
                          $requestRollback.Currency = $souceAccountInfo.BalanceCurrency;
@@ -723,7 +731,7 @@ function DepositWithdrawalMethod{
             }
             catch
             {
-                 "Error During Withdrawal Operation for {$sourceAccountId}.";
+                 Log "Error During Withdrawal Operation for {$sourceAccountId}.";
             }
       }
     }
@@ -734,7 +742,7 @@ function DepositWithdrawalMethod{
             $assetsToProcess = $souceAccountInfo.Assets;# | Where-Object -Property FreeAmount -gt 0;
             if($currencyToProcessList1.Count -gt 0){
                 $assetsToProcess = $assetsToProcess | Where-Object -Property Currency -In $currencyToProcessList1;
-                "Only {$assetsToProcess} will be proccessed";
+                Log "Only {$assetsToProcess} will be proccessed";
             }
             foreach($asset in $assetsToProcess)
             {
@@ -744,7 +752,7 @@ function DepositWithdrawalMethod{
                      $requestWithdrawal.Currency = $asset.Currency;
                      $requestWithdrawal.AccountId = $sourceAccountId;
                      $report = $mm.DepositWithdrawal($requestWithdrawal);
-                     "Balance Operation for Account - $($requestWithdrawal.AccountId): Amount - $($requestWithdrawal.Amount) Currency - $($requestWithdrawal.Currency) - Success;"
+                     Log "Balance Operation for Account - $($requestWithdrawal.AccountId): Amount - $($requestWithdrawal.Amount) Currency - $($requestWithdrawal.Currency) - Success;"
                      try{
                          $requestDeposit = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
                          $requestDeposit.Amount = $asset.FreeAmount;
@@ -756,10 +764,10 @@ function DepositWithdrawalMethod{
                          $requestDeposit.Currency = $targetCurrency;
                          $requestDeposit.AccountId = $destAccountId;
                          $report = $mm.DepositWithdrawal($requestDeposit);
-                         "Balance Operation for Account - $($requestDeposit.AccountId): Amount - $($requestDeposit.Amount) Currency - $($requestDeposit.Currency) - Success;"
+                         Log "Balance Operation for Account - $($requestDeposit.AccountId): Amount - $($requestDeposit.Amount) Currency - $($requestDeposit.Currency) - Success;"
                      }
                      catch{
-                         "Error During Deposit for {$destAccountId}. Start Rollback Operation";
+                         Log "Error During Deposit for {$destAccountId}. Start Rollback Operation";
                          $requestRollback = New-Object TickTrader.BusinessObjects.Requests.DepositWithdrawalRequest;
                          $requestRollback.Amount = $asset.FreeAmount;
                          $requestRollback.Currency = $asset.Currency;
@@ -770,14 +778,14 @@ function DepositWithdrawalMethod{
                      }
                 }
                 catch{
-                    "Error During Withdrawal Operation for {$sourceAccountId}.";
+                    Log "Error During Withdrawal Operation for {$sourceAccountId}.";
                 }
                     
             }   
         }
         else
         {
-            "Source Account is Cash, Dst Acc is Margin - can not transfer";
+            Log "Source Account is Cash, Dst Acc is Margin - can not transfer";
             return;
         }
     }        
@@ -786,7 +794,7 @@ function DepositWithdrawalMethod{
 function TransferMoney{
     param([long]$sourceAccountId, [long]$destAccountId, [string]$symbolMapString, [string]$currenciesToProcessString);
 
-    "Start Transfer Money for $sourceAccountId to $destAccountId";
+    Log "Start Transfer Money for $sourceAccountId to $destAccountId";
     if(![System.String]::IsNullOrEmpty($symbolMapString))
     {
         $symbols =  $symbolMapString.Replace(" ", "").Split(",", [System.StringSplitOptions]::RemoveEmptyEntries).Split([System.String[]]("->"), [System.StringSplitOptions]::RemoveEmptyEntries);
@@ -807,7 +815,7 @@ function TransferMoney{
     $length = $symbols.Length;
     if($length % 2 -ne 0)
     {
-        "Wrong Symbol Map string length. Odd symbols {$length}";
+        Log "Wrong Symbol Map string length. Odd symbols {$length}";
         return;
     }
 
@@ -830,4 +838,12 @@ function TransferMoney{
     {
         TransferMoneyMethod $souceAccountInfo1 $destAccountInfo1 $currencyToProcessList;
     }
+}
+
+function RequestAllAccountsLogins{
+    $mm.RequestAllAccountLogins();
+}
+
+function RequestAllAccounts{
+    $mm.RequestAllAccounts();
 }

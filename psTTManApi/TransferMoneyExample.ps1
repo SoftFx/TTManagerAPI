@@ -9,14 +9,23 @@ Import-Module .\ManagerModelModule.psm1 -Verbose -Force;
 
 Connect $false
 
-# Account List will be processed. 
-$sourceAccountList = 100018,100018,100018;
 
 # Only these currency will be processed. Remaining will be ignored. If empty, all currencies will be processed.
 $currenciesToProcess = "UST";
 
 # Currency Mapping Rules. Format string: (x. "X1 -> Y1, X2 -> Y2"). All Volume for X1 will be withdrawn and equal Volume for Y1 will be deposited.
 $currencyMap = "UST -> USDT";
+
+
+# Account List will be processed. 
+# $sourceAccountList = 100018, 100019;
+$allAccountsInfo = RequestAllAccounts;
+$sourceAccountList = $allAccountsInfo | Where-Object {$_.Assets.Currency -contains $currenciesToProcess} | Select-Object -ExpandProperty AccountId;
+
+$Time = Get-Date;
+Log "Start At $($Time.ToUniversalTime())";
+Log "Parameters: currenciesToProcess - $currenciesToProcess, currencyMap - $currencyMap, SourceAccountList - $sourceAccountList";
+Log "$($sourceAccountList.Count) accounts will be processed"; 
 
 foreach($account in $sourceAccountList)
 { 
@@ -26,3 +35,6 @@ foreach($account in $sourceAccountList)
     #Start-Sleep -s 1;
 }
 Disconnect;
+
+$Time = Get-Date;
+Log "End At $($Time.ToUniversalTime())`n`n"
