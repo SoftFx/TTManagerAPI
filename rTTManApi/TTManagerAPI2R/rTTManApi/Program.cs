@@ -1757,6 +1757,11 @@ namespace rTTManApi
             return _tradeReportList.Select(it => (double)(it.UsdToDstAssetConversionRate ?? 0)).ToArray();
         }
 
+        public static double[] GetTradeReportToBalanceConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.ReportToBalanceConversionRate ?? 0)).ToArray();
+        }
+
         public static string[] GetTradeSrcAssetCurrency()
         {
             return _tradeReportList.Select(it => it.SrcAssetCurrency).ToArray();
