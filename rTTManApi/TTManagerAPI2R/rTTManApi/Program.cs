@@ -1302,6 +1302,12 @@ namespace rTTManApi
 
         #region Get trade history
 
+        public static int GetTradeReports(DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
+        {
+            return GetTradeReports(new double[] { }, from, to, transType, reason, skipCancelled);
+        }
+
+
         public static int GetTradeReports(double accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
         {
             return GetTradeReports(new double[] { accId }, from, to, transType, reason, skipCancelled);
@@ -1344,12 +1350,12 @@ namespace rTTManApi
                     }
                     req.Reasons = reasons;
                 }
-                var accList = accId[0].ToString();
+                /*var accList = accId[0].ToString();
                 for (var i = 1; i < accId.Length; i++)
                 {
                     accList = string.Concat(accList, ", ", accId[i].ToString());
-                }
-                Logger.Log.InfoFormat("Requesting trade history of {0} from {1} to {2}", accList, from, to);
+                }*/
+                Logger.Log.InfoFormat("Requesting trade history from {0} to {1}", from, to);
                 var tradeHistory = _manager.QueryTradeHistoryOverall(req);
                 _tradeReportList = tradeHistory.Reports;
                 while (!tradeHistory.IsEndOfStream)
@@ -1590,6 +1596,15 @@ namespace rTTManApi
         public static double[] GetTradeCommission()
         {
             return _tradeReportList.Select(it => (double)(it.Commission ?? 0)).ToArray();
+        }
+
+        public static double[] GetTradeTotalCommission()
+        {
+            return _tradeReportList.Select(it => (double)(it.TotalCommission ?? 0)).ToArray();
+        }
+        public static string[] GetTradeCommissionCurrency()
+        {
+            return _tradeReportList.Select(it => it.CommissionCurrency).ToArray();
         }
 
         public static double[] GetTradeAgentCommission()

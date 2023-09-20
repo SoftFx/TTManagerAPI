@@ -13,8 +13,11 @@
 ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), skipCancelled = TRUE, transTypes = "", reasons = "", getStringPosId = FALSE) {
   print(paste("from =", from, "; to =", to))
   print(paste("(Str)from =", str(from), "; to =", str(to)))
-  
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', accId, from, to, transTypes, reasons, skipCancelled)
+  if(length(accId) > 0){
+    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', accId, from, to, transTypes, reasons, skipCancelled)
+  }else{
+    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', from, to, transTypes, reasons, skipCancelled)
+  }
   res = GetTradeFrame()
   if(getStringPosId) 
     res[, StringPositionId := GetStringPositionId()]
@@ -118,6 +121,8 @@ GetTradeFrame<-function()
   TradeBalanceToReportConversionRate = GetTradeBalanceToReportConversionRate()
   TradeProfitToReportConversionRate = GetTradeProfitToReportConversionRate()
   TradeReportToBalanceConversionRate = GetTradeReportToBalanceConversionRate()
+  TradeTotalCommission = GetTradeTotalCommission()
+  TradeCommissionCurrency = GetTradeCommissionCurrency()
   res <- data.table(TradeAccountId,TradeId, TradeDomain, TradeGroup, TradeOrderId, TradeOrderActionNo, TradeClientOrderId, TradeTrType, 
              TradeTrReason, TradeTrTime, TradeSide, TradeOrderType, TradeParentOrderType, TradeOrderCreated, 
              TradeOrderModified, TradeSymbol, TradeSymbolAlias, TradeSymbolAliasOrName, TradeSymbolFk, TradeOrderAmount, 
@@ -138,7 +143,7 @@ GetTradeFrame<-function()
              TradeDstAssetMovement, TradeOptions, TradeOrderMaxVisibleAmount, TradeReducedOpenCommissionFlag, 
              TradeReducedCloseCommissionFlag, TradeSymbolPrecision, TradeProfitCurrencyToReportConversionRate,TradeMarginCurrencyToReportConversionRate,
              TradeDstAssetToReportConversionRate,TradeSrcAssetToReportConversionRate,TradeBalanceToReportConversionRate,
-             TradeProfitToReportConversionRate,TradeReportToBalanceConversionRate)
+             TradeProfitToReportConversionRate,TradeReportToBalanceConversionRate,TradeTotalCommission,TradeCommissionCurrency)
   return(res)
 }
 # Get Trade report field
@@ -531,4 +536,12 @@ GetStringPositionId<-function(){
 # Get Trade report field
 GetTradeReportToBalanceConversionRate <- function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReportToBalanceConversionRate')
+}
+# Get Trade report field
+GetTradeTotalCommission <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeTotalCommission')
+}
+# Get Trade report field
+GetTradeCommissionCurrency <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeCommissionCurrency')
 }
