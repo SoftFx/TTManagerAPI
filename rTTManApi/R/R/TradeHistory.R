@@ -13,7 +13,7 @@
 ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), skipCancelled = TRUE, transTypes = "", reasons = "", getStringPosId = FALSE) {
   print(paste("from =", from, "; to =", to))
   print(paste("(Str)from =", str(from), "; to =", str(to)))
-  if(length(accId) > 0){
+  if(!is.null(accId)){
     rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', accId, from, to, transTypes, reasons, skipCancelled)
   }else{
     rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', from, to, transTypes, reasons, skipCancelled)

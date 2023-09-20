@@ -4,6 +4,40 @@
         <name>TickTrader.BusinessLogic</name>
     </assembly>
     <members>
+        <member name="M:TickTrader.BusinessLogic.AccountCalculator.CalculateDividend(System.Decimal,TickTrader.BusinessObjects.OrderSides,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Int32,System.Decimal@,System.Decimal@,System.Decimal@)">
+            <summary>
+            Calculate dividend payments
+            </summary>
+            <param name="amount">Amount of position is to be calculated on</param>
+            <param name="side">Side of position is to be calculated on</param>
+            <param name="grossRate">Dividend gross rate</param>
+            <param name="fee">Fee value to calculate fee charge</param>
+            <param name="tax">Tax value to calculate tax charge</param>
+            <param name="paySign">The sign of payment amount. It depends on side and the sign of gross rate</param>
+            <param name="balanceConvRate">Conversion rate from dividend pay currency to balance currency</param>
+            <param name="roundDigits">Rounding precision</param>
+            <param name="divPayment">[OUT] Dividend payment</param>
+            <param name="feeCharge">[OUT] Fee charge amount</param>
+            <param name="taxCharge">[OUT] Tax charge amount</param>
+        </member>
+        <member name="M:TickTrader.BusinessLogic.AccountCalculator.CalculateDividend(TickTrader.BusinessObjects.ISymbolInfo,System.Decimal,System.String,System.Decimal,System.Decimal,System.Decimal@,TickTrader.BusinessObjects.OrderSides@,System.Decimal@,System.Decimal@,System.Decimal@,System.Decimal@)">
+            <summary>
+            Calculate dividend payments
+            </summary>
+            <param name="symbol">Dividend symbol</param>
+            <param name="grossRate">Dividend gross rate</param>
+            <param name="currency">Dividend pay currency</param>
+            <param name="fee">Fee value to calculate fee charge</param>
+            <param name="tax">Tax value to calculate tax charge</param>
+            <param name="calcAmount">[OUT] Amount of position is used for calculation</param>
+            <param name="calcSide">[OUT] Side of position is used for calculation</param>
+            <param name="balanceMovement">[OUT] Balance movement</param>
+            <param name="feeCharge">[OUT] Fee charge amount</param>
+            <param name="taxCharge">[OUT] Tax charge amount</param>
+            <param name="convRate">[OUT] Conversion rate from dividend pay currency to balance currency</param>
+            <returns></returns>
+            <exception cref="T:TickTrader.BusinessLogic.MarketConfigurationException"></exception>
+        </member>
         <member name="F:TickTrader.BusinessLogic.CalcErrorCode.None">
             <summary>
             No error.
@@ -43,17 +77,6 @@
             <summary>
             Gets order calculatiion error description.
             </summary>
-        </member>
-        <member name="T:TickTrader.BusinessLogic.IOrderModel">
-            <summary>
-            Defines methods and properties for order which is subject of market summary calculations.
-            Properties Profit, Margin and CalculationError are updated only in NettingCalculationTypes.OneByOne mode.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessLogic.OrderExtension">
-             <summary>
-            
-             </summary>
         </member>
         <member name="T:TickTrader.BusinessLogic.IAccountInfo">
             <summary>
@@ -120,6 +143,11 @@
             Fired when position changed.
             </summary>
         </member>
+        <member name="P:TickTrader.BusinessLogic.IMarginAccountInfo.NewOrderMLThreshold">
+            <summary>
+            Account margin level threshold.
+            </summary>
+        </member>
         <member name="T:TickTrader.BusinessLogic.ICashAccountInfo">
             <summary>
             Defines methods and properties for cash account.
@@ -135,6 +163,33 @@
             Fired when underlying assests list was changed.
             </summary>
         </member>
+        <member name="T:TickTrader.BusinessLogic.IOrderModel">
+            <summary>
+            Defines methods and properties for order which is subject of market summary calculations.
+            Properties Profit, Margin and CalculationError are updated only in NettingCalculationTypes.OneByOne mode.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.OrderExtension">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketManager">
+            <summary>
+            Manages state (configuration and rates) within all accounts. Creates and keeps updated MarketState object for each account group.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketState">
+            <summary>
+            Manages state (configuration and rates) within accounts with the same configuration (group).
+            Can be used as a child object of MarketManager or as stand-alone market state.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketStateConfig">
+            <summary>
+            Readonly collections for group market state
+            </summary>
+        </member>
         <member name="T:TickTrader.BusinessLogic.NettingCalculationTypes">
             <summary>
             Netting calculation types.
@@ -148,17 +203,6 @@
         <member name="F:TickTrader.BusinessLogic.NettingCalculationTypes.Optimized">
             <summary>
             Calculate netted margin/profit. Orders are not updated.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessLogic.MarketManager">
-            <summary>
-            Manages state (configuration and rates) within all accounts. Creates and keeps updated MarketState object for each account group.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessLogic.MarketState">
-            <summary>
-            Manages state (configuration and rates) within accounts with the same configuration (group).
-            Can be used as a child object of MarketManager or as stand-alone market state.
             </summary>
         </member>
     </members>

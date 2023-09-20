@@ -2134,7 +2134,10 @@ namespace rTTManApi
         {
             return _symbolList.Select(it => it.Symbol).ToArray();
         }
-
+        public static string[] GetSymbolName()
+        {
+            return _symbolList.Select(it => it.Name).ToArray();
+        }
         public static string[] GetSymbolSecurity()
         {
             return _symbolList.Select(it => it.Security).ToArray();

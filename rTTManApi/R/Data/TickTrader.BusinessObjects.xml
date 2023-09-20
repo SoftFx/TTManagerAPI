@@ -19,6 +19,47 @@
             Rebate, used only for Gross positions
             </summary>
         </member>
+        <member name="F:TickTrader.BusinessObjects.AuthTokenType.Basic">
+            <summary>
+            Basic access token is a simple unique string generally is a GUID.
+            It does not carry any payload. RefreshToken is null by default.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.AuthToken">
+            <summary>
+            Authentication Token
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.AuthToken.Username">
+            <summary>
+            User name. Cannot be null or empty.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.AuthToken.Type">
+            <summary>
+            The Type of token
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.AuthToken.AccessToken">
+            <summary>
+            Access Token that would pass to a client application to be used for authentication purposes.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.AuthToken.AccessExpiration">
+            <summary>
+            Access Token expiration.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.AuthToken.RefreshToken">
+            <summary>
+            Refresh Token is used to regenerate Access Token. For the future use. Now it is null.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.AuthToken.RefreshExpiration">
+            <summary>
+            Refresh Token expiration. For the future use. Now it is null.
+            </summary>
+        </member>
         <member name="T:TickTrader.BusinessObjects.Configuration.Ports">
             <summary>
             List of default ports or internal port that are used in TTS.
@@ -34,6 +75,63 @@
             <summary>
             Number of Swap charges per day. The default value is 1. Generally it must be a divisor of 24.
             </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value},System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value})">
+            <summary>
+            Initialize level2 with a list of bids and asks
+            </summary>
+            <param name="bids">bids list</param>
+            <param name="asks">asks list</param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.List{TickTrader.BusinessObjects.Level2Value},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Warning should be sorted in collection and proper offset set
+            </summary>
+            <param name="level2Container">asb/bid list sorted</param>
+            <param name="offset">ask start</param>
+            <param name="bidCount">bid count</param>
+            <param name="askCount">ask count</param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerInfo.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRights.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRightsDomain.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRightsGroup.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRightsSecurity.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+            <filterpriority>2</filterpriority>
         </member>
         <member name="F:TickTrader.BusinessObjects.MatchingPatterns.Default">
             <summary>
@@ -80,200 +178,6 @@
             Match pattern for Domain lasts prefix
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetQHTransferFiles" -->
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.InitQHTaskStart(TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.QHTaskInitProperties)">
-            <summary>
-            Initiate Quote Hoistory Task Start
-            </summary>
-            <param name="initProperties">QH Task initiation properties</param>
-            <returns>History task init result with id and additional info message</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetHistoryTaskInfo(System.Int32)">
-            <summary>
-            Get history task info for specified task id
-            </summary>
-            <param name="id">Task id</param>
-            <returns>History task info</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.RequestHistoryTaskCancel(System.Int32)">
-            <summary>
-            Request history task cancel
-            </summary>
-            <param name="id">Task id</param>
-            <returns>History task info</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetTradingStatisticAsync(System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-            Get Trading statistics 
-            </summary>
-            <param name="symbols">symbols</param>
-            <param name="prefix">prefix</param>
-            <returns></returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetAllQHModifyEventsAsync(System.DateTime)">
-            <summary>
-            Get all quote history modify events after timestamp
-            </summary>
-            <param name="time">DateTime timestamp, if null return all</param>
-            <returns>list of QHModifyInfo</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetQHModifyEventByIdAsync(System.Guid)">
-            <summary>
-            Get quote history modify event by id
-            </summary>
-            <param name="id">Guid id</param>
-            <returns>QHModifyInfo</returns>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.UpstreamTypes">
-            <summary>
-            QuoteHistory upstream modes
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.Append(TickTrader.Common.Business.FeedTick)">
-            <summary>
-            Append Tick
-            </summary>
-            <param name="tick"></param>
-            <param name="quotesWriteMode"></param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ImportTicks(TickTrader.BusinessObjects.QuoteHistory.Engine.IHistorySource,System.String,System.DateTime,System.DateTime,System.Boolean,System.Boolean,TickTrader.BusinessObjects.QuoteHistory.Engine.ImportMode,TickTrader.BusinessObjects.QuoteHistory.Engine.HistoryOperationProgressCallback,System.Threading.CancellationToken)">
-            <summary>
-            Import Ticks
-            </summary>
-            <param name="source"></param>
-            <param name="symbol"></param>
-            <param name="startImportTime"></param>
-            <param name="finishImportTime"></param>
-            <param name="isLevel2"></param>
-            <param name="loadMetaData"></param>
-            <param name="importRules"></param>
-            <param name="progressCallBack"></param>
-            <param name="token"></param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ImportBars(TickTrader.BusinessObjects.QuoteHistory.Engine.IHistorySource,System.String,System.DateTime,System.DateTime,TickTrader.BusinessObjects.Periodicity,TickTrader.Common.Business.FxPriceType,System.Boolean,TickTrader.BusinessObjects.QuoteHistory.Engine.ImportMode,TickTrader.BusinessObjects.QuoteHistory.Engine.HistoryOperationProgressCallback,System.Threading.CancellationToken)">
-            <summary>
-            Import Bars
-            </summary>
-            <param name="source"></param>
-            <param name="symbol"></param>
-            <param name="startImportTime"></param>
-            <param name="finishImportTime"></param>
-            <param name="barPeriodicity"></param>
-            <param name="barsPriceType"></param>
-            <param name="loadMetaData"></param>
-            <param name="importRules"></param>
-            <param name="progressCallBack"></param>
-            <param name="token"></param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ImportBarsFromDiffBars(TickTrader.BusinessObjects.QuoteHistory.Engine.IHistorySource,System.String,System.DateTime,System.DateTime,TickTrader.BusinessObjects.Periodicity,TickTrader.Common.Business.FxPriceType,TickTrader.BusinessObjects.Periodicity,TickTrader.Common.Business.FxPriceType,System.Boolean,TickTrader.BusinessObjects.QuoteHistory.Engine.ImportMode,TickTrader.BusinessObjects.QuoteHistory.Engine.HistoryOperationProgressCallback)">
-            <summary>
-            Import Bars
-            </summary>
-            <param name="source"></param>
-            <param name="symbol"></param>
-            <param name="startImportTime"></param>
-            <param name="finishImportTime"></param>
-            <param name="sourceBarPeriodicity"></param>
-            <param name="sourceBarsPriceType"></param>
-            <param name="barPeriodicity"></param>
-            <param name="barsPriceType"></param>
-            <param name="loadMetaData"></param>
-            <param name="importRules"></param>
-            <param name="progressCallBack"></param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ClearSymbol(System.String,TickTrader.BusinessObjects.Periodicity[])">
-            <summary>
-            Clear history for particular periodicity for selected symbol
-            </summary>
-            <param name="symbol">selected symbol</param>
-            <param name="periodicities">selected periodicity</param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.Clear(TickTrader.BusinessObjects.Periodicity[])">
-            <summary>
-            Clear history for particular periodicity for all sknown symbols
-            </summary>
-            <param name="periodicities">selected periodicity</param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ClearSymbolCache(System.String)">
-            <summary>
-            Clear bar's history cache for particular symbol
-            </summary>
-            <param name="symbol"></param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ClearCache">
-            <summary>
-            Clear bar's cache for all known symbols
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QuoteHistory.MarketHistoryFile.ExtensionData">
-            <summary>
-            Gets or sets the structure that contains extra data.
-            </summary>
-            <returns>
-            An <see cref="T:System.Runtime.Serialization.ExtensionDataObject"/> that contains data that is not recognized as belonging to the data contract.
-            </returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForAccount(System.Int64)">
-            <summary>
-            Create SwapCharges request for the given Account.
-            </summary>
-            <param name="accountLogin">Desired account login</param>
-            <returns>New request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForGroup(System.String)">
-            <summary>
-            Create SwapCharges request for the given Group.
-            </summary>
-            <param name="group">Desired group name</param>
-            <returns>New request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForDomain(System.String)">
-            <summary>
-            Create SwapCharges request for the given Domain.
-            </summary>
-            <param name="domain">Desired group name</param>
-            <returns>New request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForAll">
-            <summary>
-            Create SwapCharges request for all accounts.
-            </summary>
-            <returns>New request</returns>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Requests.DividendModifyRequest.Rates">
-            <summary>
-            Rates can be null or empty. In this case there will not be changes
-            Old list of Rates are replaced with this list.
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Requests.DividendNewRequest.Rates">
-            <summary>
-            Rates cannot be null or empty
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.SubscriptionModifyRequest.Create(System.Int32,System.String,System.String,System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{TickTrader.BusinessObjects.StreamCompressionTypes})">
-            <summary>
-            Create modify subscription request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="SubscriptionName">Name of the modified subscription</param>
-            <param name="NewSubscriptionName">New name of the modified subscription (null if you want to keep previous value)</param>
-            <param name="FrequencyFilterMs">New frequency filter time inteval in ms(null if you want to keep previous value)</param>
-            <param name="TotalDepthLimit">New depth filter depth(null if you want to keep previous value)</param>
-            <param name="Compression">New compression type(null if you want to keep previous value)</param>
-            <returns>Modify subscription request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.SubscriptionNewRequest.Create(System.Int32,System.String,System.Double,System.Int32,TickTrader.BusinessObjects.StreamCompressionTypes)">
-            <summary>
-            Create new subscription request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="SubscriptionName">Desired subscription name</param>
-            <param name="FrequencyFilterMs">Desired frequency filter time inteval in ms</param>
-            <param name="TotalDepthLimit">Desired depth filter p</param>
-            <param name="MarginLevelType">Desired margin level type</param>
-            <returns>New subscription request</returns>
-        </member>
         <member name="M:TickTrader.BusinessObjects.Requests.AccessListModifyRequest.Create(System.Int32,System.String,TickTrader.BusinessObjects.Security.AccessListRecord)">
             <summary>
             Create modify access list record request with required parameters.
@@ -291,7 +195,26 @@
             <param name="Record">Access list record</param>
             <returns>New access list record request</returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.AccountDeleteRequest.Create(System.Int64,System.Boolean,System.Boolean)">
+        <member name="M:TickTrader.BusinessObjects.Requests.AccountBalanceRequest.Create(System.Int64,System.Decimal,System.String)">
+            <summary>
+            Create modify account balance request with required parameters.
+            </summary>
+            <param name="accountId">Account login</param>
+            <param name="Amount">Balance amount (positive in case of deposit, negative in case of withdrawal)</param>
+            <param name="Comment">Balance operation comment</param>
+            <returns>Modify account balance request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.AccountCreditRequest.Create(System.Int32,System.Decimal,System.DateTime,System.String)">
+            <summary>
+            Create modify account credit request with required parameters.
+            </summary>
+            <param name="AccountLogin">Account login</param>
+            <param name="Credit">Credit amount (positive in case of credit in, negative in case of credit out)</param>
+            <param name="Expiration">Expiration date/time value</param>
+            <param name="Comment">Credit operation comment</param>
+            <returns>Modify account credit request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.AccountDeleteRequest.Create(System.Int64,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Delete account request with required parameters.
             </summary>
@@ -306,271 +229,6 @@
             </summary>
             <param name="AccountLogin">Loaded account login</param>
             <returns>Load account request</returns>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Requests.DomainModifyRequest.SwapChargesPerDay">
-            <summary>
-            Number of Swap charges per day. Generally it must be a divisor of 24 or null.
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.DomainModifyRequest.Create(System.Int32,System.String,System.String)">
-            <summary>
-            Create modify domain request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="DomainName">Name of the modified domain</param>
-            <param name="NewDomainName">New name of the modified domain (null if you want to keep previous value)</param>
-            <returns>Modify domain request</returns>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Requests.DomainNewRequest.SwapChargesPerDay">
-            <summary>
-            Number of Swap charges per day. Generally it must be a divisor of 24 or null.
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.DomainNewRequest.Create(System.Int32,System.String)">
-            <summary>
-            Create new domain request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="DomainName">Desired domain name</param>
-            <returns>New domain request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.LoginModifyRequest.Create(System.String,System.String,System.Nullable{TickTrader.BusinessObjects.LoginRights})">
-            <summary>
-            Create modify login request with required parameters.
-            </summary>
-            <param name="userName">Login user name to modify</param>
-            <param name="password">New password of the modified login (null if you want to keep previous value)</param>
-            <param name="rights">New rights of the modified login (null if you want to keep previous value)</param>
-            <returns>Modify login request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.LoginNewRequest.Create(System.Int64,System.String,System.String,TickTrader.BusinessObjects.LoginRights)">
-            <summary>
-            Create new login request with required parameters.
-            </summary>
-            <param name="accountLogin">Account login</param>
-            <param name="userName">Desired user name</param>
-            <param name="password">Desired password</param>
-            <param name="rights">Desired login rights</param>
-            <returns>New login request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.MachineModifyRequest.Create(System.String,System.String,System.Nullable{System.Boolean},System.String,System.String)">
-            <summary>
-            Create modify machine request with required parameters.
-            </summary>
-            <param name="name">Modified machine name</param>
-            <param name="newName">New name of the modified machine (null if you want to keep previous value)</param>
-            <param name="newIsOnline">New online flag of the modified machine (null if you want to keep previous value)</param>
-            <param name="newDescription">New comment of the modified description (null if you want to keep previous value)</param>
-            <param name="newAddress">New address of the modified description (null if you want to keep previous value)</param>
-            <returns>Modified machine request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.MachineNewRequest.Create(System.String,System.Boolean,System.String,System.String)">
-            <summary>
-            Create new machine request with required parameters.
-            </summary>
-            <param name="name">Desired name</param>
-            <param name="isOnline">Desired online flag</param>
-            <param name="description">Desired description</param>
-            <param name="address">Desired address</param>
-            <returns>New machine request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ManagerDomainsModifyRequest.Create(System.Int32,System.String,System.String,TickTrader.BusinessObjects.ManagerRightsDomain)">
-            <summary>
-            Create modify manager domains request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="ManagerDomainsId">Manager domains Id</param>
-            <param name="Domains">Manager domains pattern (null if you want to keep previous value)</param>
-            <param name="Rights">Manager domains rights (null if you want to keep previous value)</param>
-            <returns>New manager domains request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ManagerDomainsNewRequest.Create(System.Int32,System.Int16,System.String,TickTrader.BusinessObjects.ManagerRightsDomain)">
-            <summary>
-            Create new manager domains request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="ManagerId">Manager Id</param>
-            <param name="Domains">Manager domains pattern</param>
-            <param name="Rights">Manager groups rights</param>
-            <returns>New manager domains request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ModuleModifyRequest.Create(System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.String,System.String,System.Nullable{System.Int32},TickTrader.BusinessObjects.Configuration.ServerModuleConfig,System.String,System.String)">
-            <summary>
-            Create modify module request with required parameters.
-            </summary>
-            <param name="machineName">Modified machine name</param>
-            <param name="moduleName">Modified module name</param>
-            <param name="newModuleName">New name of the modified module (null if you want to keep previous value)</param>
-            <param name="newType">New type of the modified module (null if you want to keep previous value)</param>
-            <param name="newIsOnline">New online flag is deprecated</param>
-            <param name="newMachineName">New machine of the modified description (null if you want to keep previous value)</param>
-            <param name="newServiceName">New service name of the modified description (null if you want to keep previous value)</param>
-            <param name="newPath">New path of the modified description (null if you want to keep previous value)</param>
-            <param name="newVersion">New version of the modified description (null if you want to keep previous value)</param>
-            <param name="newLogSeverity">New log severity of the modified module (null if you want to keep previous value)</param>
-            <param name="moduleConfig">New configuration of the modified module (null if you want to keep previous value)</param>
-            <param name="logFolderPath">New log folder path (null if you want to keep previos value)</param>
-            <param name="journalFolderPath">New journal folder path (null if you want to keep previos value)</param>
-            /// <returns>Modified module request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ModuleNewRequest.Create(System.String,System.String,System.Boolean,System.String,System.String,System.String,System.String,System.Int32,TickTrader.BusinessObjects.Configuration.ServerModuleConfig,System.String,System.String)">
-            <summary>
-            Create new module request with required parameters.
-            </summary>
-            <param name="name">Desired name</param>
-            <param name="type">Desired module type</param>
-            <param name="isOnline">isOnline is deprecated</param>
-            <param name="machineName">Desired machine name</param>
-            <param name="serviceName">Desired service name</param>
-            <param name="path">Desired path</param>
-            <param name="version">Desired version</param>
-            <param name="logSeverity"></param>
-            <param name="moduleConfig">Desired configuration of the modified module (null by default)</param>
-            <param name="logFolderPath">New log folder path (null if you want to keep previos value)</param>
-            <param name="journalFolderPath">New journal folder path (null if you want to keep previos value)</param>
-            <returns>New module request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ServiceSoftModifyRequest.Create(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String)">
-            <summary>
-            Create set server time request with required parameters.
-            </summary>
-            <param name="id">Modified service soft Id</param>
-            <param name="isActive">New active flag (null if we keep the previous value)</param>
-            <param name="isForced">New forced flag (null if we keep the previous value)</param>
-            <param name="comment">New service soft comment (null if we keep the previous value)</param>        
-            <returns>Modify service soft request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ServiceTypeModifyRequest.Create(System.String,System.String,System.String,System.Nullable{System.Boolean})">
-            <summary>
-            Create modify service type request with required parameters.
-            </summary>
-            <param name="name">Modified service type name</param>
-            <param name="newName">New name of the modified service type (null if you want to keep previous value)</param>
-            <param name="newComment">New comment of the modified service type (null if you want to keep previous value)</param>
-            <param name="newIsCritical">New is critical flag of the modified service type (null if you want to keep previous value)</param>
-            <returns>Modified service type request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ServiceTypeNewRequest.Create(System.String,System.String,System.Boolean)">
-            <summary>
-            Create new service type request with required parameters.
-            </summary>
-            <param name="name">Desired name</param>
-            <param name="comment">Desired comment</param>
-            <param name="isCritical">Is critical flag</param>
-            <returns>New service type request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.SetTradeConfigurationRequest.Create(System.Int32,TickTrader.BusinessObjects.TradeConfiguration)">
-            <summary>
-            Create set server configuration request with required parameters.
-            </summary>
-            <param name="configVersion">Configuration version</param>
-            <param name="config">Server common configuration</param>        
-            <returns>Set server time request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.SetClusterConfigurationRequest.Create(System.Int32,TickTrader.BusinessObjects.ClusterConfiguration)">
-            <summary>
-            Create set server time request with required parameters.
-            </summary>
-            <param name="configVersion">Configuration version</param>
-            <param name="config">Server common configuration</param>        
-            <returns>Set server time request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ThrottlingChangeRequest.Create(System.Int32,TickTrader.BusinessObjects.ThrottlingProtocol,System.Nullable{System.Int32},System.Nullable{System.Int32})">
-            <summary>
-            Create modify throttling request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="protocol">Protocol</param>
-            <param name="spa">Sessions per account</param>
-            <param name="rps">Requests per session</param>
-            <returns>New throttling request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginActivateRequest.Create(System.Int64,System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal},TickTrader.BusinessObjects.Requests.TradeRequestOptions)">
-            <summary>
-            Create validate margin activate request with required parameters.
-            </summary>
-            <param name="login">Account login of the target account</param>
-            <param name="orderId">Order Id</param>
-            <param name="amount">Amount</param>
-            <param name="price">Price</param>
-            <param name="options">Manager options</param>
-            <returns>Validate margin activate request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginActivateRequest.CreateClient(System.Int64,System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
-            <summary>
-            Create validate margin activate request with required parameters (client emulation).
-            </summary>
-            <param name="login">Account login of the target account</param>
-            <param name="orderId">Order Id</param>
-            <param name="amount">Amount</param>
-            <param name="price">Price</param>
-            <returns>Validate margin request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginRequest.Create(System.Int64,System.Nullable{System.Int64},TickTrader.BusinessObjects.OrderTypes,TickTrader.BusinessObjects.OrderSides,System.String,System.Decimal,System.Nullable{System.Decimal},System.Nullable{System.Decimal},TickTrader.BusinessObjects.Requests.TradeRequestOptions)">
-            <summary>
-            Create validate margin request with required parameters.
-            </summary>
-            <param name="login">Account login of the target account</param>
-            <param name="orderId">Order Id (optional)</param>
-            <param name="type">Order type (market, limit, stop)</param>
-            <param name="side">Order side (buy, sell)</param>
-            <param name="symbol">Symbol name</param>
-            <param name="amount">Amount</param>
-            <param name="stopPrice">Stop price</param>
-            <param name="price">Price</param>
-            <param name="options">Manager options</param>
-            <returns>Validate margin request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginRequest.CreateClient(System.Int64,System.Nullable{System.Int64},TickTrader.BusinessObjects.OrderTypes,TickTrader.BusinessObjects.OrderSides,System.String,System.Decimal,System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
-            <summary>
-            Create validate margin request with required parameters (client emulation).
-            </summary>
-            <param name="login">Account login of the target account</param>
-            <param name="orderId">Order Id (optional)</param>
-            <param name="type">Order type (market, limit, stop)</param>
-            <param name="side">Order side (buy, sell)</param>
-            <param name="symbol">Symbol name</param>
-            <param name="amount">Amount</param>
-            <param name="stopPrice">Stop price</param>
-            <param name="price">Price</param>
-            <returns>Validate margin request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.WebApiTokenModifyRequest.Create(System.String,TickTrader.BusinessObjects.WebApiAuthenticationType,System.Nullable{TickTrader.BusinessObjects.WebApiRights})">
-            <summary>
-            Create modify Web API token request with required parameters.
-            </summary>
-            <param name="webApiId">Web API token Id to modify</param>
-            <param name="authenticationType">New authentication type of the modified login (null if you want to keep previous value)</param>
-            <param name="rights">New rights of the modified login (null if you want to keep previous value)</param>
-            <returns>Modify Web API token request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.WebApiTokenNewRequest.Create(System.Int64,TickTrader.BusinessObjects.WebApiAuthenticationType,TickTrader.BusinessObjects.WebApiRights)">
-            <summary>
-            Create new Web API token request with required parameters.
-            </summary>
-            <param name="accountLogin">Account login</param>
-            <param name="authenticationType">Authentication type</param>
-            <param name="rights">Desired login rights</param>
-            <returns>New Web API token request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.AccountBalanceRequest.Create(System.Int64,System.Decimal,System.String)">
-            <summary>
-            Create modify account balance request with required parameters.
-            </summary>
-            <param name="AccountLogin">Account login</param>
-            <param name="Amount">Balance amount (positive in case of deposit, negative in case of withdrawal)</param>
-            <param name="Comment">Balance operation comment</param>
-            <returns>Modify account balance request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.AccountCreditRequest.Create(System.Int32,System.Decimal,System.DateTime,System.String)">
-            <summary>
-            Create modify account credit request with required parameters.
-            </summary>
-            <param name="AccountLogin">Account login</param>
-            <param name="Credit">Credit amount (positive in case of credit in, negative in case of credit out)</param>
-            <param name="Expiration">Expiration date/time value</param>
-            <param name="Comment">Credit operation comment</param>
-            <returns>Modify account credit request</returns>
         </member>
         <member name="P:TickTrader.BusinessObjects.Requests.AccountModifyRequest.SetTwoFactorAuthKey">
             <summary>
@@ -602,7 +260,7 @@
             <param name="AccountPassword">Desired account password (empty or null if you want Trading Platform to generate one)</param>
             <param name="AccountInvestorPassword">Desired account investor password (empty or null if you want Trading Platform to generate one)</param>
             <param name="Group">Account group</param>
-            <param name="AccountingType">Account type (gross or net)</param>
+            <param name="AccountingType">Account type (Gross, Net or Cash)</param>
             <param name="Comment">Account comment</param>
             <param name="Name">Account name</param>
             <param name="Email">Account email</param>
@@ -631,6 +289,40 @@
             <param name="Amount">Order activation amount (can be null)</param>
             <returns>Activate order request</returns>
         </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ActivateOrderRequest.Create(System.Int64,TickTrader.BusinessObjects.Requests.IOrderFillData,System.Nullable{System.Int16})">
+            <summary>
+            Create activate order request with required parameters.
+            </summary>
+            <param name="orderId">Order Id to activate</param>
+            <param name="fillData">Order fill data</param>
+            <param name="managerId">Manager Id</param>
+            <returns></returns>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Requests.AuthTokenRequest">
+            <summary>
+            Request to create Authentication Token
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.AuthTokenRequest.Username">
+            <summary>
+            User name. Should not be null or empty
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.AuthTokenRequest.RefreshToken">
+            <summary>
+            Refresh token to regenerate Access token or null. For the future use, now it will be skipped.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.AuthTokenRequest.Expiration">
+            <summary>
+            Access token expiration time in milliseconds. Must be in the rage [1..60000].
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Requests.AuthTokenReport">
+            <summary>
+            Request to create Authentication Token
+            </summary>
+        </member>
         <member name="M:TickTrader.BusinessObjects.Requests.CancelOrderRequest.Create(System.Int64,System.Boolean)">
             <summary>
             Create cancel order request with required parameters.
@@ -646,7 +338,39 @@
             <param name="OrderId">Order Id</param>
             <returns>Cancel order request</returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ClosePositionRequest.CreateClosePositionById(System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Boolean)">
+        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForAccount(System.Int64)">
+            <summary>
+            Create SwapCharges request for the given Account.
+            </summary>
+            <param name="accountLogin">Desired account login</param>
+            <returns>New request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForGroup(System.String)">
+            <summary>
+            Create SwapCharges request for the given Group.
+            </summary>
+            <param name="group">Desired group name</param>
+            <returns>New request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForDomain(System.String)">
+            <summary>
+            Create SwapCharges request for the given Domain.
+            </summary>
+            <param name="domain">Desired group name</param>
+            <returns>New request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ChargeSwapsRequest.CreateForAll">
+            <summary>
+            Create SwapCharges request for all accounts.
+            </summary>
+            <returns>New request</returns>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CheckBalanceRequest.Currency">
+            <summary>
+            Currency is used for Cash accounts. Ignored for Gross and Net accounts
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ClosePositionRequest.CreateClosePositionById(System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Boolean,TickTrader.BusinessObjects.Requests.TradeRequestOptions)">
             <summary>
             Create close position request for 'Close position by Id' operation.
             </summary>
@@ -654,6 +378,7 @@
             <param name="Amount">Close amount (null if you want to close the full volume)</param>
             <param name="Price">Close price (null if you want to close by market price)</param>
             <param name="StopoutFlag">Stopout flag</param>
+            <param name="ManOptions">Manager Options</param>
             <returns>Close position request</returns>
         </member>
         <member name="M:TickTrader.BusinessObjects.Requests.ClosePositionRequest.CreateClientClosePositionById(System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
@@ -718,82 +443,6 @@
             <param name="Price">Close price (null if you want to close by market price)</param>
             <returns>Close position request</returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.FeedSourceModifyRequest.Create(System.Int32,System.String,System.Nullable{TickTrader.BusinessObjects.FeedSourceType},System.String,System.Nullable{System.Boolean},System.String)">
-            <summary>
-            Create modify feed source request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="FeedSourceName">Modified feed source name</param>
-            <param name="NewType">New type of the modified feed source (null if you want to keep previous value)</param>
-            <param name="NewName">New name of the modified feed source (null if you want to keep previous value)</param>
-            <param name="IsEnabled">New enabled flag of the modified feed source (null if you want to keep previous value)</param>
-            <param name="Configuration">New configuratoin string of the modified feed source (null if you want to keep previous value)</param>
-            <returns>Modified feed source request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.FeedSourceNewRequest.Create(System.Int32,TickTrader.BusinessObjects.FeedSourceType,System.String,System.Boolean,System.String)">
-            <summary>
-            Create new feed source request with required parameters.
-            </summary>
-            <param name="configVersion">Configuration version</param>
-            <param name="type">Desired feed source name</param>
-            <param name="name">Desired feed source name</param>
-            <param name="isEnabled">Desired feed source enable flag</param>
-            <param name="configuration">Desired feed source configuration string</param>
-            <returns>New feed source request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ManagerGroupsModifyRequest.Create(System.Int32,System.String,System.String,TickTrader.BusinessObjects.ManagerRightsGroup)">
-            <summary>
-            Create modify manager groups request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="ManagerGroupsId">Manager groups Id</param>
-            <param name="Groups">Manager groups pattern (null if you want to keep previous value)</param>
-            <param name="Rights">Manager groups rights (null if you want to keep previous value)</param>
-            <returns>New manager groups request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ManagerGroupsNewRequest.Create(System.Int32,System.Int16,System.String,TickTrader.BusinessObjects.ManagerRightsGroup)">
-            <summary>
-            Create new manager groups request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="ManagerId">Manager Id</param>
-            <param name="Groups">Manager groups pattern</param>
-            <param name="Rights">Manager groups rights</param>
-            <returns>New manager groups request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ManagerModifyRequest.Create(System.Int32,System.Int16,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,TickTrader.BusinessObjects.ManagerRights)">
-            <summary>
-            Create modify manager info request with required parameters.
-            </summary>
-            <param name="configVersion">Configuration version</param>
-            <param name="modifiedManagerId">Id the modified manager</param>
-            <param name="managerPassword">New manager password (empty if you want Trading Platform to generate one, null if you want to keep previous value)</param>
-            <param name="group">New manager group (null if you want to keep previous value)</param>
-            <param name="comment">New manager comment (null if you want to keep previous value)</param>
-            <param name="name">New manager name (null if you want to keep previous value)</param>
-            <param name="email">New manager email (null if you want to keep previous value)</param>
-            <param name="blocked">New manager block flag (null if you want to keep previous value)</param>
-            <param name="readOnly">New manager readonly flag (null if you want to keep previous value)</param>
-            <param name="mailbox">New manager mailbox (null if you want to keep previous value)</param>
-            <param name="rights">New manager rights (null if you want to keep previous value)</param>
-            <returns>Modify manager info request</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Requests.ManagerNewRequest.Create(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,TickTrader.BusinessObjects.ManagerRights)">
-            <summary>
-            Create new manager request with required parameters.
-            </summary>
-            <param name="ConfigVersion">Configuration version</param>
-            <param name="ManagerLogin">Desired manager login (-1 if you want Trading Platform to generate one)</param>
-            <param name="ManagerPassword">Desired manager password (empty or null if you want Trading Platform to generate one)</param>
-            <param name="Group">Manager group</param>
-            <param name="Comment">Manager comment</param>
-            <param name="Name">Manager name</param>
-            <param name="Email">Manager email</param>
-            <param name="Blocked">Manager block flag</param>
-            <param name="Mailbox">Manager mailbox</param>
-            <param name="Rights">Manager rights</param>
-            <returns>New manager request</returns>
-        </member>
         <member name="M:TickTrader.BusinessObjects.Requests.CurrencyModifyRequest.Create(System.Int32,System.String,System.String,System.Int32,System.String,System.Nullable{TickTrader.BusinessObjects.CurrencyType},System.Nullable{System.Double})">
             <summary>
             Create modify currency request with required parameters.
@@ -818,6 +467,46 @@
             <param name="CurrencyType">Desired currency type</param>
             <param name="Tax">Desired tax value</param>
             <returns>New currency request</returns>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.DividendModifyRequest.Rates">
+            <summary>
+            Rates. Can be null or empty.
+            Rates = null - nothing to change;
+            Rates.Count = 0 - reset Rates;
+            Rates.Count > 0 - set Rates.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.DividendNewRequest.Rates">
+            <summary>
+            Rates cannot be null or empty
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.DomainModifyRequest.SwapChargesPerDay">
+            <summary>
+            Number of Swap charges per day. Generally it must be a divisor of 24 or null.
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.DomainModifyRequest.Create(System.Int32,System.String,System.String)">
+            <summary>
+            Create modify domain request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="DomainName">Name of the modified domain</param>
+            <param name="NewDomainName">New name of the modified domain (null if you want to keep previous value)</param>
+            <returns>Modify domain request</returns>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.DomainNewRequest.SwapChargesPerDay">
+            <summary>
+            Number of Swap charges per day. Generally it must be a divisor of 24 or null.
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.DomainNewRequest.Create(System.Int32,System.String)">
+            <summary>
+            Create new domain request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="DomainName">Desired domain name</param>
+            <returns>New domain request</returns>
         </member>
         <member name="M:TickTrader.BusinessObjects.Requests.DropSessionsRequest.CreateForAccount(System.Int64,TickTrader.BusinessObjects.Requests.DropSessionsTargets)">
             <summary>
@@ -849,6 +538,30 @@
             </summary>
             <param name="targets">Drop session targets</param>
             <returns>New drop sessions request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.FeedSourceModifyRequest.Create(System.Int32,System.String,System.Nullable{TickTrader.BusinessObjects.FeedSourceType},System.String,System.Nullable{System.Boolean},System.String,System.Boolean)">
+            <summary>
+            Create modify feed source request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="FeedSourceName">Modified feed source name</param>
+            <param name="NewType">New type of the modified feed source (null if you want to keep previous value)</param>
+            <param name="NewName">New name of the modified feed source (null if you want to keep previous value)</param>
+            <param name="IsEnabled">New enabled flag of the modified feed source (null if you want to keep previous value)</param>
+            <param name="Configuration">New configuratoin string of the modified feed source (null if you want to keep previous value)</param>
+            <param name="debug"></param>
+            <returns>Modified feed source request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.FeedSourceNewRequest.Create(System.Int32,TickTrader.BusinessObjects.FeedSourceType,System.String,System.Boolean,System.String,System.Boolean)">
+            <summary>
+            Create new feed source request with required parameters.
+            </summary>
+            <param name="configVersion">Configuration version</param>
+            <param name="type">Desired feed source name</param>
+            <param name="name">Desired feed source name</param>
+            <param name="isEnabled">Desired feed source enable flag</param>
+            <param name="configuration">Desired feed source configuration string</param>
+            <returns>New feed source request</returns>
         </member>
         <member name="M:TickTrader.BusinessObjects.Requests.GroupModifyRequest.Create(System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
@@ -904,9 +617,121 @@
             <param name="MinTradeAmount">Desired min trade amount</param>
             <param name="MaxTradeAmount">Desired max trade amount</param>
             <param name="TradeAmountStep">Desired trade amount step</param>
-            <param name="NormalizeSymbolNames">Normalize symbol names flag</param>
             <param name="IsCloseOnly">Desired close-only mode flag</param>
             <returns>New group security request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.LoginModifyRequest.Create(System.String,System.String,System.Nullable{TickTrader.BusinessObjects.LoginRights})">
+            <summary>
+            Create modify login request with required parameters.
+            </summary>
+            <param name="userName">Login user name to modify</param>
+            <param name="password">New password of the modified login (null if you want to keep previous value)</param>
+            <param name="rights">New rights of the modified login (null if you want to keep previous value)</param>
+            <returns>Modify login request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.LoginNewRequest.Create(System.Int64,System.String,System.String,TickTrader.BusinessObjects.LoginRights)">
+            <summary>
+            Create new login request with required parameters.
+            </summary>
+            <param name="accountLogin">Account login</param>
+            <param name="userName">Desired user name</param>
+            <param name="password">Desired password</param>
+            <param name="rights">Desired login rights</param>
+            <returns>New login request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.MachineModifyRequest.Create(System.String,System.String,System.Nullable{System.Boolean},System.String,System.String)">
+            <summary>
+            Create modify machine request with required parameters.
+            </summary>
+            <param name="name">Modified machine name</param>
+            <param name="newName">New name of the modified machine (null if you want to keep previous value)</param>
+            <param name="newIsOnline">New online flag of the modified machine (null if you want to keep previous value)</param>
+            <param name="newDescription">New comment of the modified description (null if you want to keep previous value)</param>
+            <param name="newAddress">New address of the modified description (null if you want to keep previous value)</param>
+            <returns>Modified machine request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.MachineNewRequest.Create(System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            Create new machine request with required parameters.
+            </summary>
+            <param name="name">Desired name</param>
+            <param name="isOnline">Desired online flag</param>
+            <param name="description">Desired description</param>
+            <param name="address">Desired address</param>
+            <returns>New machine request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ManagerDomainsModifyRequest.Create(System.Int32,System.String,System.String,TickTrader.BusinessObjects.ManagerRightsDomain)">
+            <summary>
+            Create modify manager domains request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="ManagerDomainsId">Manager domains Id</param>
+            <param name="Domains">Manager domains pattern (null if you want to keep previous value)</param>
+            <param name="Rights">Manager domains rights (null if you want to keep previous value)</param>
+            <returns>New manager domains request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ManagerDomainsNewRequest.Create(System.Int32,System.Int16,System.String,TickTrader.BusinessObjects.ManagerRightsDomain)">
+            <summary>
+            Create new manager domains request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="ManagerId">Manager Id</param>
+            <param name="Domains">Manager domains pattern</param>
+            <param name="Rights">Manager groups rights</param>
+            <returns>New manager domains request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ManagerGroupsModifyRequest.Create(System.Int32,System.String,System.String,TickTrader.BusinessObjects.ManagerRightsGroup)">
+            <summary>
+            Create modify manager groups request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="ManagerGroupsId">Manager groups Id</param>
+            <param name="Groups">Manager groups pattern (null if you want to keep previous value)</param>
+            <param name="Rights">Manager groups rights (null if you want to keep previous value)</param>
+            <returns>New manager groups request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ManagerGroupsNewRequest.Create(System.Int32,System.Int16,System.String,TickTrader.BusinessObjects.ManagerRightsGroup)">
+            <summary>
+            Create new manager groups request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="ManagerId">Manager Id</param>
+            <param name="Groups">Manager groups pattern</param>
+            <param name="Rights">Manager groups rights</param>
+            <returns>New manager groups request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ManagerModifyRequest.Create(System.Int32,System.Int16,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,TickTrader.BusinessObjects.ManagerRights)">
+            <summary>
+            Create modify manager info request with required parameters.
+            </summary>
+            <param name="configVersion">Configuration version</param>
+            <param name="modifiedManagerId">Id the modified manager</param>
+            <param name="managerPassword">New manager password (empty if you want Trading Platform to generate one, null if you want to keep previous value)</param>
+            <param name="group">New manager group (null if you want to keep previous value)</param>
+            <param name="comment">New manager comment (null if you want to keep previous value)</param>
+            <param name="name">New manager name (null if you want to keep previous value)</param>
+            <param name="email">New manager email (null if you want to keep previous value)</param>
+            <param name="blocked">New manager block flag (null if you want to keep previous value)</param>
+            <param name="readOnly">New manager readonly flag (null if you want to keep previous value)</param>
+            <param name="mailbox">New manager mailbox (null if you want to keep previous value)</param>
+            <param name="rights">New manager rights (null if you want to keep previous value)</param>
+            <returns>Modify manager info request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ManagerNewRequest.Create(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,TickTrader.BusinessObjects.ManagerRights)">
+            <summary>
+            Create new manager request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="ManagerLogin">Desired manager login (-1 if you want Trading Platform to generate one)</param>
+            <param name="ManagerPassword">Desired manager password (empty or null if you want Trading Platform to generate one)</param>
+            <param name="Group">Manager group</param>
+            <param name="Comment">Manager comment</param>
+            <param name="Name">Manager name</param>
+            <param name="Email">Manager email</param>
+            <param name="Blocked">Manager block flag</param>
+            <param name="Mailbox">Manager mailbox</param>
+            <param name="Rights">Manager rights</param>
+            <returns>New manager request</returns>
         </member>
         <member name="T:TickTrader.BusinessObjects.Requests.IManagerConfigRequest">
             <summary>
@@ -934,6 +759,51 @@
             <param name="Securities">Manager securities pattern</param>
             <param name="Rights">Manager securities rights</param>
             <returns>New manager securities request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ModuleModifyRequest.Create(System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.String,System.String,System.Nullable{System.Int32},TickTrader.BusinessObjects.Configuration.ServerModuleConfig,System.String,System.String)">
+            <summary>
+            Create modify module request with required parameters.
+            </summary>
+            <param name="machineName">Modified machine name</param>
+            <param name="moduleName">Modified module name</param>
+            <param name="newModuleName">New name of the modified module (null if you want to keep previous value)</param>
+            <param name="newType">New type of the modified module (null if you want to keep previous value)</param>
+            <param name="newIsOnline">New online flag is deprecated</param>
+            <param name="newMachineName">New machine of the modified description (null if you want to keep previous value)</param>
+            <param name="newServiceName">New service name of the modified description (null if you want to keep previous value)</param>
+            <param name="newPath">New path of the modified description (null if you want to keep previous value)</param>
+            <param name="newVersion">New version of the modified description (null if you want to keep previous value)</param>
+            <param name="newLogSeverity">New log severity of the modified module (null if you want to keep previous value)</param>
+            <param name="moduleConfig">New configuration of the modified module (null if you want to keep previous value)</param>
+            <param name="logFolderPath">New log folder path (null if you want to keep previos value)</param>
+            <param name="journalFolderPath">New journal folder path (null if you want to keep previos value)</param>
+            /// <returns>Modified module request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ModuleNewRequest.Create(System.String,System.String,System.Boolean,System.String,System.String,System.String,System.String,System.Int32,TickTrader.BusinessObjects.Configuration.ServerModuleConfig,System.String,System.String)">
+            <summary>
+            Create new module request with required parameters.
+            </summary>
+            <param name="name">Desired name</param>
+            <param name="type">Desired module type</param>
+            <param name="isOnline">isOnline is deprecated</param>
+            <param name="machineName">Desired machine name</param>
+            <param name="serviceName">Desired service name</param>
+            <param name="path">Desired path</param>
+            <param name="version">Desired version</param>
+            <param name="logSeverity"></param>
+            <param name="moduleConfig">Desired configuration of the modified module (null by default)</param>
+            <param name="logFolderPath">New log folder path (null if you want to keep previos value)</param>
+            <param name="journalFolderPath">New journal folder path (null if you want to keep previos value)</param>
+            <returns>New module request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.OpenOCOOrdersRequest.CreateFromContingent(TickTrader.BusinessObjects.IOrder,TickTrader.BusinessObjects.IOrder,System.Nullable{System.Decimal})">
+            <summary>
+            Create a request to open OCO orders from contingent orders
+            </summary>
+            <param name="firstOrder">The first order</param>
+            <param name="secondOrder">The second order</param>
+            <param name="amount">Amount or null to use amounts from orders</param>
+            <returns>Request to open OCO orders</returns>
         </member>
         <member name="M:TickTrader.BusinessObjects.Requests.OpenOrderRequest.Create(System.Int64,TickTrader.BusinessObjects.OrderTypes,TickTrader.BusinessObjects.OrderSides,System.String,System.Decimal,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.String,System.String,System.String,System.String,System.Int32,System.Nullable{System.DateTime})">
             <summary>
@@ -976,6 +846,21 @@
             <param name="Magic">Magic number (default is 0)</param>
             <param name="Expiration">Expiration date/time (default is null)</param>
             <returns>Open order request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.OpenOrderRequest.CreateFromContingent(TickTrader.BusinessObjects.IOrder,System.Nullable{System.Decimal})">
+            <summary>
+            Create request to open order from contingent order
+            </summary>
+            <param name="order">The contingent order</param>
+            <param name="amount">Amount or null to use value from order</param>
+            <returns>Request to open order or null if order is not contingent</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.OpenOrderRequest.CreateFromStopLimit(TickTrader.BusinessObjects.IOrder)">
+            <summary>
+            Create request to open Limit order from StopLimit order
+            </summary>
+            <param name="order">The StopLimit order</param>
+            <returns>Request to open order or null if order is not StopLimit</returns>
         </member>
         <member name="M:TickTrader.BusinessObjects.Requests.OrderReplaceRequest.Create(System.Int64,System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.String)">
             <summary>
@@ -1120,6 +1005,74 @@
             <param name="Description">Desired symbol security description</param>
             <returns>New symbol security request</returns>
         </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ServiceSoftModifyRequest.Create(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String)">
+            <summary>
+            Create set server time request with required parameters.
+            </summary>
+            <param name="id">Modified service soft Id</param>
+            <param name="isActive">New active flag (null if we keep the previous value)</param>
+            <param name="isForced">New forced flag (null if we keep the previous value)</param>
+            <param name="comment">New service soft comment (null if we keep the previous value)</param>        
+            <returns>Modify service soft request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ServiceTypeModifyRequest.Create(System.String,System.String,System.String,System.Nullable{System.Boolean})">
+            <summary>
+            Create modify service type request with required parameters.
+            </summary>
+            <param name="name">Modified service type name</param>
+            <param name="newName">New name of the modified service type (null if you want to keep previous value)</param>
+            <param name="newComment">New comment of the modified service type (null if you want to keep previous value)</param>
+            <param name="newIsCritical">New is critical flag of the modified service type (null if you want to keep previous value)</param>
+            <returns>Modified service type request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ServiceTypeNewRequest.Create(System.String,System.String,System.Boolean)">
+            <summary>
+            Create new service type request with required parameters.
+            </summary>
+            <param name="name">Desired name</param>
+            <param name="comment">Desired comment</param>
+            <param name="isCritical">Is critical flag</param>
+            <returns>New service type request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.SetClusterConfigurationRequest.Create(System.Int32,TickTrader.BusinessObjects.ClusterConfiguration)">
+            <summary>
+            Create set server time request with required parameters.
+            </summary>
+            <param name="configVersion">Configuration version</param>
+            <param name="config">Server common configuration</param>        
+            <returns>Set server time request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.SetTradeConfigurationRequest.Create(System.Int32,TickTrader.BusinessObjects.TradeConfiguration)">
+            <summary>
+            Create set server configuration request with required parameters.
+            </summary>
+            <param name="configVersion">Configuration version</param>
+            <param name="config">Server common configuration</param>        
+            <returns>Set server time request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.SubscriptionModifyRequest.Create(System.Int32,System.String,System.String,System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{TickTrader.BusinessObjects.StreamCompressionTypes})">
+            <summary>
+            Create modify subscription request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="SubscriptionName">Name of the modified subscription</param>
+            <param name="NewSubscriptionName">New name of the modified subscription (null if you want to keep previous value)</param>
+            <param name="FrequencyFilterMs">New frequency filter time inteval in ms(null if you want to keep previous value)</param>
+            <param name="TotalDepthLimit">New depth filter depth(null if you want to keep previous value)</param>
+            <param name="Compression">New compression type(null if you want to keep previous value)</param>
+            <returns>Modify subscription request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.SubscriptionNewRequest.Create(System.Int32,System.String,System.Double,System.Int32,TickTrader.BusinessObjects.StreamCompressionTypes)">
+            <summary>
+            Create new subscription request with required parameters.
+            </summary>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="SubscriptionName">Desired subscription name</param>
+            <param name="FrequencyFilterMs">Desired frequency filter time inteval in ms</param>
+            <param name="TotalDepthLimit">Desired depth filter p</param>
+            <param name="compression"></param>
+            <returns>New subscription request</returns>
+        </member>
         <member name="M:TickTrader.BusinessObjects.Requests.SymbolModifyRequest.Create(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Nullable{System.Boolean})">
             <summary>
             Create modify symbol request with required parameters.
@@ -1152,236 +1105,88 @@
             <param name="ISIN">Desired symbol ISIN</param>
             <returns>New symbol request</returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRightsDomain.Clone">
+        <member name="M:TickTrader.BusinessObjects.Requests.ThrottlingChangeRequest.Create(System.Int32,TickTrader.BusinessObjects.ThrottlingProtocol,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
-            Creates a new object that is a copy of the current instance.
+            Create modify throttling request with required parameters.
             </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
+            <param name="ConfigVersion">Configuration version</param>
+            <param name="protocol">Protocol</param>
+            <param name="spa">Sessions per account</param>
+            <param name="rps">Requests per session</param>
+            <returns>New throttling request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginActivateRequest.Create(System.Int64,System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal},TickTrader.BusinessObjects.Requests.TradeRequestOptions)">
+            <summary>
+            Create validate margin activate request with required parameters.
+            </summary>
+            <param name="login">Account login of the target account</param>
+            <param name="orderId">Order Id</param>
+            <param name="amount">Amount</param>
+            <param name="price">Price</param>
+            <param name="options">Manager options</param>
+            <returns>Validate margin activate request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginActivateRequest.CreateClient(System.Int64,System.Int64,System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
+            <summary>
+            Create validate margin activate request with required parameters (client emulation).
+            </summary>
+            <param name="login">Account login of the target account</param>
+            <param name="orderId">Order Id</param>
+            <param name="amount">Amount</param>
+            <param name="price">Price</param>
+            <returns>Validate margin request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginRequest.Create(System.Int64,System.Nullable{System.Int64},TickTrader.BusinessObjects.OrderTypes,TickTrader.BusinessObjects.OrderSides,System.String,System.Decimal,System.Nullable{System.Decimal},System.Nullable{System.Decimal},TickTrader.BusinessObjects.Requests.TradeRequestOptions)">
+            <summary>
+            Create validate margin request with required parameters.
+            </summary>
+            <param name="login">Account login of the target account</param>
+            <param name="orderId">Order Id (optional)</param>
+            <param name="type">Order type (market, limit, stop)</param>
+            <param name="side">Order side (buy, sell)</param>
+            <param name="symbol">Symbol name</param>
+            <param name="amount">Amount</param>
+            <param name="stopPrice">Stop price</param>
+            <param name="price">Price</param>
+            <param name="options">Manager options</param>
+            <returns>Validate margin request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.ValidateMarginRequest.CreateClient(System.Int64,System.Nullable{System.Int64},TickTrader.BusinessObjects.OrderTypes,TickTrader.BusinessObjects.OrderSides,System.String,System.Decimal,System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
+            <summary>
+            Create validate margin request with required parameters (client emulation).
+            </summary>
+            <param name="login">Account login of the target account</param>
+            <param name="orderId">Order Id (optional)</param>
+            <param name="type">Order type (market, limit, stop)</param>
+            <param name="side">Order side (buy, sell)</param>
+            <param name="symbol">Symbol name</param>
+            <param name="amount">Amount</param>
+            <param name="stopPrice">Stop price</param>
+            <param name="price">Price</param>
+            <returns>Validate margin request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.WebApiTokenModifyRequest.Create(System.String,TickTrader.BusinessObjects.WebApiAuthenticationType,System.Nullable{TickTrader.BusinessObjects.WebApiRights})">
+            <summary>
+            Create modify Web API token request with required parameters.
+            </summary>
+            <param name="webApiId">Web API token Id to modify</param>
+            <param name="authenticationType">New authentication type of the modified login (null if you want to keep previous value)</param>
+            <param name="rights">New rights of the modified login (null if you want to keep previous value)</param>
+            <returns>Modify Web API token request</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Requests.WebApiTokenNewRequest.Create(System.Int64,TickTrader.BusinessObjects.WebApiAuthenticationType,TickTrader.BusinessObjects.WebApiRights)">
+            <summary>
+            Create new Web API token request with required parameters.
+            </summary>
+            <param name="accountLogin">Account login</param>
+            <param name="authenticationType">Authentication type</param>
+            <param name="rights">Desired login rights</param>
+            <returns>New Web API token request</returns>
         </member>
         <member name="T:TickTrader.BusinessObjects.SessionTypes">
             <summary>
             Session types
             </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.SystemPerformanceCounters">
-            <summary>
-            Contains enums used in Monitoring as System Performance Counters
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.PerformanceCounters">
-            <summary>
-            Contains enums used in Monitoring Performance counters names
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.OffTimeDisabledFeatures">
-            <summary>
-            Modes that determine what will be disabled on active off-time rule
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.TradingSessionStatus">
-            <summary>
-            Trading session status
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.TradingSessionStatus.Closed">
-            <summary>Trading session is closed</summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.TradingSessionStatus.Opened">
-            <summary>Trading session is opened</summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.Domains">
-            <summary>
-            Domains wildcard
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.Groups">
-            <summary>
-            Groups wildcard
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.LoginInactivityPeriod">
-            <summary>
-            Login inactivity period in days after which an account is archived. Default 90 days.
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.IsEmptyBalance">
-            <summary>
-            Archive an account if it has zero balance or assets
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.IsEmptyTrades">
-            <summary>
-            Archive an account if it does not have orders and positions
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.RemoveOutdatedUpdatesTaskInfo.ServiceTypes">
-            <summary>
-            List of service (module) types for which outdated updates are removed
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.Tasks.RemoveOutdatedUpdatesTaskInfo.KeepLatestUpdates">
-            <summary>
-            Number of the latest updates to keep
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.FileNotLockedTrigger">
-            <summary>
-            This trigger allows task start if file not locked
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Tasks.FileNotLockedTrigger.OnSchedule(System.DateTime,System.Nullable{System.DateTime})">
-            <summary>
-            Checking trigger to fire. "now" used ONLY for test purpose!
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.TaskFaultedTrigger">
-            <summary>
-            This trigger allows task to start after another task faulted.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.TaskCanceledTrigger">
-            <summary>
-            This trigger allows task to start after another task canceled.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.TaskSucceededTrigger">
-            <summary>
-            This trigger allows task to start after another task succeeded.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.TaskEndedTrigger">
-            <summary>
-            This trigger allows task to start after another task ended with any result.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.ScheduleTrigger">
-            <summary>
-            This trigger allows task start by schedule
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Tasks.ScheduleTrigger.OnSchedule(System.DateTime,System.Nullable{System.DateTime})">
-            <summary>
-            Checking scheduled trigger to fire. "now" used ONLY for test purpose!
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.Tasks.ModuleStartTrigger">
-            <summary>
-            This trigger allows Scheduled task start on module start
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.DateTimeFrom">
-            <summary>
-            Start import period 
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.DateTimeTo">
-            <summary>
-            End import period 
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.BarsDatabasePath">
-            <summary>
-            Path to leveldb database with Bars history (not null)
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.TicksDatabasePath">
-            <summary>
-            Path to leveldb database with Ticks history (may be null)
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.TicksLevel2DatabasePath">
-            <summary>
-            Path to leveldb database with TicksLeve2 history (may be null)
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.TicksVWAPDatabasePath">
-            <summary>
-            Path to leveldb database with TicksVWAP history (may be null)
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.Symbols">
-            <summary>
-            Symbols to import (empty for all symbols)
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.ImportMode">
-            <summary>
-            History import mode
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.OnlyLastSymbols">
-            <summary>
-            Import only lasts symbols; Only affects tick history
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.SymbolMapping">
-            <summary>
-            Symbols mapping (Key: TTS name; Value: source name )
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.RestoreMode">
-            <summary>
-            Periodicities needed to restore
-            </summary>
-        </member>
-        <member name="P:TickTrader.BusinessObjects.TradeConfiguration.RolloverTime">
-            <summary>
-            Rollover Time. The date will be ignored.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessObjects.TickTypes">
-            <summary>
-            Options for indicative tick.
-            </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.TickValue.GetOrderId">
-            <summary>
-            Get OrderId (actual only for last symbols)
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value},System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value})">
-            <summary>
-            Initialize level2 with a list of bids and asks
-            </summary>
-            <param name="bids">bids list</param>
-            <param name="asks">asks list</param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.List{TickTrader.BusinessObjects.Level2Value},System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Warning should be sorted in collection and proper offset set
-            </summary>
-            <param name="level2Container">asb/bid list sorted</param>
-            <param name="offset">ask start</param>
-            <param name="bidCount">bid count</param>
-            <param name="askCount">ask count</param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRightsGroup.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRightsSecurity.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRights.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
         </member>
         <member name="T:TickTrader.BusinessObjects.OrderTypes">
             <summary>
@@ -1401,11 +1206,6 @@
         <member name="T:TickTrader.BusinessObjects.OrderExecutionOptions">
             <summary>
             Order execution options
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.OrderExecutionOptions.FillOrKill">
-            <summary>
-            Not implemented yet
             </summary>
         </member>
         <member name="T:TickTrader.BusinessObjects.Order">
@@ -1720,6 +1520,16 @@
             
              </summary>
         </member>
+        <member name="P:TickTrader.BusinessObjects.Order.IsHidden">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Order.IsIceberg">
+             <summary>
+            
+             </summary>
+        </member>
         <member name="P:TickTrader.BusinessObjects.Order.TotalCommission">
              <summary>
             
@@ -1771,93 +1581,153 @@
             contains only changed rows.
             </summary>
         </member>
-        <member name="T:TickTrader.BusinessObjects.SymbolSecurity">
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.Append(TickTrader.Common.Business.FeedTick)">
             <summary>
-            Represents a security of a symbol
+            Append Tick
+            </summary>
+            <param name="tick"></param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ImportTicks(TickTrader.BusinessObjects.QuoteHistory.Engine.IHistorySource,System.String,System.DateTime,System.DateTime,System.Boolean,System.Boolean,TickTrader.BusinessObjects.QuoteHistory.Engine.ImportMode,TickTrader.BusinessObjects.QuoteHistory.Engine.HistoryOperationProgressCallback,System.Threading.CancellationToken)">
+            <summary>
+            Import Ticks
+            </summary>
+            <param name="source"></param>
+            <param name="symbol"></param>
+            <param name="startImportTime"></param>
+            <param name="finishImportTime"></param>
+            <param name="isLevel2"></param>
+            <param name="loadMetaData"></param>
+            <param name="importRules"></param>
+            <param name="progressCallBack"></param>
+            <param name="token"></param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ImportBars(TickTrader.BusinessObjects.QuoteHistory.Engine.IHistorySource,System.String,System.DateTime,System.DateTime,TickTrader.BusinessObjects.Periodicity,TickTrader.Common.Business.FxPriceType,System.Boolean,TickTrader.BusinessObjects.QuoteHistory.Engine.ImportMode,TickTrader.BusinessObjects.QuoteHistory.Engine.HistoryOperationProgressCallback,System.Threading.CancellationToken)">
+            <summary>
+            Import Bars
+            </summary>
+            <param name="source"></param>
+            <param name="symbol"></param>
+            <param name="startImportTime"></param>
+            <param name="finishImportTime"></param>
+            <param name="barPeriodicity"></param>
+            <param name="barsPriceType"></param>
+            <param name="loadMetaData"></param>
+            <param name="importRules"></param>
+            <param name="progressCallBack"></param>
+            <param name="token"></param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ImportBarsFromDiffBars(TickTrader.BusinessObjects.QuoteHistory.Engine.IHistorySource,System.String,System.DateTime,System.DateTime,TickTrader.BusinessObjects.Periodicity,TickTrader.Common.Business.FxPriceType,TickTrader.BusinessObjects.Periodicity,TickTrader.Common.Business.FxPriceType,System.Boolean,TickTrader.BusinessObjects.QuoteHistory.Engine.ImportMode,TickTrader.BusinessObjects.QuoteHistory.Engine.HistoryOperationProgressCallback)">
+            <summary>
+            Import Bars
+            </summary>
+            <param name="source"></param>
+            <param name="symbol"></param>
+            <param name="startImportTime"></param>
+            <param name="finishImportTime"></param>
+            <param name="sourceBarPeriodicity"></param>
+            <param name="sourceBarsPriceType"></param>
+            <param name="barPeriodicity"></param>
+            <param name="barsPriceType"></param>
+            <param name="loadMetaData"></param>
+            <param name="importRules"></param>
+            <param name="progressCallBack"></param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ClearSymbol(System.String,TickTrader.BusinessObjects.Periodicity[])">
+            <summary>
+            Clear history for particular periodicity for selected symbol
+            </summary>
+            <param name="symbol">selected symbol</param>
+            <param name="periodicities">selected periodicity</param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.Clear(TickTrader.BusinessObjects.Periodicity[])">
+            <summary>
+            Clear history for particular periodicity for all sknown symbols
+            </summary>
+            <param name="periodicities">selected periodicity</param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ClearSymbolCache(System.String)">
+            <summary>
+            Clear bar's history cache for particular symbol
+            </summary>
+            <param name="symbol"></param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IHistoryEdit.ClearCache">
+            <summary>
+            Clear bar's cache for all known symbols
             </summary>
         </member>
-        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.Id">
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetQHTransferFiles" -->
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.InitQHTaskStart(TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.QHTaskInitProperties)">
             <summary>
-            Gets or sets the Id of security.
+            Initiate Quote Hoistory Task Start
             </summary>
+            <param name="initProperties">QH Task initiation properties</param>
+            <returns>History task init result with id and additional info message</returns>
         </member>
-        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.Name">
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetHistoryTaskInfo(System.Int32)">
             <summary>
-            Gets or sets the name of security.
+            Get history task info for specified task id
             </summary>
+            <param name="id">Task id</param>
+            <returns>History task info</returns>
         </member>
-        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.Description">
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.RequestHistoryTaskCancel(System.Int32)">
             <summary>
-            Gets or sets the description of security.
+            Request history task cancel
             </summary>
+            <param name="id">Task id</param>
+            <returns>History task info</returns>
         </member>
-        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.SortOrder">
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetTradingStatisticAsync(System.Collections.Generic.List{System.String},System.String)">
             <summary>
-            Gets or sets the priority of security.
+            Get Trading statistics 
             </summary>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.SymbolSecurity.Clone">
-            <summary>
-            Creates new reference of the instance.
-            </summary>
+            <param name="symbols">symbols</param>
+            <param name="prefix">prefix</param>
             <returns></returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerInfo.Clone">
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetAllQHModifyEventsAsync(System.DateTime)">
             <summary>
-            Creates a new object that is a copy of the current instance.
+            Get all quote history modify events after timestamp
+            </summary>
+            <param name="time">DateTime timestamp, if null return all</param>
+            <returns>list of QHModifyInfo</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetQHModifyEventByIdAsync(System.Guid)">
+            <summary>
+            Get quote history modify event by id
+            </summary>
+            <param name="id">Guid id</param>
+            <returns>QHModifyInfo</returns>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.UpstreamTypes">
+            <summary>
+            QuoteHistory upstream modes
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QuoteHistory.MarketHistoryFile.ExtensionData">
+            <summary>
+            Gets or sets the structure that contains extra data.
             </summary>
             <returns>
-            A new object that is a copy of this instance.
+            An <see cref="T:System.Runtime.Serialization.ExtensionDataObject"/> that contains data that is not recognized as belonging to the data contract.
             </returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsProperty(System.Type,System.String)">
+        <member name="T:TickTrader.BusinessObjects.OffTimeDisabledFeatures">
             <summary>
-            Check that property supports in current cluster model version
+            Modes that determine what will be disabled on active off-time rule
             </summary>
-            <param name="type">Type</param>
-            <param name="propName">Property name</param>
-            <returns>true if supports, otherwise false</returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsProperty``1(System.String)">
+        <member name="T:TickTrader.BusinessObjects.TradingSessionStatus">
             <summary>
-            Check that property supports in current cluster model version
+            Trading session status
             </summary>
-            <param name="propName">Property name</param>
-            <returns>true if supports, otherwise false</returns>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsField(System.Type,System.String)">
-            <summary>
-            Check that field supports in current cluster model version
-            </summary>
-            <param name="type">Type</param>
-            <param name="fieldName">Field name</param>
-            <returns>true if supports, otherwise false</returns>
+        <member name="F:TickTrader.BusinessObjects.TradingSessionStatus.Closed">
+            <summary>Trading session is closed</summary>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsField``1(System.String)">
-            <summary>
-            Check that field supports in current cluster model version
-            </summary>
-            <param name="fieldName">Field name</param>
-            <returns>true if supports, otherwise false</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.GetSupportSet``1">
-            <summary>
-            Get Enum SupportSet in current manager model version
-            </summary>
-            <returns>Enum SupportSet</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.Supports``1">
-            <summary>
-            Check that class supports in current manager model version
-            </summary>
-            <returns>true if supports, otherwise false</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.Supports(System.Object)">
-            <summary>
-            Check that object supports in current manager model version
-            </summary>
-            <param name="obj">object to check</param>
-            <returns>true if supports, otherwise false</returns>
+        <member name="F:TickTrader.BusinessObjects.TradingSessionStatus.Opened">
+            <summary>Trading session is opened</summary>
         </member>
         <member name="T:TickTrader.BusinessObjects.StreamingDirections">
             <summary>
@@ -1886,12 +1756,12 @@
         </member>
         <member name="P:TickTrader.BusinessObjects.SymbolInfo.Id">
             <summary>
-            Gets or sets a unique ID for this SymbolInfo instance.
+            Gets or sets a unique numeric ID of Symbol.
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.SymbolInfo.Symbol">
             <summary>
-            Gets or sets the name of the symbol.
+            Gets or sets the unique string ID of Symbol - SymbolId (it is unchangeable in DB).
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.SymbolInfo.Security">
@@ -2090,6 +1960,11 @@
               All = TicksLevel2|BarsAndTicks
             </summary>
         </member>
+        <member name="P:TickTrader.BusinessObjects.SymbolInfo.Name">
+            <summary>
+            Gets or sets the unique Name of symbol - SymbolName (it can be changed in DB).
+            </summary>
+        </member>
         <member name="M:TickTrader.BusinessObjects.SymbolInfo.Clone">
             <summary>
             
@@ -2211,6 +2086,37 @@
             Gets or sets the TODO
             </summary>
         </member>
+        <member name="T:TickTrader.BusinessObjects.SymbolSecurity">
+            <summary>
+            Represents a security of a symbol
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.Id">
+            <summary>
+            Gets or sets the Id of security.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.Name">
+            <summary>
+            Gets or sets the name of security.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.Description">
+            <summary>
+            Gets or sets the description of security.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.SymbolSecurity.SortOrder">
+            <summary>
+            Gets or sets the priority of security.
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.SymbolSecurity.Clone">
+            <summary>
+            Creates new reference of the instance.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:TickTrader.BusinessObjects.SymbolTick">
             <summary>
             Represents a tick of a symbol
@@ -2288,6 +2194,151 @@
             </summary>
             <param name="tick">Symbol tick</param>
             <returns>Feed tick</returns>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.Domains">
+            <summary>
+            Domains wildcard
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.Groups">
+            <summary>
+            Groups wildcard
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.LoginInactivityPeriod">
+            <summary>
+            Login inactivity period in days after which an account is archived. Default 90 days.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.IsEmptyBalance">
+            <summary>
+            Archive an account if it has zero balance or assets
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.AutomaticArchiveAccountsTaskInfo.IsEmptyTrades">
+            <summary>
+            Archive an account if it does not have orders and positions
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.RemoveOutdatedUpdatesTaskInfo.ServiceTypes">
+            <summary>
+            List of service (module) types for which outdated updates are removed
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Tasks.RemoveOutdatedUpdatesTaskInfo.KeepLatestUpdates">
+            <summary>
+            Number of the latest updates to keep
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.FileNotLockedTrigger">
+            <summary>
+            This trigger allows task start if file not locked
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Tasks.FileNotLockedTrigger.OnSchedule(System.DateTime,System.Nullable{System.DateTime})">
+            <summary>
+            Checking trigger to fire. "now" used ONLY for test purpose!
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.ModuleStartTrigger">
+            <summary>
+            This trigger allows Scheduled task start on module start
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.ScheduleTrigger">
+            <summary>
+            This trigger allows task start by schedule
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Tasks.ScheduleTrigger.OnSchedule(System.DateTime,System.Nullable{System.DateTime})">
+            <summary>
+            Checking scheduled trigger to fire. "now" used ONLY for test purpose!
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.TaskCanceledTrigger">
+            <summary>
+            This trigger allows task to start after another task canceled.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.TaskEndedTrigger">
+            <summary>
+            This trigger allows task to start after another task ended with any result.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.TaskFaultedTrigger">
+            <summary>
+            This trigger allows task to start after another task faulted.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.Tasks.TaskSucceededTrigger">
+            <summary>
+            This trigger allows task to start after another task succeeded.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.DateTimeFrom">
+            <summary>
+            Start import period 
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.DateTimeTo">
+            <summary>
+            End import period 
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.BarsDatabasePath">
+            <summary>
+            Path to leveldb database with Bars history (not null)
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.TicksDatabasePath">
+            <summary>
+            Path to leveldb database with Ticks history (may be null)
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.TicksLevel2DatabasePath">
+            <summary>
+            Path to leveldb database with TicksLeve2 history (may be null)
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.TicksVWAPDatabasePath">
+            <summary>
+            Path to leveldb database with TicksVWAP history (may be null)
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.Symbols">
+            <summary>
+            Symbols to import (empty for all symbols)
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.ImportMode">
+            <summary>
+            History import mode
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.OnlyLastSymbols">
+            <summary>
+            Import only lasts symbols; Only affects tick history
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.SymbolMapping">
+            <summary>
+            Symbols mapping (Key: TTS name; Value: source name )
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.QHRestoreTaskInfo.RestoreMode">
+            <summary>
+            Periodicities needed to restore
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessObjects.TickTypes">
+            <summary>
+            Options for indicative tick.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.TradeConfiguration.RolloverTime">
+            <summary>
+            Rollover Time. The date will be ignored.
+            </summary>
         </member>
         <member name="T:TickTrader.BusinessObjects.TradeReport">
             <summary>
@@ -2408,7 +2459,7 @@
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.Symbol">
             <summary>
-            Name of instrument of described order.
+            Name Id of instrument of described order.
             Null in case of Balance and Credit transactions.
             </summary>
         </member>
@@ -2426,7 +2477,7 @@
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.SymbolFk">
             <summary>
-            Id of instrument
+            Db Id of instrument
             Null in case of Balance and Credit transactions.
             </summary>
         </member>
@@ -2456,7 +2507,7 @@
         <member name="P:TickTrader.BusinessObjects.TradeReport.OrderPrice">
              <summary>
              The price of order on the moment of the order fill.
-             Mandatory for Limit orders.
+             Mandatory for Limit/StopLimit orders.
              Can be null for Market order if price was not specified in order request.
              Null in case of Balance and Credit transactions.
             
@@ -2471,7 +2522,7 @@
         <member name="P:TickTrader.BusinessObjects.TradeReport.OrderStopPrice">
             <summary>
             The price of order on the moment of the order fill.
-            Mandatory for Stop orders.
+            Mandatory for Stop/StopLimit orders.
             Null in case of Market and Limit orders.
             Null in case of Balance and Credit transactions.
             <see cref="P:TickTrader.BusinessObjects.TradeReport.OrderPrice"/> for example.
@@ -2515,7 +2566,7 @@
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ClientApp">
             <summary>
-            
+            Client application specific identifier
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.RequestTime">
@@ -2740,37 +2791,37 @@
         <member name="P:TickTrader.BusinessObjects.TradeReport.ProfitToUsdConversionRate">
             <summary>
             Conversion rate to convert profit to USD
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.UsdToProfitConversionRate">
             <summary>
             Conversion rate to convert USD to profit
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.BalanceToUsdConversionRate">
             <summary>
             Conversion rate to convert balance currency to USD
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.UsdToBalanceConversionRate">
             <summary>
             Conversion rate to convert USD to balance currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.MarginCurrencyToUsdConversionRate">
             <summary>
             Conversion rate to convert margin currency to USD
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.UsdToMarginCurrencyConversionRate">
             <summary>
             Conversion rate to convert USD to margin currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.MarginCurrency">
@@ -2781,13 +2832,13 @@
         <member name="P:TickTrader.BusinessObjects.TradeReport.ProfitCurrencyToUsdConversionRate">
             <summary>
             Conversion rate to convert profit currency to USD
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.UsdToProfitCurrencyConversionRate">
             <summary>
             Conversion rate to convert USD to profit currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ProfitCurrency">
@@ -2798,25 +2849,25 @@
         <member name="P:TickTrader.BusinessObjects.TradeReport.SrcAssetToUsdConversionRate">
             <summary>
             Conversion rate to convert source asset currency to USD
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.UsdToSrcAssetConversionRate">
             <summary>
             Conversion rate to convert USD to source asset currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.DstAssetToUsdConversionRate">
             <summary>
             Conversion rate to convert destination asset currency to USD
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.UsdToDstAssetConversionRate">
             <summary>
             Conversion rate to convert USD to destination asset currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.SrcAssetCurrency">
@@ -2907,73 +2958,73 @@
         <member name="P:TickTrader.BusinessObjects.TradeReport.ProfitToReportConversionRate">
             <summary>
             Conversion rate to convert profit to report currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportToProfitConversionRate">
             <summary>
             Conversion rate to convert report currency to profit
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.BalanceToReportConversionRate">
             <summary>
             Conversion rate to convert balance currency to report currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportToBalanceConversionRate">
             <summary>
             Conversion rate to convert report currency to balance currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.SrcAssetToReportConversionRate">
             <summary>
             Conversion rate to convert source asset currency to report currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportToSrcAssetConversionRate">
             <summary>
             Conversion rate to convert report currency to source asset currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.DstAssetToReportConversionRate">
             <summary>
             Conversion rate to convert destination asset currency to report currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportToDstAssetConversionRate">
             <summary>
             Conversion rate to convert report currency to destination asset currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.MarginCurrencyToReportConversionRate">
             <summary>
             Conversion rate to convert margin currency to report currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportToMarginCurrencyConversionRate">
             <summary>
             Conversion rate to convert report currency to margin currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ProfitCurrencyToReportConversionRate">
             <summary>
             Conversion rate to convert profit currency to report currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportToProfitCurrencyConversionRate">
             <summary>
             Conversion rate to convert report currency to profit currency
-            Null if no conversion cannot be performed
+            Null if conversion cannot be performed
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.ReportCurrency">
@@ -3051,6 +3102,18 @@
             Related order
             </summary>
         </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.MarginCurrencyToBalanceConversionRate">
+            <summary>
+            Conversion rate to convert margin currency to balance currency
+            Null if conversion cannot be performed
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.SymbolName">
+            <summary>
+            Name of instrument which was used to create described order.
+            Null in case of Balance and Credit transactions.
+            </summary>
+        </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.IsIoC">
             <summary>
             Is IoC flag
@@ -3061,6 +3124,12 @@
             <summary>
             Is Market with slippage flag
             Determines whether order has "MarketWithSlippage" option
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.IsFillOrKill">
+            <summary>
+            Is Fill Or Kill flag
+            Determines whether order has "FillOrKill" option
             </summary>
         </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.IsOneCancelsTheOther">
@@ -3089,6 +3158,55 @@
             <summary>
             Trade transaction reasons
             </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsProperty(System.Type,System.String)">
+            <summary>
+            Check that property supports in current cluster model version
+            </summary>
+            <param name="type">Type</param>
+            <param name="propName">Property name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsProperty``1(System.String)">
+            <summary>
+            Check that property supports in current cluster model version
+            </summary>
+            <param name="propName">Property name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsField(System.Type,System.String)">
+            <summary>
+            Check that field supports in current cluster model version
+            </summary>
+            <param name="type">Type</param>
+            <param name="fieldName">Field name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsField``1(System.String)">
+            <summary>
+            Check that field supports in current cluster model version
+            </summary>
+            <param name="fieldName">Field name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.GetSupportSet``1">
+            <summary>
+            Get Enum SupportSet in current manager model version
+            </summary>
+            <returns>Enum SupportSet</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.Supports``1">
+            <summary>
+            Check that class supports in current manager model version
+            </summary>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.Supports(System.Object)">
+            <summary>
+            Check that object supports in current manager model version
+            </summary>
+            <param name="obj">object to check</param>
+            <returns>true if supports, otherwise false</returns>
         </member>
         <member name="T:TickTrader.Common.Business.FeedTick">
             <summary>
@@ -3155,32 +3273,18 @@
             
             </summary>
         </member>
+        <member name="P:TickTrader.Common.Business.FeedTick.MetaData">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:TickTrader.Common.Business.FeedTick.#ctor">
             <summary>
             
             </summary>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,System.Decimal,System.Double,System.Decimal,System.Double)">
-            <summary>
-            
-            </summary>
-            <param name="symbol"></param>
-            <param name="time"></param>
-            <param name="bid"></param>
-            <param name="bidVolume"></param>
-            <param name="ask"></param>
-            <param name="askVolume"></param>
-        </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,TickTrader.Common.Business.FxPriceType,System.Decimal,System.Double)">
-            <summary>
-            
-            </summary>
-            <param name="symbol"></param>
-            <param name="time"></param>
-            <param name="tyickType"></param>
-            <param name="price"></param>
-            <param name="volume"></param>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,System.Decimal,System.Double,System.Decimal,System.Double,System.Int64)" -->
+        <!-- Badly formed XML comment ignored for member "M:TickTrader.Common.Business.FeedTick.#ctor(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.Common.Business.FxPriceType,System.Decimal,System.Double,System.Int64)" -->
         <member name="M:TickTrader.Common.Business.FeedTick.#ctor(TickTrader.Common.Business.FeedTick,System.DateTime)">
             <summary>
             
@@ -3188,15 +3292,16 @@
             <param name="tick"></param>
             <param name="time"></param>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,System.Collections.Generic.IEnumerable{TickTrader.Common.Business.FeedLevel2Record})">
+        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,System.Collections.Generic.IEnumerable{TickTrader.Common.Business.FeedLevel2Record},System.Int64)">
             <summary>
             
             </summary>
             <param name="symbol"></param>
             <param name="time"></param>
             <param name="level2"></param>
+            <param name="orderId"></param>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,System.Byte,System.Collections.Generic.IEnumerable{TickTrader.Common.Business.FeedLevel2Record})">
+        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,System.DateTime,System.Byte,System.Collections.Generic.IEnumerable{TickTrader.Common.Business.FeedLevel2Record},System.Int64)">
             <summary>
             
             </summary>
@@ -3204,16 +3309,26 @@
             <param name="time"></param>
             <param name="timeIndex"></param>
             <param name="level2"></param>
+            <param name="orderId"></param>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,TickTrader.BusinessObjects.FeedTickId,System.Collections.Generic.IEnumerable{TickTrader.Common.Business.FeedLevel2Record})">
+        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,TickTrader.BusinessObjects.FeedTickId,System.Collections.Generic.IEnumerable{TickTrader.Common.Business.FeedLevel2Record},System.Int64)">
             <summary>
             
             </summary>
             <param name="symbol"></param>
             <param name="id"></param>
             <param name="level2"></param>
+            <param name="orderId"></param>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.ConstructFormPreparedData(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.Common.Business.FeedLevel2Record[],System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Boolean,System.Boolean)">
+        <member name="M:TickTrader.Common.Business.FeedTick.#ctor(System.String,TickTrader.BusinessObjects.FeedTickId,System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="symbol"></param>
+            <param name="id"></param>
+            <param name="orderId"></param>
+        </member>
+        <member name="M:TickTrader.Common.Business.FeedTick.ConstructFormPreparedData(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.Common.Business.FeedLevel2Record[],System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Boolean,System.Boolean,System.Int64)">
             <summary>
             
             </summary>
@@ -3222,9 +3337,12 @@
             <param name="level2"></param>
             <param name="bestBid"></param>
             <param name="bestAsk"></param>
+            <param name="disabledFiltration"></param>
+            <param name="indicative"></param>
+            <param name="orderId"></param>
             <returns></returns>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.ConstructFormPreparedData(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.Common.Business.FeedLevel2Record[],System.Boolean,System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Boolean,System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Boolean,System.Boolean)">
+        <member name="M:TickTrader.Common.Business.FeedTick.ConstructFormPreparedData(System.String,TickTrader.BusinessObjects.FeedTickId,TickTrader.Common.Business.FeedLevel2Record[],System.Boolean,System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Boolean,System.Nullable{TickTrader.Common.Business.FeedLevel2Record},System.Boolean,System.Boolean,System.Int64)">
             <summary>
             
             </summary>
@@ -3235,6 +3353,7 @@
             <param name="bestBid"></param>
             <param name="askPresent"></param>
             <param name="bestAsk"></param>
+            <param name="orderId"></param>
             <returns></returns>
         </member>
         <member name="M:TickTrader.Common.Business.FeedTick.RoundPrice(System.Decimal,System.Int32,System.Boolean)">
@@ -3251,16 +3370,10 @@
             
             </summary>
         </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.GetValue(System.Boolean,System.Boolean)">
+        <member name="M:TickTrader.Common.Business.FeedTick.GetValue(System.Boolean,System.Boolean,System.Collections.Generic.List{TickTrader.BusinessObjects.Level2Value})">
             <summary>
             
             </summary>
-        </member>
-        <member name="M:TickTrader.Common.Business.FeedTick.GetOrderId">
-            <summary>
-            Get OrderId (actual only for last symbols)
-            </summary>
-            <returns></returns>
         </member>
         <member name="M:TickTrader.Common.Business.FeedTick.Equals(System.Object)">
             <summary>

@@ -122,11 +122,12 @@ GetSymbolFrame<-function()
   TripleSwapDay = GetSymbolTripleSwapDay()
   ISIN = GetSymbolISIN()
   Alias = GetSymbolAlias()
+  SymbolName = GetSymbolName()
   data.table(Id,Symbol,Security,Precision,TradeIsAllowed,MarginMode,ProfitMode,QuotesWriteMode,ContractSizeFractional,MarginHedged,
              MarginFactorFractional,MarginStrongMode,MarginCurrency,MarginCurrencyId,MarginCurrencyPrecision,MarginCurrencySortOrder,
              ProfitCurrency,ProfitCurrencyId,ProfitCurrencyPrecision,ProfitCurrencySortOrder,ColorRef,Description,SwapEnabled,SwapSizeShort,
              SwapSizeLong,IsPrimary,SortOrder,IsQuotesFilteringDisabled,Schedule,DefaultSlippage,StopOrderMarginReduction,HiddenLimitOrderMarginReduction,
-             SwapType,TripleSwapDay,ISIN,Alias)
+             SwapType,TripleSwapDay,ISIN,Alias,SymbolName)
 }
 # Get Symbol field
 GetSymbolId<-function(){
@@ -271,6 +272,9 @@ GetSymbolISIN <- function(){
 # Get Symbol field
 GetSymbolAlias <- function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolAlias')
+}
+GetSymbolName <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolName')
 }
 
 MarginCalculationModes <- list("Forex" = 0,
