@@ -1,13 +1,26 @@
-# #' Upstream symbol ticks
-# #' @param symbol a character. Symbol
-# #' @param from a DateTime object. Start time to upstream
-# #' @param to a DateTime object. End time to upstream
-# #' @param upstreamType a numeric. UpstreamType Enum Code
-# #' @examples
-# #'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), 1)
-# ttmUpstream <- function(symbol, from, to, upstreamType) {
-#   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream', symbol, from, to, upstreamType)
-#   if(hResult == FALSE) stop("ttmUpstream return false")
+#' Upstream symbol ticks
+#' @param symbol a character. Symbol
+#' @param from a DateTime object. Start time to upstream
+#' @param to a DateTime object. End time to upstream
+#' @param upstreamType a character vector. From this ("Level2ToTicks","TicksToM1","M1ToH1","Level2ToVWAP","Level2ToMain","TicksToCache" ,"M1ToCache","H1ToCache" ,"Cache","Level2ToAll")
+#' @examples
+#'  ttmUpstream("EURUSD", ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,02,0,00,00, tz ="GMT"), c("M1ToH1", "H1ToCache"))
+#'
+#' @export
+ttmUpstream <- function(symbol, from, to, upstreamType) {
+  upstreamNum <- sapply(1:length(upstreamType), function(i){
+    if( is.element(upstreamType[i], names(UpstreamTypes))){
+      UpstreamTypes[[upstreamType[i]]]
+    }else{
+      stop(paste("ttmUpstreamAsync - Wrong Upstream Type -", upstreamType[i]))
+      -1
+    }
+  })
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'Upstream', symbol, from, to, upstreamNum)
+  if(hResult == FALSE)
+    return(-1)
+  return(0)
+}
 
 
 
