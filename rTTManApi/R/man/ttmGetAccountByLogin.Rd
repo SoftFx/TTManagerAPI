@@ -4,7 +4,7 @@
 \alias{ttmGetAccountByLogin}
 \title{Gets the Accounts by login}
 \usage{
-ttmGetAccountByLogin(accountId)
+ttmGetAccountByLogin(accountId, fromArchieve = FALSE)
 }
 \description{
 Gets the Accounts by login

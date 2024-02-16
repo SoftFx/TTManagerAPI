@@ -11,7 +11,8 @@ ttmGetTradeReports(
   skipCancelled = TRUE,
   transTypes = "",
   reasons = "",
-  getStringPosId = FALSE
+  getStringPosId = FALSE,
+  fromArchive = FALSE
 )
 }
 \arguments{

@@ -4,7 +4,7 @@
 \alias{ttmGetAllAccounts}
 \title{Gets the Accounts as requested}
 \usage{
-ttmGetAllAccounts()
+ttmGetAllAccounts(fromArchieve = FALSE)
 }
 \description{
 Gets the Accounts as requested

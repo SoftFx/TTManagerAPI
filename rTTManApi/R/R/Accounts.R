@@ -2,8 +2,8 @@
 #' @examples 
 #' ttmGetAllAccounts()
 #' @export
-ttmGetAllAccounts <- function() {
-  t1 = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAccounts')
+ttmGetAllAccounts <- function(fromArchieve = FALSE) {
+  t1 = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllAccounts', fromArchieve)
   #return(GetAccountFrame)
   
   ###temp code to Get eWallet Property from CustomProperties
@@ -18,8 +18,8 @@ ttmGetAllAccounts <- function() {
 #' @examples
 #' GetAccountByLogin(100040)
 #' @export
-ttmGetAccountByLogin <- function(accountId){
-  t <- rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountByLogin', as.integer(accountId))
+ttmGetAccountByLogin <- function(accountId, fromArchieve = FALSE){
+  t <- rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountByLogin', as.integer(accountId), fromArchieve)
   if(t != 0) stop(paste("Error in getting Account Info", accountId))
   PropertyTable = GetAccountsCustomProperties()
   accounts = GetAccountFrame()

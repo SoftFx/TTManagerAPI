@@ -56,6 +56,15 @@ ttmModifySymbol <- function(symbol, isin) {
   hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbol', symbol, isin)
 }
 
+#' Modify Symbol ExtendedName and Description
+#' 
+#' @param symbolId a character. Symbol
+#' @param newExtendedName a character. New Extended Name value
+#' @param newDescription a character. New Description value
+#' @export
+ttmModifySymbolExtendedNameDescription <- function(symbol, newExtendedName, newDescription) {
+  hResult = rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'ModifySymbolExtendedNameDescription', symbol, newExtendedName, newDescription)
+}
 
 
 #' Gets the symbols as requested
@@ -123,11 +132,12 @@ GetSymbolFrame<-function()
   ISIN = GetSymbolISIN()
   Alias = GetSymbolAlias()
   SymbolName = GetSymbolName()
+  ExtendedName = GetSymbolExtendedName()
   data.table(Id,Symbol,Security,Precision,TradeIsAllowed,MarginMode,ProfitMode,QuotesWriteMode,ContractSizeFractional,MarginHedged,
              MarginFactorFractional,MarginStrongMode,MarginCurrency,MarginCurrencyId,MarginCurrencyPrecision,MarginCurrencySortOrder,
              ProfitCurrency,ProfitCurrencyId,ProfitCurrencyPrecision,ProfitCurrencySortOrder,ColorRef,Description,SwapEnabled,SwapSizeShort,
              SwapSizeLong,IsPrimary,SortOrder,IsQuotesFilteringDisabled,Schedule,DefaultSlippage,StopOrderMarginReduction,HiddenLimitOrderMarginReduction,
-             SwapType,TripleSwapDay,ISIN,Alias,SymbolName)
+             SwapType,TripleSwapDay,ISIN,Alias,SymbolName, ExtendedName)
 }
 # Get Symbol field
 GetSymbolId<-function(){
@@ -276,7 +286,9 @@ GetSymbolAlias <- function(){
 GetSymbolName <- function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolName')
 }
-
+GetSymbolExtendedName <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetSymbolExtendedName')
+}
 MarginCalculationModes <- list("Forex" = 0,
                                "CFD" = 1,
                                "Futures" = 2,

@@ -10,13 +10,13 @@
 #' ttmGetTradeReports(c(100181, 100182), ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), TRUE)
 #' 
 #' @export
-ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), skipCancelled = TRUE, transTypes = "", reasons = "", getStringPosId = FALSE) {
+ttmGetTradeReports <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), skipCancelled = TRUE, transTypes = "", reasons = "", getStringPosId = FALSE, fromArchive = FALSE) {
   print(paste("from =", from, "; to =", to))
   print(paste("(Str)from =", str(from), "; to =", str(to)))
   if(!is.null(accId)){
-    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', accId, from, to, transTypes, reasons, skipCancelled)
+    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', accId, from, to, transTypes, reasons, skipCancelled, fromArchive)
   }else{
-    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', from, to, transTypes, reasons, skipCancelled)
+    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetTradeReports', from, to, transTypes, reasons, skipCancelled, fromArchive)
   }
   res = GetTradeFrame()
   if(getStringPosId) 

@@ -229,8 +229,8 @@ namespace rTTManApi
                 Amount = asset.Amount;
                 FreeAmount = asset.FreeAmount;
                 LockedAmount = asset.LockedAmount;
-                CurrencyToUsdConversionRate = asset.CurrencyToUsdConversionRate;
-                UsdToCurrencyConversionRate = asset.UsdToCurrencyConversionRate;
+                CurrencyToUsdConversionRate = 0;
+                UsdToCurrencyConversionRate = 0;
                 CurrencyToReportConversionRate = asset.CurrencyToReportConversionRate ?? 0;
                 ReportToCurrencyConversionRate = asset.ReportToCurrencyConversionRate ?? 0;
                 Timestamp = timestamp;
@@ -309,7 +309,6 @@ namespace rTTManApi
         private static List<SymbolInfo> _symbolList;
         private static List<AccountSnapshotEntity> _accountSnapshotList;
         private static List<PositionDailySnapshot> _positionList;
-        private static List<Order> _orderSnapshotList;
         private static List<NetPosition> _netPositions;
 
         private static List<TickValue> _tickValues;
@@ -580,13 +579,21 @@ namespace rTTManApi
 
         #region Get accounts
 
-        public static int GetAccountByLogin(int accountId)
+        public static int GetAccountByLogin(int accountId, bool fromArchive = false)
         {
             try
             {
                 _accountList?.Clear();
-                Logger.Log.Info("Requesting all accounts");
-                _accountList = new List<AccountInfo>() { _manager.RequestAccountById((int)accountId) };
+                if (!fromArchive)
+                {
+                    Logger.Log.Info("Requesting accounts by ID");
+                    _accountList = new List<AccountInfo>() { _manager.RequestAccountById((int)accountId) };
+                }
+                else
+                {
+                    Logger.Log.Info("Requesting archieve accounts by ID");
+                    _accountList = new List<AccountInfo>() { _manager.ArchiveGetAccountById((int)accountId) };
+                }
                 Logger.Log.InfoFormat("Recieved {0} accounts", _accountList.Count);
                 return 0;
             }
@@ -597,13 +604,21 @@ namespace rTTManApi
             }
         }
 
-        public static int GetAllAccounts()
+        public static int GetAllAccounts(bool fromArchieve = false)
         {
             try
             {
                 _accountList?.Clear();
-                Logger.Log.Info("Requesting all accounts");
-                _accountList = _manager.RequestAllAccounts();
+                if (!fromArchieve)
+                {
+                    Logger.Log.Info("Requesting all accounts");
+                    _accountList = _manager.RequestAllAccounts();
+                }
+                else
+                {
+                    Logger.Log.Info("Requesting all archieve accounts");
+                    _accountList = _manager.ArchiveGetAllAccounts();
+                }
                 Logger.Log.InfoFormat("Recieved {0} accounts", _accountList.Count);
                 return 0;
             }
@@ -1302,18 +1317,18 @@ namespace rTTManApi
 
         #region Get trade history
 
-        public static int GetTradeReports(DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
+        public static int GetTradeReports(DateTime from, DateTime to, string transType, string reason, bool skipCancelled, bool fromArchieve = false)
         {
-            return GetTradeReports(new double[] { }, from, to, transType, reason, skipCancelled);
+            return GetTradeReports(new double[] { }, from, to, transType, reason, skipCancelled, fromArchieve);
         }
 
 
-        public static int GetTradeReports(double accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
+        public static int GetTradeReports(double accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled, bool fromArchieve = false)
         {
-            return GetTradeReports(new double[] { accId }, from, to, transType, reason, skipCancelled);
+            return GetTradeReports(new double[] { accId }, from, to, transType, reason, skipCancelled, fromArchieve);
         }
 
-        public static int GetTradeReports(double[] accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled)
+        public static int GetTradeReports(double[] accId, DateTime from, DateTime to, string transType, string reason, bool skipCancelled, bool fromArchieve = false)
         {
             try
             {
@@ -1355,17 +1370,35 @@ namespace rTTManApi
                 {
                     accList = string.Concat(accList, ", ", accId[i].ToString());
                 }*/
-                Logger.Log.InfoFormat("Requesting trade history from {0} to {1}", from, to);
-                var tradeHistory = _manager.QueryTradeHistoryOverall(req);
-                _tradeReportList = tradeHistory.Reports;
-                while (!tradeHistory.IsEndOfStream)
+                if (fromArchieve)
                 {
-                    var time = DateTime.UtcNow;
-                    req.Streaming = new StreamingInfo<string> { PosId = tradeHistory.LastId };
-                    tradeHistory = _manager.QueryTradeHistoryOverall(req);
-                    var time2 = DateTime.UtcNow;
-                    _tradeReportList.AddRange(tradeHistory.Reports);
-                    Logger.Log.Info($"Trades Count {_tradeReportList.Count} - time:{(time2 - time).TotalSeconds} - seconds");
+                    Logger.Log.InfoFormat("Requesting archive trade history from {0} to {1}", from, to);
+                    var tradeHistory = _manager.ArchiveQueryTradeHistoryOverall(req);
+                    _tradeReportList = tradeHistory.Reports;
+                    while (!tradeHistory.IsEndOfStream)
+                    {
+                        var time = DateTime.UtcNow;
+                        req.Streaming = new StreamingInfo<string> { PosId = tradeHistory.LastId };
+                        tradeHistory = _manager.ArchiveQueryTradeHistoryOverall(req);
+                        var time2 = DateTime.UtcNow;
+                        _tradeReportList.AddRange(tradeHistory.Reports);
+                        Logger.Log.Info($"Trades Count {_tradeReportList.Count} - time:{(time2 - time).TotalSeconds} - seconds");
+                    }
+                }
+                else
+                {
+                    Logger.Log.InfoFormat("Requesting trade history from {0} to {1}", from, to);
+                    var tradeHistory = _manager.QueryTradeHistoryOverall(req);
+                    _tradeReportList = tradeHistory.Reports;
+                    while (!tradeHistory.IsEndOfStream)
+                    {
+                        var time = DateTime.UtcNow;
+                        req.Streaming = new StreamingInfo<string> { PosId = tradeHistory.LastId };
+                        tradeHistory = _manager.QueryTradeHistoryOverall(req);
+                        var time2 = DateTime.UtcNow;
+                        _tradeReportList.AddRange(tradeHistory.Reports);
+                        Logger.Log.Info($"Trades Count {_tradeReportList.Count} - time:{(time2 - time).TotalSeconds} - seconds");
+                    }
                 }
                 Logger.Log.InfoFormat("Recieved {0} trade reports", _tradeReportList.Count);
                 return 0;
@@ -1857,6 +1890,11 @@ namespace rTTManApi
             return _tradeReportList.Select(it => (double)(it.ProfitToReportConversionRate ?? 0)).ToArray();
         }
 
+        public static double[] GetMarginToBalanceConversionRate()
+        {
+            return _tradeReportList.Select(it => (double)(it.MarginCurrencyToBalanceConversionRate ?? 0)).ToArray();
+        }
+
         private static string CreatePosIdValue(TradeReport t)
         {
             if (t.TrReason == TradeTransReasons.Split)
@@ -2092,9 +2130,31 @@ namespace rTTManApi
             var req = new SymbolModifyRequest
             {
                 //ConfigVersion = _manager.ConfigVersion,
-                SymbolName = symbolName,
+                SymbolId = symbolName,
                 IgnoreConfigVersion = true,
                 ISIN = newISIN
+            };
+            try
+            {
+                return _manager.ModifySymbol(req);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.ErrorFormat("Modify symbol failed because {0}", ex.Message);
+                return false;
+            }
+        }
+
+        public static bool ModifySymbolExtendedNameDescription(string symbolId, string newExtendedName, string newDescription)
+        {
+            //int ConfigVersion, string SymbolName, string NewSymbolName, string Security, string MarginCurrency, string ProfitCurrency, int? Precision, int? ContractSize, string Description, bool? IsPrimary
+            var req = new SymbolModifyRequest
+            {
+                //ConfigVersion = _manager.ConfigVersion,
+                SymbolId = symbolId,
+                IgnoreConfigVersion = true,
+                ExtendedName = newExtendedName,
+                Description = newDescription
             };
             try
             {
@@ -2306,18 +2366,24 @@ namespace rTTManApi
         {
             return _symbolList.Select(it => it.Alias).ToArray();
         }
+
+        public static string[] GetSymbolExtendedName()
+        {
+            return _symbolList.Select(it => it.ExtendedName).ToArray();
+        }
+
         #endregion
 
         #region Modify symbol swap
 
-        public static int ModifySymbolSwap(string symbolName, double swapSizeShort, double swapSizeLong)
+        public static int ModifySymbolSwap(string symbolId, double swapSizeShort, double swapSizeLong)
         {
             //return ModifySymbolSwap(new string[] { symbolName }, new double[] { swapSizeShort }, new double[] { swapSizeLong });
             try
             {
                 var symbolModifyRequest = new SymbolModifyRequest
                 {
-                    SymbolName = symbolName,
+                    SymbolId = symbolId,
                     IgnoreConfigVersion = true,
                     SwapSizeShort = float.Parse(swapSizeShort.ToString()),
                     SwapSizeLong = float.Parse(swapSizeLong.ToString())
@@ -2337,16 +2403,16 @@ namespace rTTManApi
         }
 
 
-        public static int ModifySymbolSwap(string[] symbolName, double[] swapSizeShort, double[] swapSizeLong)
+        public static int ModifySymbolSwap(string[] symbolIds, double[] swapSizeShort, double[] swapSizeLong)
         {
             try
             {
-                if (!(symbolName.Length == swapSizeShort.Length && symbolName.Length == swapSizeLong.Length))
+                if (!(symbolIds.Length == swapSizeShort.Length && symbolIds.Length == swapSizeLong.Length))
                     throw new Exception("Wrong paramaters length");
                 var symbolModifyReq = new List<SymbolModifyRequest>();
-                for (int i = 0; i < symbolName.Length; ++i)
+                for (int i = 0; i < symbolIds.Length; ++i)
                 {
-                    symbolModifyReq.Add(new SymbolModifyRequest { SymbolName = symbolName[i], IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort[i], SwapSizeLong = (float?)swapSizeLong[i] });
+                    symbolModifyReq.Add(new SymbolModifyRequest { SymbolId = symbolIds[i], IgnoreConfigVersion = true, SwapSizeShort = (float?)swapSizeShort[i], SwapSizeLong = (float?)swapSizeLong[i] });
                 }
                 var result = _manager.BulkModifySymbol(symbolModifyReq);
                 if (result.Count != 0)
