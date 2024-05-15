@@ -575,6 +575,139 @@ namespace rTTManApi
             return result;
         }
 
+        struct GroupSecurityInfo
+        {
+            public string Name;
+            public bool IsEnable;
+            public string SecurityName;
+            public string ExecutionMode;
+            public bool TradeAllowed;
+            public double MinTradeAmount;
+            public double MaxTradeAmount;
+            public double Step;
+            public string CommissionChargeType;
+            public double TakerFee;
+            public double? MakerFee;
+            public string CommissionValueType;
+            public double Rebate;
+            public double MinFee;
+            public string MinFeeCurrency;
+
+            public GroupSecurityInfo(string groupName, GroupSecurity grSec)
+            {
+                Name = groupName;
+                IsEnable = grSec.Enabled;
+                SecurityName = grSec.Security;
+                ExecutionMode = grSec.Execution.ToString();
+                TradeAllowed = grSec.AllowTrade;
+                MinTradeAmount = (double)grSec.MinTradeAmount;
+                MaxTradeAmount = (double)grSec.MaxTradeAmount;
+                Step = (double)grSec.TradeAmountStep;
+                CommissionChargeType = grSec.CommissionChargeType.ToString();
+                TakerFee = grSec.CommissionValue;
+                MakerFee = grSec.CommissionValueBookOrders;
+                CommissionValueType = grSec.CommissionValueType.ToString();
+                Rebate = grSec.RebateValue;
+                MinFee = grSec.CommissionMinValue;
+                MinFeeCurrency = grSec.CommissionMinValueCurrency;
+
+        }
+        };
+        static List<GroupSecurityInfo> _groupSecInfo;
+        public static int GetAllGroupsSecurityInfo()
+        {
+            try
+            {
+                GetAllGroups();
+                _groupSecInfo = new List<GroupSecurityInfo>();
+                foreach (var gr in _groupList)
+                {
+                    foreach (var grSec in gr.GroupSecurities)
+                    {
+                        _groupSecInfo.Add(new GroupSecurityInfo(gr.Name, grSec));
+                    }
+                }
+                return 0;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error in getting GroupSecurityIndo {ex.Message}");
+                return -1;
+            }
+        }
+
+        public static string[] GetGroupSecurityInfoName()
+        {
+            return _groupSecInfo.Select(it => it.Name).ToArray();
+        }
+        
+        public static bool[] GetGroupSecurityInfoIsEnable()
+        {
+            return _groupSecInfo.Select(it => it.IsEnable).ToArray();
+        }
+
+        public static string[] GetGroupSecurityInfoSecurityName()
+        {
+            return _groupSecInfo.Select(it => it.SecurityName).ToArray();
+        }
+
+        public static string[] GetGroupSecurityInfoExecutionMode()
+        {
+            return _groupSecInfo.Select(it => it.ExecutionMode).ToArray();
+        }
+
+        public static bool[] GetGroupSecurityInfoTradeAllowed()
+        {
+            return _groupSecInfo.Select(it => it.TradeAllowed).ToArray();
+        }
+
+        public static double[] GetGroupSecurityInfoMinTradeAmount()
+        {
+            return _groupSecInfo.Select(it => it.MinTradeAmount).ToArray();
+        }
+
+        public static double[] GetGroupSecurityInfoMaxTradeAmount()
+        {
+            return _groupSecInfo.Select(it => it.MaxTradeAmount).ToArray();
+        }
+        public static double[] GetGroupSecurityInfoStep()
+        {
+            return _groupSecInfo.Select(it => it.Step).ToArray();
+        }
+        public static string[] GetGroupSecurityInfoCommissionChargeType()
+        {
+            return _groupSecInfo.Select(it => it.CommissionChargeType).ToArray();
+        }
+
+        public static string[] GetGroupSecurityInfoCommissionValueType()
+        {
+            return _groupSecInfo.Select(it => it.CommissionValueType).ToArray();
+        }
+
+        public static double[] GetGroupSecurityInfoTakerFee()
+        {
+            return _groupSecInfo.Select(it => it.TakerFee).ToArray();
+        }
+        public static double[] GetGroupSecurityInfoMakerFee()
+        {
+            return _groupSecInfo.Select(it => it.MakerFee.HasValue ? it.MakerFee.Value : 0 ).ToArray();
+        }
+
+        public static double[] GetGroupSecurityInfoRebate()
+        {
+            return _groupSecInfo.Select(it => it.Rebate).ToArray();
+        }
+
+        public static double[] GetGroupSecurityInfoMinFee()
+        {
+            return _groupSecInfo.Select(it => it.MinFee).ToArray();
+        }
+
+        public static string[] GetGroupSecurityInfoMinFeeCurrency()
+        {
+            return _groupSecInfo.Select(it => it.MinFeeCurrency).ToArray();
+        }
+
         #endregion
 
         #region Get accounts

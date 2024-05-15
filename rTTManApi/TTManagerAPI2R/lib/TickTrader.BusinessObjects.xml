@@ -76,108 +76,6 @@
             Number of Swap charges per day. The default value is 1. Generally it must be a divisor of 24.
             </summary>
         </member>
-        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value},System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value})">
-            <summary>
-            Initialize level2 with a list of bids and asks
-            </summary>
-            <param name="bids">bids list</param>
-            <param name="asks">asks list</param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.List{TickTrader.BusinessObjects.Level2Value},System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Warning should be sorted in collection and proper offset set
-            </summary>
-            <param name="level2Container">asb/bid list sorted</param>
-            <param name="offset">ask start</param>
-            <param name="bidCount">bid count</param>
-            <param name="askCount">ask count</param>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerInfo.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRights.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRightsDomain.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRightsGroup.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.ManagerRightsSecurity.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.Default">
-            <summary>
-            Default pattern for the Name of business objects
-            Disallowed:
-            1) White-spaces (leading, trailing or inside the string)
-            2) All control characters including DEL(0x7F)
-            3) Characters: ' ; = [ ]
-            4) Suffix "_L"
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.SymbolNameAndAlias">
-            <summary>
-            Match pattern for Symbol Name and Alias
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.CurrencyTypeName">
-            <summary>
-            Match pattern for Currency Type Name
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.CurrencyName">
-            <summary>
-            Match pattern for Currency Name
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.SecurityName">
-            <summary>
-            Match pattern for Security Name
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.GroupName">
-            <summary>
-            Match pattern for Group Name
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.DomainName">
-            <summary>
-            Match pattern for Domain Name
-            </summary>
-        </member>
-        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.DomainLastTradesPrefix">
-            <summary>
-            Match pattern for Domain lasts prefix
-            </summary>
-        </member>
         <member name="M:TickTrader.BusinessObjects.Requests.AccessListModifyRequest.Create(System.Int32,System.String,TickTrader.BusinessObjects.Security.AccessListRecord)">
             <summary>
             Create modify access list record request with required parameters.
@@ -321,6 +219,45 @@
         <member name="T:TickTrader.BusinessObjects.Requests.AuthTokenReport">
             <summary>
             Request to create Authentication Token
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyFileGenerateRequest.AllDomains">
+            <summary>
+            True - generate for all domains, otherwise - only for domain Default
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyFileGenerateRequest.Write">
+            <summary>
+            True - write caddyfile, otherwise - output only
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyWebsitesGenerateRequest.Domain">
+            <summary>
+            The name of Domain
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyWebsitesGenerateRequest.CaddyOptions">
+            <summary>
+            Usage options
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyFileWriteRequest.Config">
+            <summary>
+            Caddyfile content.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyFileWriteRequest.Merge">
+            <summary>
+            True - caddyfile will be merged with new content.
+            In this case new content might have a part of caddy file but it must be full blocks #GLOBAL and/or #SNIPPETS and/or #WEBSITES.
+            Old blocks will be replaced with new ones, the rest will remain unchanged.
+            False - caddyfile will be fully replaced with new content.
+            NOTE: Merge=false and Write=false do not affect anything except the output report.
+            </summary>
+        </member>
+        <member name="P:TickTrader.BusinessObjects.Requests.CaddyFileWriteRequest.Write">
+            <summary>
+            True - write caddyfile, otherwise - output only
             </summary>
         </member>
         <member name="M:TickTrader.BusinessObjects.Requests.CancelOrderRequest.Create(System.Int64,System.Boolean)">
@@ -1183,6 +1120,113 @@
             <param name="rights">Desired login rights</param>
             <returns>New Web API token request</returns>
         </member>
+        <member name="P:TickTrader.BusinessObjects.EventArguments.PumpingUpdateOrderEventArgs.UpdateType">
+            <summary>
+            Update type can be the only PUMP_UPDATE_TRADE or PUMP_UPDATE_TRADE_LOCK or PUMP_UPDATE_TRADE_UNLOCK
+            </summary>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value},System.Collections.Generic.IEnumerable{TickTrader.BusinessObjects.Level2Value})">
+            <summary>
+            Initialize level2 with a list of bids and asks
+            </summary>
+            <param name="bids">bids list</param>
+            <param name="asks">asks list</param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Level2Collection.#ctor(System.Collections.Generic.List{TickTrader.BusinessObjects.Level2Value},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Warning should be sorted in collection and proper offset set
+            </summary>
+            <param name="level2Container">asb/bid list sorted</param>
+            <param name="offset">ask start</param>
+            <param name="bidCount">bid count</param>
+            <param name="askCount">ask count</param>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerInfo.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRights.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRightsDomain.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRightsGroup.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.ManagerRightsSecurity.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.Default">
+            <summary>
+            Default pattern for the Name of business objects
+            Disallowed:
+            1) White-spaces (leading, trailing or inside the string)
+            2) All control characters including DEL(0x7F)
+            3) Characters: ' ; = [ ]
+            4) Suffix "_L"
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.SymbolNameAndAlias">
+            <summary>
+            Match pattern for Symbol Name and Alias
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.CurrencyTypeName">
+            <summary>
+            Match pattern for Currency Type Name
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.CurrencyName">
+            <summary>
+            Match pattern for Currency Name
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.SecurityName">
+            <summary>
+            Match pattern for Security Name
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.GroupName">
+            <summary>
+            Match pattern for Group Name
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.DomainName">
+            <summary>
+            Match pattern for Domain Name
+            </summary>
+        </member>
+        <member name="F:TickTrader.BusinessObjects.MatchingPatterns.DomainLastTradesPrefix">
+            <summary>
+            Match pattern for Domain lasts prefix
+            </summary>
+        </member>
         <member name="T:TickTrader.BusinessObjects.SessionTypes">
             <summary>
             Session types
@@ -1655,50 +1699,6 @@
             <summary>
             Clear bar's cache for all known symbols
             </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetQHTransferFiles" -->
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.InitQHTaskStart(TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.QHTaskInitProperties)">
-            <summary>
-            Initiate Quote Hoistory Task Start
-            </summary>
-            <param name="initProperties">QH Task initiation properties</param>
-            <returns>History task init result with id and additional info message</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetHistoryTaskInfo(System.Int32)">
-            <summary>
-            Get history task info for specified task id
-            </summary>
-            <param name="id">Task id</param>
-            <returns>History task info</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.RequestHistoryTaskCancel(System.Int32)">
-            <summary>
-            Request history task cancel
-            </summary>
-            <param name="id">Task id</param>
-            <returns>History task info</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetTradingStatisticAsync(System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-            Get Trading statistics 
-            </summary>
-            <param name="symbols">symbols</param>
-            <param name="prefix">prefix</param>
-            <returns></returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetAllQHModifyEventsAsync(System.DateTime)">
-            <summary>
-            Get all quote history modify events after timestamp
-            </summary>
-            <param name="time">DateTime timestamp, if null return all</param>
-            <returns>list of QHModifyInfo</returns>
-        </member>
-        <member name="M:TickTrader.BusinessObjects.QuoteHistory.Engine.IQHStorageModifier.GetQHModifyEventByIdAsync(System.Guid)">
-            <summary>
-            Get quote history modify event by id
-            </summary>
-            <param name="id">Guid id</param>
-            <returns>QHModifyInfo</returns>
         </member>
         <member name="T:TickTrader.BusinessObjects.QuoteHistory.Engine.QuoteHistoryTask.UpstreamTypes">
             <summary>
@@ -3114,6 +3114,12 @@
             Null in case of Balance and Credit transactions.
             </summary>
         </member>
+        <member name="P:TickTrader.BusinessObjects.TradeReport.SymbolFkInt">
+            <summary>
+            Db Id of instrument
+            Null in case of Balance and Credit transactions.
+            </summary>
+        </member>
         <member name="P:TickTrader.BusinessObjects.TradeReport.IsIoC">
             <summary>
             Is IoC flag
@@ -3189,6 +3195,21 @@
             <param name="fieldName">Field name</param>
             <returns>true if supports, otherwise false</returns>
         </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsMethod(System.Type,System.String)">
+            <summary>
+            Check that method supports in current cluster model version
+            </summary>
+            <param name="type">Type</param>
+            <param name="methodName">Method name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsMethod``1(System.String)">
+            <summary>
+            Check that method supports in current cluster model version
+            </summary>
+            <param name="methodName">Method name</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
         <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.GetSupportSet``1">
             <summary>
             Get Enum SupportSet in current manager model version
@@ -3206,6 +3227,12 @@
             Check that object supports in current manager model version
             </summary>
             <param name="obj">object to check</param>
+            <returns>true if supports, otherwise false</returns>
+        </member>
+        <member name="M:TickTrader.BusinessObjects.Versioning.BaseSpec.SupportsType(System.Type)">
+            <summary>
+            Check that type supports in current manager model version
+            </summary>
             <returns>true if supports, otherwise false</returns>
         </member>
         <member name="T:TickTrader.Common.Business.FeedTick">

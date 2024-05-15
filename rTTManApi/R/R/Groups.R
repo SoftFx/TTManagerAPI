@@ -61,3 +61,85 @@ GetGroupStopOutMode<-function(){
 GetGroupIsWebApiEnabled<-function(){
   rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetIsWebApiEnabled')
 }
+
+#' Gets the Groups Security Info as requested
+#' @examples 
+#' ttmGetAllGroupsSecurityInfo()
+#' @export
+ttmGetAllGroupsSecurityInfo <- function() {
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAllGroupsSecurityInfo')
+  GetGroupSecurityFrame()
+}
+
+GetGroupSecurityFrame <- function(){
+  Name = GetGroupSecurityInfoName()
+  IsEnable = GetGroupSecurityInfoIsEnable()
+  SecurityName = GetGroupSecurityInfoSecurityName()
+  ExecutionMode = GetGroupSecurityInfoExecutionMode()
+  TradeAllowed = GetGroupSecurityInfoTradeAllowed()
+  MinTradeAmount = GetGroupSecurityInfoMinTradeAmount()
+  MaxTradeAmount = GetGroupSecurityInfoMaxTradeAmount()
+  Step = GetGroupSecurityInfoStep()
+  CommissionChargeType = GetGroupSecurityInfoCommissionChargeType()
+  CommissionValueType = GetGroupSecurityInfoCommissionValueType()
+  TakerFee = GetGroupSecurityInfoTakerFee()
+  MakerFee = GetGroupSecurityInfoMakerFee()
+  Rebate = GetGroupSecurityInfoRebate()
+  MinFee = GetGroupSecurityInfoMinFee()
+  MinFeeCurrency = GetGroupSecurityInfoMinFeeCurrency()
+  return(data.table(Name, IsEnable, SecurityName, ExecutionMode, TradeAllowed, MinTradeAmount, MaxTradeAmount, Step,
+                    CommissionChargeType, CommissionValueType, TakerFee, MakerFee,
+                    Rebate, MinFee, MinFeeCurrency))
+}
+
+GetGroupSecurityInfoName <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoName')
+}
+
+GetGroupSecurityInfoIsEnable <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoIsEnable')
+}
+
+GetGroupSecurityInfoSecurityName <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoSecurityName')
+}
+GetGroupSecurityInfoExecutionMode <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoExecutionMode')
+}
+GetGroupSecurityInfoTradeAllowed <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoTradeAllowed')
+}
+GetGroupSecurityInfoMinTradeAmount <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoMinTradeAmount')
+}
+GetGroupSecurityInfoMaxTradeAmount <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoMaxTradeAmount')
+}
+GetGroupSecurityInfoStep <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoStep')
+}
+GetGroupSecurityInfoCommissionChargeType <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoCommissionChargeType')
+}
+GetGroupSecurityInfoCommissionValueType <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoCommissionValueType')
+}
+GetGroupSecurityInfoTakerFee <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoTakerFee')
+}
+GetGroupSecurityInfoMakerFee <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoMakerFee')
+}
+
+GetGroupSecurityInfoRebate <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoRebate')
+}
+
+GetGroupSecurityInfoMinFee <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoMinFee')
+}
+
+GetGroupSecurityInfoMinFeeCurrency <- function(){
+  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetGroupSecurityInfoMinFeeCurrency')
+}
+

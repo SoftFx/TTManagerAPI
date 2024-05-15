@@ -237,6 +237,11 @@
             Event is raised when the pumping is started.
             </summary>
         </member>
+        <member name="E:TickTrader.Manager.Model.ITickTraderManagerModel.PumpingSnapshotLoaded">
+            <summary>
+            Event is raised after snapshot is loaded and all PumpingUpdateAll events have been raised
+            </summary>
+        </member>
         <member name="E:TickTrader.Manager.Model.ITickTraderManagerModel.PumpingUpdateAllConfiguration">
             <summary>
             Event is raised when the pumping received all configuration update.
@@ -2637,6 +2642,20 @@
             <param name="request">Trade history overall request</param>
             <returns>Trade history overall report</returns>
         </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ArchiveQueryContingentOrderTriggerHistory(TickTrader.BusinessObjects.Requests.ContingentOrderTriggerHistoryRequest)">
+            <summary>
+            Request contingent order trigger history from archive
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.ArchiveQueryDailyAccountsSnapshot(TickTrader.BusinessObjects.Requests.DailyAccountsSnapshotRequest)">
+            <summary>
+            Request daily accounts snapshots from archive
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.PerformRollover(TickTrader.BusinessObjects.Requests.RolloverRequest)">
             <summary>
             Perform a rollover operation.
@@ -3092,6 +3111,18 @@
             </summary>
             <returns>QHModifyEvents list</returns>
         </member>
+        <member name="P:TickTrader.Manager.Model.ITickTraderManagerModel.RequestStartedCallback">
+            <summary>
+            Callback implementation low overhead REQUIRED.
+            Request hook. Invoked before a request is send to server
+            </summary>
+        </member>
+        <member name="P:TickTrader.Manager.Model.ITickTraderManagerModel.RequestEndedCallback">
+            <summary>
+            Callback implementation low overhead REQUIRED.
+            Request hook. Invoked after response is recieved from server
+            </summary>
+        </member>
         <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.RequestManagerWebApiToken(System.Int16)">
             <summary>
             Request Manager Web API token by manager Id directly from Trading Platform.
@@ -3119,6 +3150,27 @@
             </summary>
             <param name="webApiId">Manager Web Api Token Id</param>
             <returns>Successful status</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GenerateCaddyFile(TickTrader.BusinessObjects.Requests.CaddyFileGenerateRequest)">
+            <summary>
+            Generate Caddy file
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.GenerateCaddyWebsites(TickTrader.BusinessObjects.Requests.CaddyWebsitesGenerateRequest)">
+            <summary>
+            Generates Caddy websites by Domain info
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.ITickTraderManagerModel.WriteCaddyFile(TickTrader.BusinessObjects.Requests.CaddyFileWriteRequest)">
+            <summary>
+            Write or Merge current Caddy file with new content
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
         </member>
         <member name="M:TickTrader.Manager.Model.ManagerVersionSpecExtensions.SupportsMethod(TickTrader.BusinessObjects.Versioning.ManagerVersionSpec,System.String)">
             <summary>
@@ -3408,6 +3460,11 @@
         <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingStarted">
             <summary>
             Event is raised when the pumping is started.
+            </summary>
+        </member>
+        <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingSnapshotLoaded">
+            <summary>
+            Event is raised after snapshot is loaded and all PumpingUpdateAll events have been raised
             </summary>
         </member>
         <member name="E:TickTrader.Manager.Model.TickTraderManagerModel.PumpingUpdateAllConfiguration">
@@ -5618,6 +5675,13 @@
             </summary>
             <param name="request">Trade history overall request</param>
             <returns>Trade history overall report</returns>
+        </member>
+        <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.ArchiveQueryDailyAccountsSnapshot(TickTrader.BusinessObjects.Requests.DailyAccountsSnapshotRequest)">
+            <summary>
+            Query daily accounts snapshot.
+            </summary>
+            <param name="request">Daily accounts snapshot request</param>
+            <returns>Daily accounts snapshot report</returns>
         </member>
         <member name="M:TickTrader.Manager.Model.TickTraderManagerModel.PerformRollover(TickTrader.BusinessObjects.Requests.RolloverRequest)">
             <summary>
