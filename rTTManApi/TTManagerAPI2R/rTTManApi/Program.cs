@@ -315,6 +315,7 @@ namespace rTTManApi
         private static List<AccountCustomProperties> _customProperties;
         private static string _server = "";
         private static string _accounSnapshotServerName = "";
+        private static bool _fromArchive = false;
         private static DailyAccountsSnapshotRequest _accSnapReq;
         #endregion
 
@@ -690,7 +691,7 @@ namespace rTTManApi
         }
         public static double[] GetGroupSecurityInfoMakerFee()
         {
-            return _groupSecInfo.Select(it => it.MakerFee.HasValue ? it.MakerFee.Value : 0 ).ToArray();
+            return _groupSecInfo.Select(it => it.MakerFee.HasValue ? it.MakerFee.Value : it.TakerFee).ToArray();
         }
 
         public static double[] GetGroupSecurityInfoRebate()
@@ -2680,18 +2681,30 @@ namespace rTTManApi
 
         #endregion
 
+        #region Get ArchieveAccountSnapshots
+
+
+        #endregion
+
         #region Get account snapshots
-        public static int GetAccountSnapshots(double accId, DateTime from, DateTime to)
+
+        public static int GetAccountSnapshots(DateTime from, DateTime to, int bufSize = 1000, bool fromArchieve = false)
         {
-            return GetAccountSnapshots(new double[] { accId }, from, to);
+            return GetAccountSnapshots(new double[] { }, from, to, bufSize, fromArchieve);
         }
 
-        public static int GetAccountSnapshots(double[] accId, DateTime from, DateTime to)
+        public static int GetAccountSnapshots(double accId, DateTime from, DateTime to, int bufSize = 1000, bool fromArchieve = false) 
+        {
+            return GetAccountSnapshots(new double[] { accId }, from, to, bufSize);
+        }
+
+        public static int GetAccountSnapshots(double[] accId, DateTime from, DateTime to, int bufSize = 1000, bool fromArchieve = false)
         {
             //_accountSnapshotList?.Clear();
             try
             {
-                if (_accounSnapshotServerName.Equals(_server) && _accountSnapshotList != null && _accSnapReq != null)
+                //to reduse request count for AccountSnapshots to server, as POsitionSnapshot, OrderSnapshots and AssetsSnapshots are properties of AccountSnapshots object.
+                if (_fromArchive == fromArchieve && _accounSnapshotServerName.Equals(_server) && _accountSnapshotList != null && _accSnapReq != null)
 
                 {
                     var isEqualAccountList = new HashSet<long>(_accSnapReq.AccountIds).SetEquals(accId.Select(Convert.ToInt64).ToList());
@@ -2702,24 +2715,48 @@ namespace rTTManApi
                     }
                 }
                 _accounSnapshotServerName = _server;
+                _fromArchive = fromArchieve;
                 _accSnapReq = new DailyAccountsSnapshotRequest
                 {
                     AccountIds = accId.Select(Convert.ToInt64).ToList(),
                     fromDate = from,
                     toDate = to,
                     IsUTC = true,
+                    Streaming = new StreamingInfo<string> { BufSize = bufSize}
                 };
                 _accountSnapshotList = new List<AccountSnapshotEntity>();
-                Logger.Log.InfoFormat("Requesting account snapshots of {0} accounts from {1} to {2}", accId.Length, from, to);
-                var query = _manager.QueryDailyAccountsSnapshot(_accSnapReq);
-                _accountSnapshotList.AddRange(query.Reports);
-                while (!query.IsEndOfStream)
+                Logger.Log.InfoFormat("Requesting account snapshots of {0} accounts from {1} to {2} - bufSize {3}", accId.Length, from, to, bufSize);
+                var t = DateTime.UtcNow;
+                if (fromArchieve)
                 {
-                    _accSnapReq.Streaming = new StreamingInfo<string> { PosId = query.LastReportId };
-                    query = _manager.QueryDailyAccountsSnapshot(_accSnapReq);
+                    var query = _manager.ArchiveQueryDailyAccountsSnapshot(_accSnapReq);
+                    Logger.Log.InfoFormat("Account Chunk with size {0} take {1} sec", query.Reports.Count, (DateTime.UtcNow - t).TotalSeconds);
                     _accountSnapshotList.AddRange(query.Reports);
+                    while (!query.IsEndOfStream)
+                    {
+                        _accSnapReq.Streaming.PosId = query.LastReportId;
+                        t = DateTime.UtcNow;
+                        query = _manager.ArchiveQueryDailyAccountsSnapshot(_accSnapReq);
+                        Logger.Log.InfoFormat("Account Chunk with size {0} take {1} sec", query.Reports.Count, (DateTime.UtcNow - t).TotalSeconds);
+                        _accountSnapshotList.AddRange(query.Reports);
+                    }
+                    Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
                 }
-                Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
+                else
+                {
+                    var query = _manager.QueryDailyAccountsSnapshot(_accSnapReq);
+                    Logger.Log.InfoFormat("Account Chunk with size {0} take {1} sec", query.Reports.Count, (DateTime.UtcNow - t).TotalSeconds);
+                    _accountSnapshotList.AddRange(query.Reports);
+                    while (!query.IsEndOfStream)
+                    {
+                        _accSnapReq.Streaming.PosId = query.LastReportId;
+                        t = DateTime.UtcNow;
+                        query = _manager.QueryDailyAccountsSnapshot(_accSnapReq);
+                        Logger.Log.InfoFormat("Account Chunk with size {0} take {1} sec", query.Reports.Count, (DateTime.UtcNow - t).TotalSeconds);
+                        _accountSnapshotList.AddRange(query.Reports);
+                    }
+                    Logger.Log.InfoFormat("Recieved {0} account snapshots", _accountSnapshotList.Count);
+                }
                 return 0;
             }
             catch (Exception ex)

@@ -7,8 +7,12 @@
 #' ttmGetAccountSnaphots(c(100181,100182,100183), ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), ISOdatetime(2017,08,01,0,00,00, tz ="GMT"))
 #' 
 #' @export
-ttmGetAccountSnaphots <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT")) {
-  rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshots',accId,from,to)
+ttmGetAccountSnaphots <- function(accId, from = ISOdatetime(1970,01,01,0,00,00, tz ="GMT"), to = ISOdatetime(2017,08,01,0,00,00, tz ="GMT"), bufSize = 1000, fromArchieve = FALSE) {
+  if(!is.null(accId)){
+    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshots', accId, from, to, bufSize, fromArchieve)
+  }else{
+    rClr::clrCallStatic('rTTManApi.rTTManApiHost', 'GetAccountSnapshots', from, to, bufSize, fromArchieve)
+  }
   GetAccountSnapshotFrame()
 }
 # Get Account snapshot table

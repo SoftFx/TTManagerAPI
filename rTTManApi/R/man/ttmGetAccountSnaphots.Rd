@@ -7,7 +7,9 @@
 ttmGetAccountSnaphots(
   accId,
   from = ISOdatetime(1970, 1, 1, 0, 0, 0, tz = "GMT"),
-  to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT")
+  to = ISOdatetime(2017, 8, 1, 0, 0, 0, tz = "GMT"),
+  bufSize = 1000,
+  fromArchieve = FALSE
 )
 }
 \arguments{

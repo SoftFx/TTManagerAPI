@@ -2,12 +2,12 @@
 % Please edit documentation in R/Groups.R
 \name{ttmGetAllGroupsSecurityInfo}
 \alias{ttmGetAllGroupsSecurityInfo}
-\title{Gets the groups as requested}
+\title{Gets the Groups Security Info as requested}
 \usage{
 ttmGetAllGroupsSecurityInfo()
 }
 \description{
-Gets the groups as requested
+Gets the Groups Security Info as requested
 }
 \examples{
 ttmGetAllGroupsSecurityInfo()
