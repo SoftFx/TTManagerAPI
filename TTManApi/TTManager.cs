@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using TickTrader.BusinessObjects;
 using TickTrader.BusinessObjects.EventArguments;
 using TickTrader.BusinessObjects.Requests;
@@ -30,6 +25,10 @@ namespace TTManApi
 
             _manager = new TickTraderManagerModel();
             _manager.ModelStateChanged += ModelStateChanged;
+            _manager.ModelError += OnModelError;
+            var execAssembly = Assembly.GetExecutingAssembly();
+            var rootDir = Path.GetDirectoryName(execAssembly.Location);
+            _manager.SetupManagerCachePath(Path.Combine(rootDir, "Cache"));
 
             _manager.Connect(server, login, password);
 
@@ -37,6 +36,11 @@ namespace TTManApi
             {
                 EnablePumping();
             }
+        }
+
+        private void OnModelError(object sender, ErrorExceptionEventArgs e)
+        {
+            Console.WriteLine($"\n{e.ErrorMessage} {e.ErrorException}");
         }
 
         private void ModelStateChanged(object sender, ConnectionStatusEventArgs args)
@@ -70,7 +74,7 @@ namespace TTManApi
             _manager.PumpingUpdateSplit += ModelPumpingUpdateSplit;
             _manager.PumpingUpdateCurrencyType += ModelPumpingUpdateCurrencyType;
 
-            _manager.EnablePumping();
+            _manager.EnablePumping(PumpingFlag.CLIENT_FLAGS_FILTERTICKS|PumpingFlag.CLIENT_FLAGS_REPLACEUNHANDLEDUPDATES|PumpingFlag.CLIENT_FLAGS_HIDELOGINS);
             _manager.WaitForPumping(60000);
         }
 
@@ -509,7 +513,7 @@ namespace TTManApi
 
         public void CreateSymbol(SymbolNewRequest request, int timeout = 1000)
         {
-            WaitForSymbolUpdate(() => _manager.CreateSymbol(request), request.SymbolName, PumpingTransactionType.TRANS_ADD, timeout);
+            WaitForSymbolUpdate(() => _manager.CreateSymbol(request), request.SymbolId, PumpingTransactionType.TRANS_ADD, timeout);
         }
 
         public SymbolInfo GetSymbolConfig(string symbol) => _manager.GetSymbolConfig(symbol);
@@ -518,7 +522,7 @@ namespace TTManApi
 
         public void ModifySymbol(SymbolModifyRequest request, int timeout = 1000)
         {
-            WaitForSymbolUpdate(() => _manager.ModifySymbol(request), request.SymbolName, PumpingTransactionType.TRANS_UPDATE, timeout);
+            WaitForSymbolUpdate(() => _manager.ModifySymbol(request), request.SymbolId, PumpingTransactionType.TRANS_UPDATE, timeout);
         }
 
         public void DeleteSymbol(string symbol, int? configVersion = null, int timeout = 1000)

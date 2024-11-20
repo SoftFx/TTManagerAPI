@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TickTrader.BusinessObjects;
+﻿using TickTrader.BusinessObjects;
 
 namespace TTManApi.Samples
 {
@@ -21,7 +16,7 @@ namespace TTManApi.Samples
         {
             if (!Manager.DirectQuery.IsPumpingEnabled)
                 Manager.EnablePumping();
-
+            
             List<Order> Orders = Manager.DirectQuery.GetAllOrders();
             foreach (var item in Orders)
             {

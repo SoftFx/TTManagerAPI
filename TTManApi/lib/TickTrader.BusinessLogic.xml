@@ -4,6 +4,40 @@
         <name>TickTrader.BusinessLogic</name>
     </assembly>
     <members>
+        <member name="M:TickTrader.BusinessLogic.AccountCalculator.CalculateDividend(System.Decimal,TickTrader.BusinessObjects.OrderSides,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Int32,System.Decimal@,System.Decimal@,System.Decimal@)">
+            <summary>
+            Calculate dividend payments
+            </summary>
+            <param name="amount">Amount of position is to be calculated on</param>
+            <param name="side">Side of position is to be calculated on</param>
+            <param name="grossRate">Dividend gross rate</param>
+            <param name="fee">Fee value to calculate fee charge</param>
+            <param name="tax">Tax value to calculate tax charge</param>
+            <param name="paySign">The sign of payment amount. It depends on side and the sign of gross rate</param>
+            <param name="balanceConvRate">Conversion rate from dividend pay currency to balance currency</param>
+            <param name="roundDigits">Rounding precision</param>
+            <param name="divPayment">[OUT] Dividend payment</param>
+            <param name="feeCharge">[OUT] Fee charge amount</param>
+            <param name="taxCharge">[OUT] Tax charge amount</param>
+        </member>
+        <member name="M:TickTrader.BusinessLogic.AccountCalculator.CalculateDividend(TickTrader.BusinessObjects.ISymbolInfo,System.Decimal,System.String,System.Decimal,System.Decimal,System.Decimal@,TickTrader.BusinessObjects.OrderSides@,System.Decimal@,System.Decimal@,System.Decimal@,System.Decimal@)">
+            <summary>
+            Calculate dividend payments
+            </summary>
+            <param name="symbol">Dividend symbol</param>
+            <param name="grossRate">Dividend gross rate</param>
+            <param name="currency">Dividend pay currency</param>
+            <param name="fee">Fee value to calculate fee charge</param>
+            <param name="tax">Tax value to calculate tax charge</param>
+            <param name="calcAmount">[OUT] Amount of position is used for calculation</param>
+            <param name="calcSide">[OUT] Side of position is used for calculation</param>
+            <param name="balanceMovement">[OUT] Balance movement</param>
+            <param name="feeCharge">[OUT] Fee charge amount</param>
+            <param name="taxCharge">[OUT] Tax charge amount</param>
+            <param name="convRate">[OUT] Conversion rate from dividend pay currency to balance currency</param>
+            <returns></returns>
+            <exception cref="T:TickTrader.BusinessLogic.MarketConfigurationException"></exception>
+        </member>
         <member name="F:TickTrader.BusinessLogic.CalcErrorCode.None">
             <summary>
             No error.
@@ -43,17 +77,6 @@
             <summary>
             Gets order calculatiion error description.
             </summary>
-        </member>
-        <member name="T:TickTrader.BusinessLogic.IOrderModel">
-            <summary>
-            Defines methods and properties for order which is subject of market summary calculations.
-            Properties Profit, Margin and CalculationError are updated only in NettingCalculationTypes.OneByOne mode.
-            </summary>
-        </member>
-        <member name="T:TickTrader.BusinessLogic.OrderExtension">
-             <summary>
-            
-             </summary>
         </member>
         <member name="T:TickTrader.BusinessLogic.IAccountInfo">
             <summary>
@@ -120,6 +143,11 @@
             Fired when position changed.
             </summary>
         </member>
+        <member name="P:TickTrader.BusinessLogic.IMarginAccountInfo.NewOrderMLThreshold">
+            <summary>
+            Account margin level threshold.
+            </summary>
+        </member>
         <member name="T:TickTrader.BusinessLogic.ICashAccountInfo">
             <summary>
             Defines methods and properties for cash account.
@@ -133,6 +161,75 @@
         <member name="E:TickTrader.BusinessLogic.ICashAccountInfo.AssetsChanged">
             <summary>
             Fired when underlying assests list was changed.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.IOrderModel">
+            <summary>
+            Defines methods and properties for order which is subject of market summary calculations.
+            Properties Profit, Margin and CalculationError are updated only in NettingCalculationTypes.OneByOne mode.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.OrderExtension">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketManager">
+            <summary>
+            Manages state (configuration and rates) within all accounts. Creates and keeps updated MarketState object for each account group.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketManager.DebugStats">
+            <summary>Market Manager debug stats</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.GroupCnt">
+            <summary>Number of groups</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.SymbolCnt">
+            <summary>Number of symbols</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.CurrencyCnt">
+            <summary>Number of currencies</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.SymbolInfoCnt">
+            <summary>Total size of collections that hold SymbolInfo refences</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.CurrencyInfoCnt">
+            <summary>Total size of collections that hold CurrencyInfo refences</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.DistinctSymbolInfoCnt">
+            <summary>Number of SymbolInfo instances</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.DistinctCurrencyInfoCnt">
+            <summary>Number of CurrencyInfo instances</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.TargetMarketNodesCnt">
+            <summary>Number of SymbolMarketNodes that are required in current config</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.TotalMarketNodesCnt">
+            <summary>Number of SymbolMarketNodes that exist</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.EnabledMarketNodesCnt">
+            <summary>Number of SymbolMarketNodes that are enabled. Normally equal to TargetMarketNodesCnt</summary>
+        </member>
+        <member name="P:TickTrader.BusinessLogic.MarketManager.DebugStats.DisabledMarketNodesCnt">
+            <summary>Number of SymbolMarketNodes that are disabled. Disabled nodes appear when current instance config is updated after initial start</summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketRatesContainer">
+            <summary>
+            Target usage: Store latest rates, so we can init SymbolMarketNode.Rate when config changed
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketState">
+            <summary>
+            Manages state (configuration and rates) within accounts with the same configuration (group).
+            Can be used as a child object of MarketManager or as stand-alone market state.
+            </summary>
+        </member>
+        <member name="T:TickTrader.BusinessLogic.MarketStateConfig">
+            <summary>
+            Readonly collections for group market state. Used to share as much objects as possible.
+            SymbolErrors is very heavy when created for every symbol in every group.
             </summary>
         </member>
         <member name="T:TickTrader.BusinessLogic.NettingCalculationTypes">
@@ -150,16 +247,44 @@
             Calculate netted margin/profit. Orders are not updated.
             </summary>
         </member>
-        <member name="T:TickTrader.BusinessLogic.MarketManager">
+        <member name="M:TickTrader.BusinessLogic.OrderCalculator.CalculateSwap(System.Double,TickTrader.BusinessObjects.OrderSides,System.DateTime,TickTrader.BusinessLogic.CalcError@,System.Nullable{TickTrader.BusinessObjects.SwapType}@,System.Nullable{System.Double}@,System.Boolean@)">
             <summary>
-            Manages state (configuration and rates) within all accounts. Creates and keeps updated MarketState object for each account group.
+            Calculate Swap by Symbol swap parameters
             </summary>
+            <param name="amount">Position amount</param>
+            <param name="side">Position side</param>
+            <param name="execTime">Swap execution time</param>
+            <param name="error">Error</param>
+            <param name="swapType">SwapSize type</param>
+            <param name="swapSize">SwapSize value</param>
+            <param name="isTriple">Is tripple swap</param>
+            <returns>Calculated swap</returns>
         </member>
-        <member name="T:TickTrader.BusinessLogic.MarketState">
+        <member name="M:TickTrader.BusinessLogic.OrderCalculator.CalculateSwapBySymbol(System.Double,TickTrader.BusinessObjects.OrderSides,System.DateTime,TickTrader.BusinessLogic.IConversionFormula@,System.Nullable{TickTrader.BusinessObjects.SwapType}@,System.Nullable{System.Double}@,System.Boolean@)">
             <summary>
-            Manages state (configuration and rates) within accounts with the same configuration (group).
-            Can be used as a child object of MarketManager or as stand-alone market state.
+            Calculate Swap by Symbol swap parameters
             </summary>
+            <param name="amount">Position amount</param>
+            <param name="side">Position side</param>
+            <param name="execTime">Swap execution time</param>
+            <param name="conversion">Conversion to balance currency</param>
+            <param name="swapType">SwapSize type</param>
+            <param name="swapSize">SwapSize value</param>
+            <param name="isTriple">Is tripple swap</param>
+            <returns>Calculated swap</returns>
+        </member>
+        <member name="M:TickTrader.BusinessLogic.OrderCalculator.CalculateSwapByExposure(System.Double,TickTrader.BusinessObjects.OrderSides,System.Double,System.DateTime,TickTrader.BusinessLogic.IConversionFormula@,System.Nullable{TickTrader.BusinessObjects.SwapType}@,System.Nullable{System.Double}@)">
+            <summary>
+            Calculate Swap by exposure
+            </summary>
+            <param name="amount">Position amount</param>
+            <param name="side">Position side</param>
+            <param name="openPrice">Position open price</param>
+            <param name="execTime">Swap execution time</param>
+            <param name="conversion">Conversion to balance currency</param>
+            <param name="swapType">SwapSize type</param>
+            <param name="swapSize">SwapSize value</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

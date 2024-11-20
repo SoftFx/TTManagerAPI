@@ -1,9 +1,4 @@
-﻿using System;
-using TickTrader.BusinessObjects;
-using TickTrader.BusinessObjects.EventArguments;
-using TickTrader.BusinessObjects.Requests;
-using TickTrader.Manager.Model;
-using TTManApi.Samples;
+﻿using TTManApi.Samples;
 
 namespace TTManApi
 {
@@ -27,10 +22,11 @@ namespace TTManApi
                 using (TTManager manager = new TTManager(ttsAddress, managerLogin, managerPassword, true))
                 //using (Sample sample = new WaitForOrderPositionUpdate(manager, account))
                 //using (Sample sample = new SubscribeLastTrades(manager, new []{"EURUSD"}))
-                using (Sample sample = new GetAllOrders(manager))
+                //using (Sample sample = new GetAllOrders(manager))
+                using (Sample sample = new WaitForAccountUpdate(manager, account))
                 {
                     sample.Run();
-                    Console.ReadKey();
+                    //Console.ReadKey();
                 }
             }
             catch (Exception e)
